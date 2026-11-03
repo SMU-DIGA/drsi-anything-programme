@@ -7,30 +7,23 @@ markdown: kramdown
 permalink: /progress/:title/
 defaults:
   - scope:
-      path: ""
-    values:
-      layout: article
-  - scope:
       type: posts
     values:
-      layout: post
-      numbered: true
+      layout: redirect
 exclude:
   - README.md
   - README.zh-CN.md
   - LICENSE
 nav:
-  - title: Overview
-    url: /
   - title: Design
-    url: /design/
+    url: /#design
   - title: Environments
-    url: /environments/
+    url: /#environments
   - title: Results
     url: /#results
   - title: Progress
-    url: /progress/
+    url: /#progress
   - title: Roadmap
-    url: /roadmap/
+    url: /#roadmap
   - title: BibTeX
     url: /#bibtex

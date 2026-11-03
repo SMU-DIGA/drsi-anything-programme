@@ -164,8 +164,21 @@ table.roadmap td:first-child { width: 90px; }
 .timeline li { position: relative; padding: 0 0 22px 6px; margin: 0; }
 .timeline li::before { content: ""; position: absolute; left: -30px; top: 7px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 3px solid var(--accent); }
 .timeline time { display: block; font-size: 13px; font-weight: 600; color: var(--faint); letter-spacing: 0.02em; }
-.tl-title { font-weight: 650; font-size: 17px; color: var(--fg); }
 .timeline p { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+.timeline p.tl-title { margin-top: 2px; font-family: var(--display); font-weight: 700; letter-spacing: -0.01em; font-size: 18px; color: var(--fg); }
+.timeline li { scroll-margin-top: 80px; }
+details.update { margin-top: 8px; }
+details.update > summary { cursor: pointer; width: fit-content; font-size: 14px; font-weight: 600; color: var(--accent); list-style: none; }
+details.update > summary::-webkit-details-marker { display: none; }
+details.update > summary::before { content: "+ "; }
+details.update[open] > summary::before { content: "− "; }
+.update-body { margin-top: 10px; padding: 4px 20px 8px; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); color: var(--fg); font-size: 15.5px; }
+.update-body h4 { font-family: var(--display); font-size: 16px; margin: 18px 0 6px; }
+.update-body p, .update-body li { color: var(--fg); }
+.update-body table { font-size: 14px; }
+.check { display: inline-block; width: 1.3em; font-weight: 700; color: var(--faint); }
+.check.done { color: var(--good); }
+.article-body ul:has(.check) { list-style: none; padding-left: 4px; }
 .timeline .tags { margin-top: 6px; }
 
 .bibtex { font-size: 13px; }

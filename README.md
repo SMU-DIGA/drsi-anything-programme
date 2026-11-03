@@ -2,7 +2,7 @@
 
 **Neuro-Symbolic Recursive Self-Improvement across General Domains**: LLMs (neural) write and repeatedly improve programs (symbolic) for games, embodied robotics and computer use.
 
-**[Project page & progress log](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](design.md) · [Environments](environments.md) · [Roadmap](roadmap.md)
+**[Project page & progress log](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](https://smu-diga.github.io/ns-rsi-anything-programme/#design) · [Environments](https://smu-diga.github.io/ns-rsi-anything-programme/#environments) · [Roadmap](https://smu-diga.github.io/ns-rsi-anything-programme/#roadmap)
 
 An LLM writes a program that solves a task (a game bot, a robot controller, a desktop agent). Then LLMs
 improve that program over many generations, using only interaction feedback from the environment. The
@@ -30,7 +30,7 @@ The project combines two lines of work:
 ## Status
 
 Work in progress. The core loop and the EnvPool task families work end to end. See the
-[roadmap](roadmap.md) for what remains. This repository hosts the programme's documents and results;
+[roadmap](https://smu-diga.github.io/ns-rsi-anything-programme/#roadmap) for what remains. This repository hosts the programme's documents and results;
 the implementation is not public.
 
 | Component | Status |

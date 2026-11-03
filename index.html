@@ -9,11 +9,11 @@ layout: default
   <p class="hero-subtitle">Neuro-Symbolic Recursive Self-Improvement across General Domains</p>
   <p class="affiliation">SMU-DIGA</p>
   <div class="pills">
-    <a class="pill" href="{{ '/design/' | relative_url }}"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 5v3l2 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Design</a>
-    <a class="pill" href="{{ '/environments/' | relative_url }}"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Environments</a>
+    <a class="pill" href="#design"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 5v3l2 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Design</a>
+    <a class="pill" href="#environments"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Environments</a>
     <a class="pill" href="#results"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13V8M8 13V3M13 13V6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Results</a>
-    <a class="pill" href="{{ '/progress/' | relative_url }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13h12M4 10l3-3 2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Progress</a>
-    <a class="pill" href="{{ '/roadmap/' | relative_url }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3v10M3 4h8l-1.5 2.5L11 9H3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Roadmap</a>
+    <a class="pill" href="#progress"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13h12M4 10l3-3 2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Progress</a>
+    <a class="pill" href="#roadmap"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3v10M3 4h8l-1.5 2.5L11 9H3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Roadmap</a>
     <a class="pill" href="#bibtex"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h6l2.5 2.5v8.5h-8.5z M10 2.5v2.5h2.5 M6 8h4 M6 10.5h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>BibTeX</a>
     <a class="pill pill-dark" href="https://github.com/{{ site.repository }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
   </div>
@@ -72,7 +72,8 @@ layout: default
     <div class="step"><p class="step-num">3</p><h4>Promote</h4><p>The best candidates face the incumbent on <em>hidden dev seeds</em> under a paired bootstrap gate. Test seeds are used once, at the end.</p></div>
     <div class="step"><p class="step-num">4</p><h4>Simplify</h4><p>The winner is simplified and kept only if its dev score does not drop. This counters the build-up of patches.</p></div>
   </div>
-  <p class="more"><a href="{{ '/design/' | relative_url }}">Full Design page →</a></p>
+  {% capture design_md %}{% include design.md %}{% endcapture %}
+  {{ design_md | markdownify }}
 
   <h2 id="environments">Environments</h2>
   <p class="lead">Benchmarks people already trust.</p>
@@ -106,7 +107,8 @@ layout: default
     </div>
   </div>
   <p class="status-legend"><span class="badge done">Done</span> integrated and tested <span class="badge running">Running</span> experiment in progress <span class="badge wip">In progress</span> being built <span class="badge planned">Planned</span> not started</p>
-  <p class="more"><a href="{{ '/environments/' | relative_url }}">Full Environments page →</a></p>
+  {% capture environments_md %}{% include environments.md %}{% endcapture %}
+  {{ environments_md | markdownify }}
 
   <h2 id="results">Results</h2>
   <p>Results are added as experiments finish. Rows marked <span class="legend-swatch best-swatch"></span> are the
@@ -151,29 +153,25 @@ layout: default
   </div>
 
   <h2 id="progress">Progress</h2>
+  <p>Dated updates, newest first. Open an entry to read the full update.</p>
   <ol class="timeline">
-  {% for post in site.posts limit:6 %}
-    <li>
+  {% for post in site.posts %}
+    <li id="{{ post.slug }}">
       <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
-      <a class="tl-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <p class="tl-title">{{ post.title }}</p>
       <p>{{ post.summary }}</p>
       {% if post.tags.size > 0 %}<p class="tags">{% for tag in post.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</p>{% endif %}
+      <details class="update">
+        <summary>Read the full update</summary>
+        <div class="update-body">{{ post.content | replace: '<h2', '<h4' | replace: '</h2>', '</h4>' }}</div>
+      </details>
     </li>
   {% endfor %}
   </ol>
-  <p class="more"><a href="{{ '/progress/' | relative_url }}">Full Progress page →</a></p>
 
   <h2 id="roadmap">Roadmap</h2>
-  <table class="roadmap">
-    <tbody>
-      <tr><td><span class="badge done">Done</span></td><td><strong>Phase 0: Framework.</strong> Loop, isolated evaluator, three improver kinds, EnvPool families, first smoke run.</td></tr>
-      <tr><td><span class="badge running">Running</span></td><td><strong>Phase 1: Games.</strong> Breakout, Pong, Montezuma; VizDoom; Atari57 under a fixed env-step budget, compared with PPO.</td></tr>
-      <tr><td><span class="badge wip">In progress</span></td><td><strong>Phase 2: Embodied robotics.</strong> LIBERO, ManiSkill3, SimplerEnv, RoboTwin 2.0; a cross-task skill library.</td></tr>
-      <tr><td><span class="badge planned">Planned</span></td><td><strong>Phase 3: Computer use.</strong> OSWorld with parallel VMs and app-level skills.</td></tr>
-      <tr><td><span class="badge planned">Planned</span></td><td><strong>Phase 4: Deeper recursion.</strong> Self-improving improvers, a learned pre-filter over program edits, optional weight updates.</td></tr>
-    </tbody>
-  </table>
-  <p class="more"><a href="{{ '/roadmap/' | relative_url }}">Full Roadmap page →</a></p>
+  {% capture roadmap_md %}{% include roadmap.md %}{% endcapture %}
+  {{ roadmap_md | markdownify }}
 
   <h2 id="bibtex">BibTeX</h2>
   <p>The programme is ongoing. If you refer to it, please cite:</p>

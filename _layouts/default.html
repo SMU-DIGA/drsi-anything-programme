@@ -12,13 +12,7 @@
     <div class="topbar-inner">
       <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark">NS</span>-RSI-Anything</a>
       <nav>
-        {% for item in site.nav %}
-        {% assign active = false %}
-        {% if item.url == "/" and page.url == "/" %}{% assign active = true %}{% endif %}
-        {% unless item.url == "/" or item.url contains "#" %}{% if page.url contains item.url %}{% assign active = true %}{% endif %}{% endunless %}
-        {% if item.url == "/progress/" and page.layout == "post" %}{% assign active = true %}{% endif %}
-        <a href="{{ item.url | relative_url }}"{% if active %} class="active"{% endif %}>{{ item.title }}</a>
-        {% endfor %}
+        {% for item in site.nav %}<a href="{{ item.url | relative_url }}" data-section="{{ item.url | remove: '/#' }}">{{ item.title }}</a>{% endfor %}
         <span class="nav-sep"></span>
         <a href="https://github.com/{{ site.repository }}">GitHub</a>
       </nav>
@@ -42,6 +36,33 @@
       if (h.tagName === 'H2') { n2 += 1; n3 = 0; h.setAttribute('data-num', (n2 < 10 ? '0' : '') + n2); }
       else { n3 += 1; h.setAttribute('data-num', n2 + '.' + n3); }
     });
+  })();
+  // Highlight the nav item of the section in view; open a progress update when the URL points to it.
+  (function () {
+    var links = {};
+    document.querySelectorAll('.topbar nav a[data-section]').forEach(function (a) { links[a.dataset.section] = a; });
+    var sections = Object.keys(links).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    function update() {
+      var current = null;
+      sections.forEach(function (sec) { if (sec.getBoundingClientRect().top <= 140) current = sec.id; });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4 && sections.length) current = sections[sections.length - 1].id;
+      Object.keys(links).forEach(function (id) { links[id].classList.toggle('active', id === current); });
+    }
+    var queued = false;
+    window.addEventListener('scroll', function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; update(); });
+    }, { passive: true });
+    window.addEventListener('hashchange', update);
+    update();
+    function openTarget() {
+      var el = location.hash && document.getElementById(location.hash.slice(1));
+      var d = el && el.querySelector('details.update');
+      if (d) { d.open = true; el.scrollIntoView(); }
+    }
+    window.addEventListener('hashchange', openTarget);
+    openTarget();
   })();
   // Result tabs and BibTeX copy button.
   document.querySelectorAll('.tabs').forEach(function (tabs) {

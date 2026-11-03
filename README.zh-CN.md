@@ -2,7 +2,7 @@
 
 **Neuro-Symbolic Recursive Self-Improvement across General Domains（跨通用领域的神经-符号递归自我改进）**：LLM（神经）编写程序（符号）来完成任务，再递归地改进这个程序，覆盖游戏、具身机器人和计算机操作。
 
-**[项目主页与进度日志](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [English](README.md) · [方案设计](design.md) · [环境选型](environments.md) · [路线图](roadmap.md)
+**[项目主页与进度日志](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [English](README.md) · [方案设计](https://smu-diga.github.io/ns-rsi-anything-programme/#design) · [环境选型](https://smu-diga.github.io/ns-rsi-anything-programme/#environments) · [路线图](https://smu-diga.github.io/ns-rsi-anything-programme/#roadmap)
 
 LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制器或桌面 agent。之后多个 LLM 根据环境交互反馈，逐代改进这个程序。被改进的对象是**代码**，不是神经网络权重。一个程序包括策略、状态检测与技能函数，以及一份作为程序记忆的 `NOTES.md`。
 

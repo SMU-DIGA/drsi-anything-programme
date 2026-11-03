@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+{% if page.redirect_to %}{% assign path = page.redirect_to %}{% else %}{% assign path = '/#' | append: page.slug %}{% endif %}{% assign target = path | relative_url %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ site.title }}</title>
+  <meta http-equiv="refresh" content="0; url={{ target }}">
+  <link rel="canonical" href="{{ path | absolute_url }}">
+  <meta name="robots" content="noindex">
+</head>
+<body><p>This page moved to <a href="{{ target }}">{{ path | absolute_url }}</a>.</p></body>
+</html>
