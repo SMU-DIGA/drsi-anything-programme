@@ -34,38 +34,18 @@
     <p class="footnote">All numbers on this site come from our own runs. Pipeline smoke tests are labelled as such and are not benchmark claims. Content released under the MIT License.</p>
   </footer>
   <script>
-  // Sticky table of contents built from the article's section headings (no external scripts).
+  // Section numbers and anchors for the article's headings (no external scripts).
   (function () {
     var body = document.querySelector('.article-body');
-    var toc = document.querySelector('.toc nav');
-    if (!body || !toc) return;
+    if (!body) return;
     var numbered = body.hasAttribute('data-numbered');
-    var heads = body.querySelectorAll(':scope > h2, :scope > h3');
-    if (!heads.length) { document.querySelector('.toc').remove(); return; }
     var n2 = 0, n3 = 0;
-    heads.forEach(function (h) {
+    body.querySelectorAll(':scope > h2, :scope > h3').forEach(function (h) {
       if (!h.id) h.id = h.textContent.trim().toLowerCase().replace(/[^\w]+/g, '-').replace(/^-|-$/g, '');
-      var num = '';
-      if (numbered) {
-        if (h.tagName === 'H2') { n2 += 1; n3 = 0; num = (n2 < 10 ? '0' : '') + n2; }
-        else { n3 += 1; num = n2 + '.' + n3; }
-        h.setAttribute('data-num', num);
-      }
-      var a = document.createElement('a');
-      a.href = '#' + h.id;
-      a.className = h.tagName.toLowerCase();
-      if (num) { var s = document.createElement('span'); s.className = 'num'; s.textContent = num; a.appendChild(s); }
-      a.appendChild(document.createTextNode(h.textContent));
-      toc.appendChild(a);
+      if (!numbered) return;
+      if (h.tagName === 'H2') { n2 += 1; n3 = 0; h.setAttribute('data-num', (n2 < 10 ? '0' : '') + n2); }
+      else { n3 += 1; h.setAttribute('data-num', n2 + '.' + n3); }
     });
-    var links = toc.querySelectorAll('a');
-    var obs = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        links.forEach(function (l) { l.classList.toggle('current', l.getAttribute('href') === '#' + e.target.id); });
-      });
-    }, { rootMargin: '0px 0px -75% 0px' });
-    heads.forEach(function (h) { obs.observe(h); });
   })();
   // Result tabs and BibTeX copy button.
   document.querySelectorAll('.tabs').forEach(function (tabs) {
