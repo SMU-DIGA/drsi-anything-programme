@@ -1,0 +1,72 @@
+<svg class="teaser-svg" viewBox="0 0 1000 360" role="img" aria-labelledby="teaser-title teaser-desc" xmlns="http://www.w3.org/2000/svg">
+  <title id="teaser-title">The NS-RSI-Anything loop</title>
+  <desc id="teaser-desc">The incumbent program is copied to parallel improvers (Codex CLI, Claude Code, DeepSeek API). Each candidate is re-evaluated independently on train seeds, compared with the incumbent on hidden dev seeds by a paired bootstrap gate, optionally simplified, and becomes the incumbent for the next generation.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="svg-arrowhead" d="M 0 0 L 10 5 L 0 10 z"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path class="svg-arrowhead-accent" d="M 0 0 L 10 5 L 0 10 z"/>
+    </marker>
+  </defs>
+
+  <text class="svg-stage" x="105" y="28" text-anchor="middle">① incumbent</text>
+  <text class="svg-stage" x="335" y="28" text-anchor="middle">② propose in parallel</text>
+  <text class="svg-stage" x="555" y="28" text-anchor="middle">③ re-evaluate</text>
+  <text class="svg-stage" x="765" y="28" text-anchor="middle">④ promote</text>
+  <text class="svg-stage" x="925" y="28" text-anchor="middle">⑤ simplify</text>
+
+  <!-- incumbent -->
+  <rect class="svg-box svg-strong" x="12" y="120" width="182" height="110" rx="12"/>
+  <text class="svg-title" x="103" y="152" text-anchor="middle">Incumbent</text>
+  <text class="svg-title" x="103" y="172" text-anchor="middle">program</text>
+  <text class="svg-sub" x="103" y="196" text-anchor="middle">policy · skills</text>
+  <text class="svg-sub" x="103" y="214" text-anchor="middle">notes (memory)</text>
+
+  <!-- improvers -->
+  <rect class="svg-box" x="250" y="48" width="170" height="74" rx="12"/>
+  <text class="svg-title" x="335" y="80" text-anchor="middle">Codex CLI</text>
+  <text class="svg-sub" x="335" y="103" text-anchor="middle">edit · self-test (train)</text>
+  <rect class="svg-box" x="250" y="138" width="170" height="74" rx="12"/>
+  <text class="svg-title" x="335" y="170" text-anchor="middle">Claude Code</text>
+  <text class="svg-sub" x="335" y="193" text-anchor="middle">edit · self-test (train)</text>
+  <rect class="svg-box" x="250" y="228" width="170" height="74" rx="12"/>
+  <text class="svg-title" x="335" y="260" text-anchor="middle">DeepSeek API</text>
+  <text class="svg-sub" x="335" y="283" text-anchor="middle">files ⇄ train scores</text>
+
+  <path class="svg-arrow" d="M190 160 C 220 140, 225 90, 248 86" marker-end="url(#arrow)"/>
+  <path class="svg-arrow" d="M190 175 L 248 175" marker-end="url(#arrow)"/>
+  <path class="svg-arrow" d="M190 190 C 220 210, 225 262, 248 264" marker-end="url(#arrow)"/>
+
+  <!-- re-evaluation -->
+  <rect class="svg-box" x="480" y="120" width="150" height="110" rx="12"/>
+  <text class="svg-title" x="555" y="158" text-anchor="middle">Independent</text>
+  <text class="svg-title" x="555" y="180" text-anchor="middle">re-evaluation</text>
+  <text class="svg-sub" x="555" y="205" text-anchor="middle">isolated · train seeds</text>
+
+  <path class="svg-arrow" d="M420 86 C 450 90, 455 140, 478 155" marker-end="url(#arrow)"/>
+  <path class="svg-arrow" d="M420 175 L 478 175" marker-end="url(#arrow)"/>
+  <path class="svg-arrow" d="M420 264 C 450 260, 455 210, 478 195" marker-end="url(#arrow)"/>
+
+  <!-- gate -->
+  <rect class="svg-box svg-accent" x="690" y="120" width="150" height="110" rx="12"/>
+  <text class="svg-title" x="765" y="158" text-anchor="middle">Promotion gate</text>
+  <text class="svg-sub" x="765" y="182" text-anchor="middle">hidden dev seeds</text>
+  <text class="svg-sub" x="765" y="202" text-anchor="middle">paired bootstrap</text>
+  <path class="svg-arrow" d="M630 175 L 688 175" marker-end="url(#arrow)"/>
+
+  <path class="svg-arrow svg-dashed" d="M765 230 L 765 262" marker-end="url(#arrow)"/>
+  <text class="svg-sub" x="765" y="282" text-anchor="middle">rejected → archive</text>
+  <text class="svg-sub" x="765" y="300" text-anchor="middle">(shared history)</text>
+
+  <!-- simplify -->
+  <rect class="svg-box" x="870" y="130" width="112" height="90" rx="12"/>
+  <text class="svg-title" x="926" y="166" text-anchor="middle">Simplify</text>
+  <text class="svg-sub" x="926" y="190" text-anchor="middle">keep if dev</text>
+  <text class="svg-sub" x="926" y="207" text-anchor="middle">does not drop</text>
+  <path class="svg-arrow" d="M840 175 L 868 175" marker-end="url(#arrow)"/>
+
+  <!-- next generation loop -->
+  <path class="svg-loop" d="M926 220 L 926 336 L 105 336 L 105 232" marker-end="url(#arrow-accent)"/>
+  <text class="svg-loop-label" x="515" y="328" text-anchor="middle">promoted program becomes the incumbent of the next generation</text>
+</svg>

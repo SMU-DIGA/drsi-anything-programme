@@ -1,0 +1,188 @@
+---
+title: NS-RSI-Anything
+permalink: /
+layout: default
+---
+<section class="hero">
+  <p class="kicker">Recursive self-improvement · LLM-written programs</p>
+  <h1>NS-RSI-Anything</h1>
+  <p class="hero-subtitle">Recursive Self-Improvement of LLM-Written Programs<br>for Games, Embodied Robotics and Computer Use</p>
+  <p class="affiliation">SMU-DIGA</p>
+  <div class="pills">
+    <a class="pill" href="{{ '/progress/' | relative_url }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13h12M4 10l3-3 2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Progress</a>
+    <a class="pill" href="{{ '/design/' | relative_url }}"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 5v3l2 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Design</a>
+    <a class="pill" href="{{ '/environments/' | relative_url }}"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Environments</a>
+    <a class="pill" href="{{ '/roadmap/' | relative_url }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3v10M3 4h8l-1.5 2.5L11 9H3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Roadmap</a>
+    <a class="pill" href="#bibtex"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h6l2.5 2.5v8.5h-8.5z M10 2.5v2.5h2.5 M6 8h4 M6 10.5h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>BibTeX</a>
+    <a class="pill pill-dark" href="https://github.com/{{ site.repository }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+  </div>
+  <p class="hook"><em>Deep RL updates weights. Prompt optimization tunes instructions. We let LLMs rewrite the <strong>program itself</strong>, keep a version only if it wins on seeds it never saw, and repeat.</em></p>
+</section>
+
+<section class="tldr-block" id="tldr">
+  <div class="tldr">
+    <p class="tldr-label">TL;DR</p>
+    <p>An LLM writes a program that solves a task, such as an Atari bot, a robot-arm controller or a desktop agent.
+    A <em>population</em> of LLM improvers (Codex CLI, Claude Code, DeepSeek) then improves that program over many
+    generations, using only feedback from interaction with the environment. Promotion is gated on hidden seeds, and
+    we evaluate on the game, embodied-robotics and computer-use benchmarks the community reports on most often.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><p class="stat-num">2.1 <span class="arrow">→</span> 13.0</p><p class="stat-label">Breakout dev score</p><p class="stat-sub">1 generation · pipeline smoke test</p></div>
+    <div class="stat"><p class="stat-num">4</p><p class="stat-label">Task families running</p><p class="stat-sub">Atari · VizDoom · MuJoCo · MetaWorld</p></div>
+    <div class="stat"><p class="stat-num">2</p><p class="stat-label">Embodied benchmarks verified</p><p class="stat-sub">LIBERO · ManiSkill3</p></div>
+    <div class="stat"><p class="stat-num">3</p><p class="stat-label">Improver kinds, one population</p><p class="stat-sub">Codex CLI · Claude Code · chat API</p></div>
+  </div>
+</section>
+
+<figure class="teaser">
+  {% include teaser.svg %}
+  <figcaption><strong>Figure 1.</strong> The self-improvement loop. Several coding agents and LLMs edit the current
+  program in parallel. Every candidate is re-scored in isolation, and only a version that beats the incumbent
+  on <em>hidden</em> dev seeds is promoted. The object being improved is software (policy, skills and a notes
+  file that serves as memory), not network weights.</figcaption>
+</figure>
+
+<section class="abstract">
+  <h2 class="abstract-title">Abstract</h2>
+  <p>Deep reinforcement learning improves agents by adjusting weights. Recent evidence suggests that coding agents
+  editing <strong>hand-written programs</strong> can reach competitive scores on Atari, MuJoCo and VizDoom without
+  any gradient step, and that cross-domain <strong>recursive self-improvement</strong> loops benefit from frozen
+  evaluation protocols. <strong>NS-RSI-Anything</strong> combines the two. A program, consisting of a policy, its
+  skills and its notes, is improved generation after generation by a heterogeneous population of LLM improvers.
+  Each candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We
+  study when such loops keep improving, what transfers across tasks, and how they compare with RL under the same
+  environment-step budget, on games, embodied manipulation (LIBERO, ManiSkill3, SimplerEnv, RoboTwin 2.0) and
+  computer use (OSWorld).</p>
+</section>
+
+<div class="article-layout">
+  <aside class="toc"><p class="toc-title">Contents</p><nav></nav></aside>
+  <article class="article-body" data-numbered>
+
+  <h2 id="method">Improve the program, not the weights</h2>
+  <p>A <strong>program</strong> is the whole "heuristic system": the policy, its state detectors and skills, and
+  notes holding environment facts, failed ideas and a dated changelog. Each generation runs four steps.</p>
+  <div class="step-grid">
+    <div class="step"><p class="step-num">1</p><h4>Propose</h4><p>The incumbent is copied into one isolated workspace per improver, with a task brief, per-seed feedback, the full history of earlier attempts, and an evaluator restricted to the <em>train</em> seeds.</p></div>
+    <div class="step"><p class="step-num">2</p><h4>Re-evaluate</h4><p>Candidates are re-scored independently. The environment runs in one process and the policy in another, so a policy never sees the reward, the seed or the environment object.</p></div>
+    <div class="step"><p class="step-num">3</p><h4>Promote</h4><p>The best candidates face the incumbent on <em>hidden dev seeds</em> under a paired bootstrap gate. Test seeds are used once, at the end.</p></div>
+    <div class="step"><p class="step-num">4</p><h4>Simplify</h4><p>The winner is simplified and kept only if its dev score does not drop. This counters the build-up of patches.</p></div>
+  </div>
+  <p class="more"><a href="{{ '/design/' | relative_url }}">Full design: isolation, improvers, levels of recursion →</a></p>
+
+  <h2 id="domains">Benchmarks people already trust</h2>
+  <p>We prioritize the benchmarks the community reports on most often, so that every number is directly comparable with
+  published RL and VLA results.</p>
+  <div class="domains">
+    <div class="domain">
+      <h4>Games</h4>
+      <ul>
+        <li>Atari (RAM / image) <span class="badge done">running</span></li>
+        <li>VizDoom <span class="badge done">running</span></li>
+      </ul>
+      <p class="domain-note">Same suite as <em>Learning Beyond Gradients</em>, so results compare directly.</p>
+    </div>
+    <div class="domain">
+      <h4>Embodied robotics</h4>
+      <ul>
+        <li>MetaWorld · MuJoCo <span class="badge done">running</span></li>
+        <li>LIBERO <span class="badge wip">adapter</span></li>
+        <li>ManiSkill3 <span class="badge wip">adapter</span></li>
+        <li>SimplerEnv · RoboTwin 2.0 <span class="badge planned">planned</span></li>
+      </ul>
+      <p class="domain-note">State mode (object poses) and vision mode (RGB-D and camera parameters only).</p>
+    </div>
+    <div class="domain">
+      <h4>Computer use</h4>
+      <ul>
+        <li>OSWorld <span class="badge planned">planned</span></li>
+      </ul>
+      <p class="domain-note">A desktop agent with an app-level skill library, split by application.</p>
+    </div>
+  </div>
+  <p class="more"><a href="{{ '/environments/' | relative_url }}">Why these environments →</a></p>
+
+  <h2 id="results">Results</h2>
+  <p>Results are added as experiments finish. Rows marked <span class="legend-swatch best-swatch"></span> are the
+  promoted version. Grey rows are references.</p>
+  <div class="tabs" role="tablist">
+    <button class="on" data-tab="games" role="tab">Games</button>
+    <button data-tab="embodied" role="tab">Embodied</button>
+    <button data-tab="computer" role="tab">Computer use</button>
+  </div>
+  <div data-panel="games">
+    <figure class="table-figure">
+      <figcaption><strong>Table 1.</strong> Breakout (RAM observations, frame skip 4, no sticky actions), one generation
+      with one DeepSeek improver, 4 train / 8 hidden dev seeds. This is a <em>pipeline smoke test</em>, not a benchmark
+      claim.</figcaption>
+      <table>
+        <thead><tr><th>Version</th><th class="num">Train mean</th><th class="num">Dev mean</th><th class="num">Δ dev</th><th>Gate</th></tr></thead>
+        <tbody>
+          <tr class="ref"><td>Seed program (random actions)</td><td class="num">2.25</td><td class="num">2.13</td><td class="num">—</td><td>—</td></tr>
+          <tr class="best"><td>Generation 1</td><td class="num">14.75</td><td class="num"><strong>13.00</strong></td><td class="num delta">+10.88</td><td>promoted · won 6 / 8 seeds</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <div class="finding">
+      <p class="finding-label">What the program learned by itself</p>
+      <p>Its notes record that the ball must be served with FIRE, that frame skip calls for a paddle dead-band, and which
+      RAM bytes hold the paddle and ball positions, confirmed by measurement rather than assumed.</p>
+    </div>
+    <p class="pending">Full runs with all three improvers, more seeds and more generations are underway.</p>
+  </div>
+  <div data-panel="embodied" hidden>
+    <div class="empty">
+      <p class="empty-title">No results yet</p>
+      <p>LIBERO and ManiSkill3 run headless in our setup. Task adapters with state and vision modes are in progress.
+      MetaWorld and MuJoCo locomotion already run through the same loop.</p>
+    </div>
+  </div>
+  <div data-panel="computer" hidden>
+    <div class="empty">
+      <p class="empty-title">Planned</p>
+      <p>OSWorld comes after the embodied track, with parallel VMs and tasks split by application.</p>
+    </div>
+  </div>
+
+  <h2 id="progress">Progress</h2>
+  <ol class="timeline">
+  {% for post in site.posts limit:6 %}
+    <li>
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+      <a class="tl-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <p>{{ post.summary }}</p>
+      {% if post.tags.size > 0 %}<p class="tags">{% for tag in post.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</p>{% endif %}
+    </li>
+  {% endfor %}
+  </ol>
+  <p class="more"><a href="{{ '/progress/' | relative_url }}">All updates →</a></p>
+
+  <h2 id="roadmap">Roadmap</h2>
+  <table class="roadmap">
+    <tbody>
+      <tr><td><span class="badge done">done</span></td><td><strong>Phase 0, framework.</strong> Loop, isolated evaluator, three improver kinds, EnvPool families, first smoke run.</td></tr>
+      <tr><td><span class="badge wip">active</span></td><td><strong>Phase 1, games.</strong> Breakout, Pong, Montezuma; VizDoom; Atari57 under a fixed env-step budget, compared with PPO.</td></tr>
+      <tr><td><span class="badge wip">active</span></td><td><strong>Phase 2, embodied.</strong> LIBERO, ManiSkill3, SimplerEnv, RoboTwin 2.0; a cross-task skill library.</td></tr>
+      <tr><td><span class="badge planned">next</span></td><td><strong>Phase 3, computer use.</strong> OSWorld with parallel VMs and app-level skills.</td></tr>
+      <tr><td><span class="badge planned">next</span></td><td><strong>Phase 4, deeper recursion.</strong> Self-improving improvers, a learned pre-filter over program edits, optional weight updates.</td></tr>
+    </tbody>
+  </table>
+  <p class="more"><a href="{{ '/roadmap/' | relative_url }}">Full roadmap and open questions →</a></p>
+
+  <h2 id="bibtex">BibTeX</h2>
+  <p>The programme is ongoing. If you refer to it, please cite:</p>
+  <div class="bib-wrap">
+    <button class="copy" data-target="#bib">Copy</button>
+<pre class="bibtex" id="bib">@misc{nsrsianything2026,
+  title  = {NS-RSI-Anything: Recursive Self-Improvement of LLM-Written Programs
+            for Games, Embodied Robotics and Computer Use},
+  author = {SMU-DIGA},
+  year   = {2026},
+  howpublished = {\url{https://smu-diga.github.io/ns-rsi-anything-programme/}}
+}</pre>
+  </div>
+  <p>Questions and collaboration: please open an issue on <a href="https://github.com/{{ site.repository }}">GitHub</a>.</p>
+
+  </article>
+</div>

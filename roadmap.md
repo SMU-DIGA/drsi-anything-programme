@@ -1,9 +1,10 @@
 ---
 title: Roadmap
 permalink: /roadmap/
+kicker: Plan
+summary: "Phases of the programme and the research questions it is designed to answer."
+numbered: true
 ---
-
-# Roadmap
 
 ## Phase 0: framework (done)
 

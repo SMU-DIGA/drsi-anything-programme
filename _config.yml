@@ -16,11 +16,26 @@ nav:
     url: /environments/
   - title: Roadmap
     url: /roadmap/
+home_nav:
+  - title: TL;DR
+    url: "#tldr"
+  - title: Method
+    url: "#method"
+  - title: Domains
+    url: "#domains"
+  - title: Results
+    url: "#results"
+  - title: Progress
+    url: "#progress"
+  - title: Roadmap
+    url: "#roadmap"
+  - title: BibTeX
+    url: "#bibtex"
 defaults:
   - scope:
       path: ""
     values:
-      layout: default
+      layout: article
   - scope:
       type: posts
     values:

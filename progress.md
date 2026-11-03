@@ -1,20 +1,17 @@
 ---
 title: Progress
 permalink: /progress/
+kicker: Log
+summary: Dated updates on the programme, newest first.
 ---
 
-# Progress
-
-Dated updates on the programme, newest first. Each entry is a Markdown file in
-[`_posts/`](https://github.com/{{ site.repository }}/tree/main/_posts).
-
-<ul class="log">
+<ol class="timeline">
 {% for post in site.posts %}
   <li>
-    <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
-    · <a class="title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
-    {% for tag in post.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
-    <p class="summary">{{ post.summary }}</p>
+    <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+    <a class="tl-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    <p>{{ post.summary }}</p>
+    {% if post.tags.size > 0 %}<p class="tags">{% for tag in post.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</p>{% endif %}
   </li>
 {% endfor %}
-</ul>
+</ol>

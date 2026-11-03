@@ -13,7 +13,7 @@ tags: [framework, games]
 - **Isolated evaluator.** The environment and the score live in one process; the LLM-written policy runs
   in another, on a fresh copy of its files, and only receives observations. Tests cover crashes,
   timeouts, a policy rewriting its own files, and hiding Atari RAM in image mode.
-- **Improvers.** Codex CLI (`workspace-write` sandbox), Claude Code (headless, narrow tool allow-list), and
+- **Improvers.** Codex CLI (write-restricted sandbox), Claude Code (headless, narrow tool allow-list), and
   any OpenAI-compatible chat API in a multi-round "send files → get scores back" loop.
 - **Tasks.** Atari, VizDoom, MuJoCo and MetaWorld via EnvPool 1.2.5, each with a trivial seed program.
 
@@ -23,7 +23,7 @@ tags: [framework, games]
 |---|---|
 | Task | Breakout-v5, RAM observations, frame skip 4, no sticky actions |
 | Seeds | 4 train / 8 dev |
-| Improver | DeepSeek (`deepseek-flash`), 2 inner rounds |
+| Improver | DeepSeek (flash model), 2 inner rounds |
 | Generations | 1 |
 
 | Version | Train mean | Dev mean |
@@ -31,7 +31,7 @@ tags: [framework, games]
 | seed program (random actions) | 2.25 | 2.13 |
 | generation 1 | 14.75 | **13.00** (promoted; won 6 of 8 seeds, bootstrap P(gain) ≈ 1.0) |
 
-The improver wrote down facts it worked out in the program's `NOTES.md`: the ball must be served with
+The improver wrote down facts it worked out in the program's notes: the ball must be served with
 FIRE, the paddle needs a deadband because of frame skip, and which RAM bytes hold the paddle and ball
 positions, confirmed by measurement rather than assumed.
 

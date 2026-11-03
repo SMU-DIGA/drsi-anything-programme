@@ -4,29 +4,86 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% if page.title and page.url != "/" %}{{ page.title }} · {% endif %}{{ site.title }}</title>
-  <meta name="description" content="{{ page.description | default: site.description }}">
+  <meta name="description" content="{{ page.summary | default: page.description | default: site.description }}">
   <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrap">
-      <a class="brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark">NS</span>-RSI-Anything</a>
       <nav>
+        {% if page.url == "/" %}
+        {% for item in site.home_nav %}<a href="{{ item.url }}">{{ item.title }}</a>{% endfor %}
+        <span class="nav-sep"></span>
+        <a href="{{ '/progress/' | relative_url }}">Log</a>
+        {% else %}
         {% for item in site.nav %}
         {% assign active = false %}
         {% if item.url == "/" and page.url == "/" %}{% assign active = true %}{% endif %}
         {% if item.url != "/" and page.url contains item.url %}{% assign active = true %}{% endif %}
         <a href="{{ item.url | relative_url }}"{% if active %} class="active"{% endif %}>{{ item.title }}</a>
         {% endfor %}
+        {% endif %}
         <a href="https://github.com/{{ site.repository }}">GitHub</a>
       </nav>
     </div>
   </header>
-  <main class="wrap">
-    {{ content }}
-  </main>
-  <footer class="wrap">
-    <p>SMU-DIGA · <a href="https://github.com/{{ site.repository }}">{{ site.repository }}</a> · MIT License</p>
+  {{ content }}
+  <footer class="site-footer">
+    <p><strong>SMU-DIGA</strong> · <a href="https://github.com/{{ site.repository }}">GitHub</a> · <a href="{{ '/progress/' | relative_url }}">Progress log</a> · <a href="https://github.com/Gen-Verse/RSI-Anything">RSI-Anything</a> · <a href="https://trinkle23897.github.io/learning-beyond-gradients/">Learning Beyond Gradients</a></p>
+    <p class="footnote">All numbers on this site come from our own runs. Pipeline smoke tests are labelled as such and are not benchmark claims. Content released under the MIT License.</p>
   </footer>
+  <script>
+  // Sticky table of contents built from the article's section headings (no external scripts).
+  (function () {
+    var body = document.querySelector('.article-body');
+    var toc = document.querySelector('.toc nav');
+    if (!body || !toc) return;
+    var numbered = body.hasAttribute('data-numbered');
+    var heads = body.querySelectorAll(':scope > h2, :scope > h3');
+    if (!heads.length) { document.querySelector('.toc').remove(); return; }
+    var n2 = 0, n3 = 0;
+    heads.forEach(function (h) {
+      if (!h.id) h.id = h.textContent.trim().toLowerCase().replace(/[^\w]+/g, '-').replace(/^-|-$/g, '');
+      var num = '';
+      if (numbered) {
+        if (h.tagName === 'H2') { n2 += 1; n3 = 0; num = (n2 < 10 ? '0' : '') + n2; }
+        else { n3 += 1; num = n2 + '.' + n3; }
+        h.setAttribute('data-num', num);
+      }
+      var a = document.createElement('a');
+      a.href = '#' + h.id;
+      a.className = h.tagName.toLowerCase();
+      if (num) { var s = document.createElement('span'); s.className = 'num'; s.textContent = num; a.appendChild(s); }
+      a.appendChild(document.createTextNode(h.textContent));
+      toc.appendChild(a);
+    });
+    var links = toc.querySelectorAll('a');
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        links.forEach(function (l) { l.classList.toggle('current', l.getAttribute('href') === '#' + e.target.id); });
+      });
+    }, { rootMargin: '0px 0px -75% 0px' });
+    heads.forEach(function (h) { obs.observe(h); });
+  })();
+  // Result tabs and BibTeX copy button.
+  document.querySelectorAll('.tabs').forEach(function (tabs) {
+    var buttons = tabs.querySelectorAll('[data-tab]');
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        buttons.forEach(function (x) { x.classList.toggle('on', x === b); });
+        document.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== b.getAttribute('data-tab'); });
+      });
+    });
+  });
+  document.querySelectorAll('.copy').forEach(function (b) {
+    b.addEventListener('click', function () {
+      navigator.clipboard.writeText(document.querySelector(b.getAttribute('data-target')).textContent).then(function () {
+        b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500);
+      });
+    });
+  });
+  </script>
 </body>
 </html>

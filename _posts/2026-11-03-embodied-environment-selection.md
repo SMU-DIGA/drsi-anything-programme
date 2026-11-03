@@ -24,8 +24,7 @@ build their own skills.
 
 ## Status
 
-- **LIBERO** runs headless with EGL rendering. Observations include per-object poses (e.g.
-  `akita_black_bowl_1_pos`), which makes a state-based mode straightforward. It runs at about 27 steps/s
+- **LIBERO** runs headless with EGL rendering. Observations include the pose of every object in the scene, which makes a state-based mode straightforward. It runs at about 27 steps/s
   with two cameras.
 - **ManiSkill3** runs in both state and RGB modes.
 

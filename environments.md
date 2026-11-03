@@ -1,9 +1,10 @@
 ---
 title: Environments
 permalink: /environments/
+kicker: Benchmarks
+summary: "Games, embodied robotics and computer use, chosen from the benchmarks the community reports on most often."
+numbered: true
 ---
-
-# Environments
 
 The selection favors **widely adopted, community-recognized benchmarks**, so that results are comparable
 with published RL and VLA numbers.
@@ -31,7 +32,7 @@ Following *Learning Beyond Gradients*, all games run through [EnvPool](https://g
 
 Each embodied task will offer two observation modes:
 
-- **state**: object poses and proprioception, for example LIBERO's `*_pos` / `*_quat` keys. This tests
+- **state**: object poses and proprioception, for example LIBERO's per-object position and orientation. This tests
   the self-improvement loop itself.
 - **vision**: RGB-D, camera intrinsics and extrinsics, and proprioception only, without privileged scene
   state. This is the setting comparable to VLA results.

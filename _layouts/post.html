@@ -1,8 +1,16 @@
 ---
 layout: default
 ---
-<article class="post">
-  <p class="meta"><a href="{{ '/progress/' | relative_url }}">← Progress</a> · <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time>{% if page.tags.size > 0 %} · {% for tag in page.tags %}<span class="tag">{{ tag }}</span>{% endfor %}{% endif %}</p>
+<section class="page-hero">
+  <p class="kicker"><a href="{{ '/progress/' | relative_url }}">Progress update</a> · <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time></p>
   <h1>{{ page.title }}</h1>
-  {{ content }}
-</article>
+  {% if page.summary %}<p class="subtitle">{{ page.summary }}</p>{% endif %}
+  {% if page.tags.size > 0 %}<p class="tags">{% for tag in page.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</p>{% endif %}
+</section>
+<div class="article-layout">
+  <aside class="toc"><p class="toc-title">Contents</p><nav></nav></aside>
+  <article class="article-body">
+    {{ content }}
+    <p class="back"><a href="{{ '/progress/' | relative_url }}">← All progress updates</a></p>
+  </article>
+</div>
