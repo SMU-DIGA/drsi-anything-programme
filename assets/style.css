@@ -199,8 +199,8 @@ details.update[open] > summary::before { content: "− "; }
 .tldr-block { max-width: 1060px; margin: 48px auto 0; padding: 0 24px; }
 .tldr-block .tldr { margin: 0 auto; max-width: none; }
 .stats { margin-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
-.stat { border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; background: var(--bg); }
-.stat-num { margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 700; font-size: clamp(28px, 2.6vw, 36px); line-height: 1.1; color: var(--accent-ink); }
+.stat { border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; background: var(--bg); container-type: inline-size; min-width: 0; }
+.stat-num { margin: 0; white-space: nowrap; font-family: var(--display); font-weight: 700; font-size: clamp(28px, 2.6vw, 36px); font-size: clamp(20px, 15cqi, 36px); line-height: 1.1; color: var(--accent-ink); }
 .stat-num .arrow { color: var(--faint); font-weight: 400; }
 .stat-label { margin: 8px 0 2px; font-weight: 650; font-size: 15px; }
 .stat-sub { margin: 0; font-size: 13.5px; color: var(--muted); }
