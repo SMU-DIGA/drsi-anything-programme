@@ -38,12 +38,12 @@ the implementation is not public.
 | RSI loop, archive, promotion gate, resume, env-step ledger | Done |
 | Isolated evaluator (policy in a separate process, no access to reward or seed) | Done |
 | Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
-| Games: Atari (Breakout RAM experiment) | Running |
+| Games: Atari, Breakout RAM (849.9 on hidden dev seeds after 2 generations) | Running |
 | Games: VizDoom | Done |
 | Embodied robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
-| Embodied robotics: LIBERO (LIBERO-Spatial experiment) | Running |
+| Embodied robotics: LIBERO (Spatial state 99.0% test; Spatial vision 95.0% dev; LIBERO-10 state 100% dev) | Running |
 | Embodied robotics: SimplerEnv, RoboTwin 2.0 | Planned |
-| Computer use: OSWorld | Planned |
+| Computer use: OSWorld (agent harness around a fixed 2B model) | In progress |
 
 Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).
 

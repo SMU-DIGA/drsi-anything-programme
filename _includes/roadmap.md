@@ -32,7 +32,7 @@
 
 <span class="badge planned">Planned</span>
 
-- <span class="check" aria-label="open">○</span> OSWorld adapter with parallel VMs, split by application
+- <span class="check" aria-label="open">○</span> OSWorld adapter with parallel VMs and a fixed small model inside the program (in progress)
 - <span class="check" aria-label="open">○</span> App-level skill library
 
 ### Phase 4: Deeper recursion

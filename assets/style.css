@@ -240,3 +240,19 @@ td.delta { color: var(--good); font-weight: 650; }
 .copy { position: absolute; top: 10px; right: 10px; font: 600 12.5px var(--sans); padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--bg); color: var(--fg); cursor: pointer; }
 .site-footer .footnote { margin-top: 8px; font-size: 13px; }
 @media (max-width: 860px) { .topbar nav { display: flex; flex-wrap: wrap; } .nav-sep { display: none; } }
+
+/* RSI curves: small multiples, one per setting */
+.curves { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 18px 0 6px; }
+.curve { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 6px 4px 0; }
+.curve svg { display: block; width: 100%; height: auto; overflow: visible; }
+.c-title { font: 700 15px var(--sans); fill: var(--fg); }
+.c-tick, .c-val, .c-ref-label { font: 12px var(--mono); fill: var(--muted); }
+.c-val { fill: var(--fg); font-weight: 600; }
+.c-val, .c-ref-label { paint-order: stroke; stroke: var(--panel); stroke-width: 5px; stroke-linejoin: round; }
+.c-grid { stroke: var(--border); stroke-width: 1; }
+.c-ref { stroke: var(--faint); stroke-width: 1.5; stroke-dasharray: 4 4; }
+.c-line { fill: none; stroke: var(--accent); stroke-width: 2; stroke-linejoin: round; }
+.c-dot { fill: var(--accent); stroke: var(--panel); stroke-width: 2; }
+.c-hit { fill: transparent; }
+.c-pt:hover .c-dot { r: 6; }
+.results-table td.note { color: var(--muted); font-size: 14px; }

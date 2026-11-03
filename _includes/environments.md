@@ -38,4 +38,4 @@ feedback and skill synthesis recover much of the gap.
 
 | Benchmark | Plan | Status |
 |---|---|---|
-| **OSWorld** | The program is a desktop agent: screenshot and accessibility-tree parsing, plus pyautogui actions and an app-level skill library. Scored by OSWorld's own task checkers. Tasks are split by application to prevent overfitting. Many VMs run in parallel. | <span class="badge planned">Planned</span> |
+| **OSWorld** | The program is a desktop agent harness around one fixed small model (Qwen3.5-2B): screenshot and accessibility-tree parsing, pyautogui actions and per-application skills. Only the code is improved, never the model. Scored by OSWorld's own task checkers. First apps: LibreOffice Calc and OS, with tasks split into train, dev and test. | <span class="badge wip">In progress</span> |

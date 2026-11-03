@@ -26,12 +26,12 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 | RSI 主循环、版本库、晋升门槛、断点续跑、环境步数统计 | Done |
 | 隔离评测：策略运行在独立进程，拿不到 reward 和 seed | Done |
 | Improver：Codex CLI、Claude Code、OpenAI 兼容 API（DeepSeek） | Done |
-| 游戏：Atari（Breakout RAM 实验） | Running |
+| 游戏：Atari，Breakout RAM（2 代后隐藏 dev seed 平均 849.9） | Running |
 | 游戏：VizDoom | Done |
 | 具身机器人：MuJoCo 运动控制、MetaWorld、ManiSkill3 | Done |
-| 具身机器人：LIBERO（LIBERO-Spatial 实验） | Running |
+| 具身机器人：LIBERO（Spatial state test 99.0%；Spatial vision dev 95.0%；LIBERO-10 state dev 100%） | Running |
 | 具身机器人：SimplerEnv、RoboTwin 2.0 | Planned |
-| 计算机操作：OSWorld | Planned |
+| 计算机操作：OSWorld（围绕固定 2B 小模型的智能体框架） | In progress |
 
 状态：Done（已接入并测试）· Running（实验进行中）· In progress（开发中）· Planned（尚未开始）。
 
