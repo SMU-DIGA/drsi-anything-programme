@@ -140,6 +140,7 @@ table.roadmap td:first-child { width: 90px; }
 /* badges and tags */
 .badge { flex: none; display: inline-block; line-height: 1.6; font-size: 12px; font-weight: 700; padding: 1px 9px; border-radius: 999px; white-space: nowrap; vertical-align: 1px; }
 .badge.done { background: var(--good-soft); color: var(--good); }
+.badge.running { background: var(--accent-soft); color: var(--accent-ink); }
 .badge.wip { background: var(--warn-soft); color: var(--warn); }
 .badge.planned { background: var(--panel-2); color: var(--muted); }
 .tag { display: inline-block; font-size: 12px; padding: 1px 9px; margin-right: 6px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); }

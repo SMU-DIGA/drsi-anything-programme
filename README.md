@@ -33,15 +33,19 @@ Work in progress. The core loop and the EnvPool task families work end to end. S
 [roadmap](roadmap.md) for what remains. This repository hosts the programme's documents and results;
 the implementation is not public.
 
-| Component | State |
+| Component | Status |
 |---|---|
-| RSI loop, archive, promotion gate, resume, env-step ledger | done |
-| Isolated evaluator (policy in a separate process, no access to reward or seed) | done, tested |
-| Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | done; API path verified end to end |
-| Games: Atari (RAM / image), VizDoom (EnvPool) | done |
-| Robotics: MuJoCo locomotion, MetaWorld (EnvPool) | done |
-| Robotics: LIBERO, ManiSkill3, SimplerEnv, RoboTwin 2.0 | simulators verified; adapters in progress |
-| Computer use: OSWorld | planned |
+| RSI loop, archive, promotion gate, resume, env-step ledger | Done |
+| Isolated evaluator (policy in a separate process, no access to reward or seed) | Done |
+| Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
+| Games: Atari (Breakout RAM experiment) | Running |
+| Games: VizDoom | Done |
+| Robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
+| Robotics: LIBERO (LIBERO-Spatial experiment) | Running |
+| Robotics: SimplerEnv, RoboTwin 2.0 | Planned |
+| Computer use: OSWorld | Planned |
+
+Status vocabulary: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned.
 
 First smoke test (Breakout, RAM observations, one generation, one DeepSeek improver): hidden dev mean
 went from 2.1 (random seed program) to 13.0. Along the way the program wrote down facts it discovered,

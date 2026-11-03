@@ -6,7 +6,9 @@ summary: "Phases of the programme and the research questions it is designed to a
 numbered: true
 ---
 
-## Phase 0: framework (done)
+## Phase 0: framework
+
+<span class="badge done">Done</span>
 
 - [x] RSI loop with archive, promotion gate, simplification pass, resume, env-step budget
 - [x] Isolated evaluator, with tests for crashes, timeouts, artifact tampering and observation filtering
@@ -16,25 +18,34 @@ numbered: true
 
 ## Phase 1: games
 
-- [ ] Breakout, Pong, Montezuma (RAM and image) with all three improvers; compare against *Learning Beyond Gradients*
+<span class="badge running">Running</span>
+
+- [ ] Breakout, Pong, Montezuma (RAM and image) with all three improvers (Breakout RAM running); compare against *Learning Beyond Gradients*
 - [ ] VizDoom D1/D3, MuJoCo Ant/HalfCheetah
 - [ ] Atari57 sweep with a fixed env-step budget, reporting human-normalized scores against PPO curves
 - [ ] Ablations: single improver vs. mixed population; with and without shared history; with and without simplification
 
 ## Phase 2: embodied robotics
 
-- [ ] LIBERO adapter (state and vision modes), all four suites
-- [ ] ManiSkill3 adapter (PickCube, StackCube, PegInsertionSide, PushT, …)
+<span class="badge wip">In progress</span>
+
+- [x] LIBERO adapter (state and vision modes), all four suites
+- [ ] LIBERO-Spatial (state) self-improvement run (running)
+- [x] ManiSkill3 adapter (PickCube, StackCube, PegInsertionSide, …)
 - [ ] SimplerEnv (Google Robot, WidowX)
 - [ ] RoboTwin 2.0 (bimanual)
 - [ ] L2: a cross-task skill library distilled from train tasks and reused on held-out tasks
 
 ## Phase 3: computer use
 
+<span class="badge planned">Planned</span>
+
 - [ ] OSWorld adapter with parallel VMs, split by application
 - [ ] App-level skill library
 
 ## Phase 4: deeper recursion
+
+<span class="badge planned">Planned</span>
 
 - [ ] L3: self-improving improver (prompts, feedback format, search strategy), selected by meta-evaluation
 - [ ] Learned pre-filter ("world model over program edits") for expensive domains

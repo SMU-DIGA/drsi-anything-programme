@@ -13,22 +13,22 @@ with published RL and VLA numbers.
 
 Following *Learning Beyond Gradients*, all games run through [EnvPool](https://github.com/sail-sg/envpool) (1.2.5).
 
-| Family | Tasks | Observation | Score |
-|---|---|---|---|
-| Atari (ALE) | Breakout, Pong, Montezuma's Revenge, … Atari57 | RAM (128 bytes), RGB image, or both | episode return (unclipped, no sticky actions, full game) |
-| VizDoom | D1 Basic, D3 Battle | stacked screen + game variables | episode return |
+| Family | Tasks | Observation | Score | Status |
+|---|---|---|---|---|
+| Atari (ALE) | Breakout, Pong, Montezuma's Revenge, … Atari57 | RAM (128 bytes), RGB image, or both | episode return (unclipped, no sticky actions, full game) | <span class="badge running">Running</span> |
+| VizDoom | D1 Basic, D3 Battle | stacked screen + game variables | episode return | <span class="badge done">Done</span> |
 
 ## Embodied robotics (simulation)
 
-| Benchmark | Why it matters | Integration |
+| Benchmark | Why it matters | Status |
 |---|---|---|
-| **LIBERO** (Spatial / Object / Goal / Long, LIBERO-90) | The most widely reported simulation benchmark for VLA policies (OpenVLA, OpenVLA-OFT, π0, π0.5, …) | Verified (robosuite 1.4 + MuJoCo 2.3.7, EGL rendering); adapter in progress |
-| **ManiSkill3** | The standard GPU-parallel manipulation platform for RL and imitation learning; SimplerEnv is built on it | Verified (state and RGB); adapter in progress |
-| **SimplerEnv** | Real-to-sim evaluation that correlates with real Google Robot and WidowX/Bridge results | Planned (on top of ManiSkill) |
-| **RoboTwin 2.0** | Main bimanual manipulation benchmark | Planned |
-| **MetaWorld** (50 tasks) | Classic multi-task RL benchmark | Done (EnvPool) |
-| **MuJoCo locomotion** (Ant, HalfCheetah, …) | Classic continuous control | Done (EnvPool) |
-| CALVIN, RLBench, BEHAVIOR-1K, Habitat | Long-horizon, household and navigation settings | Later; heavier to set up |
+| **LIBERO** (Spatial / Object / Goal / Long, LIBERO-90) | The most widely reported simulation benchmark for VLA policies (OpenVLA, OpenVLA-OFT, π0, π0.5, …) | <span class="badge running">Running</span> |
+| **ManiSkill3** | The standard GPU-parallel manipulation platform for RL and imitation learning; SimplerEnv is built on it | <span class="badge done">Done</span> |
+| **SimplerEnv** | Real-to-sim evaluation that correlates with real Google Robot and WidowX/Bridge results; built on ManiSkill | <span class="badge planned">Planned</span> |
+| **RoboTwin 2.0** | Main bimanual manipulation benchmark | <span class="badge planned">Planned</span> |
+| **MetaWorld** (50 tasks) | Classic multi-task RL benchmark | <span class="badge done">Done</span> |
+| **MuJoCo locomotion** (Ant, HalfCheetah, …) | Classic continuous control | <span class="badge done">Done</span> |
+| CALVIN, RLBench, BEHAVIOR-1K, Habitat | Long-horizon, household and navigation settings; heavier to set up | <span class="badge planned">Planned</span> |
 
 Each embodied task will offer two observation modes:
 

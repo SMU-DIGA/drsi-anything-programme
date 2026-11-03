@@ -79,25 +79,25 @@ layout: default
     <div class="domain">
       <h4>Games</h4>
       <ul>
-        <li>Atari (RAM / image) <span class="badge done">running</span></li>
-        <li>VizDoom <span class="badge done">running</span></li>
+        <li>Atari (RAM / image) <span class="badge running">Running</span></li>
+        <li>VizDoom <span class="badge done">Done</span></li>
       </ul>
       <p class="domain-note">Same suite as <em>Learning Beyond Gradients</em>, so results compare directly.</p>
     </div>
     <div class="domain">
       <h4>Embodied robotics</h4>
       <ul>
-        <li>MetaWorld · MuJoCo <span class="badge done">running</span></li>
-        <li>LIBERO <span class="badge wip">adapter</span></li>
-        <li>ManiSkill3 <span class="badge wip">adapter</span></li>
-        <li>SimplerEnv · RoboTwin 2.0 <span class="badge planned">planned</span></li>
+        <li>MetaWorld · MuJoCo <span class="badge done">Done</span></li>
+        <li>LIBERO <span class="badge running">Running</span></li>
+        <li>ManiSkill3 <span class="badge done">Done</span></li>
+        <li>SimplerEnv · RoboTwin 2.0 <span class="badge planned">Planned</span></li>
       </ul>
       <p class="domain-note">State mode (object poses) and vision mode (RGB-D and camera parameters only).</p>
     </div>
     <div class="domain">
       <h4>Computer use</h4>
       <ul>
-        <li>OSWorld <span class="badge planned">planned</span></li>
+        <li>OSWorld <span class="badge planned">Planned</span></li>
       </ul>
       <p class="domain-note">A desktop agent with an app-level skill library, split by application.</p>
     </div>
@@ -162,11 +162,11 @@ layout: default
   <h2 id="roadmap">Roadmap</h2>
   <table class="roadmap">
     <tbody>
-      <tr><td><span class="badge done">done</span></td><td><strong>Phase 0, framework.</strong> Loop, isolated evaluator, three improver kinds, EnvPool families, first smoke run.</td></tr>
-      <tr><td><span class="badge wip">active</span></td><td><strong>Phase 1, games.</strong> Breakout, Pong, Montezuma; VizDoom; Atari57 under a fixed env-step budget, compared with PPO.</td></tr>
-      <tr><td><span class="badge wip">active</span></td><td><strong>Phase 2, embodied.</strong> LIBERO, ManiSkill3, SimplerEnv, RoboTwin 2.0; a cross-task skill library.</td></tr>
-      <tr><td><span class="badge planned">next</span></td><td><strong>Phase 3, computer use.</strong> OSWorld with parallel VMs and app-level skills.</td></tr>
-      <tr><td><span class="badge planned">next</span></td><td><strong>Phase 4, deeper recursion.</strong> Self-improving improvers, a learned pre-filter over program edits, optional weight updates.</td></tr>
+      <tr><td><span class="badge done">Done</span></td><td><strong>Phase 0, framework.</strong> Loop, isolated evaluator, three improver kinds, EnvPool families, first smoke run.</td></tr>
+      <tr><td><span class="badge running">Running</span></td><td><strong>Phase 1, games.</strong> Breakout, Pong, Montezuma; VizDoom; Atari57 under a fixed env-step budget, compared with PPO.</td></tr>
+      <tr><td><span class="badge wip">In progress</span></td><td><strong>Phase 2, embodied.</strong> LIBERO, ManiSkill3, SimplerEnv, RoboTwin 2.0; a cross-task skill library.</td></tr>
+      <tr><td><span class="badge planned">Planned</span></td><td><strong>Phase 3, computer use.</strong> OSWorld with parallel VMs and app-level skills.</td></tr>
+      <tr><td><span class="badge planned">Planned</span></td><td><strong>Phase 4, deeper recursion.</strong> Self-improving improvers, a learned pre-filter over program edits, optional weight updates.</td></tr>
     </tbody>
   </table>
   <p class="more"><a href="{{ '/roadmap/' | relative_url }}">Full roadmap and open questions →</a></p>
