@@ -1,0 +1,9 @@
+api_keys/
+.venv*/
+.libero/
+runs/
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+_vizdoom.ini

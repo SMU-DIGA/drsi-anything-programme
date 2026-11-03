@@ -1,0 +1,27 @@
+title: NS-RSI-Anything
+description: Recursive self-improvement of LLM-written programs for games, embodied robotics and computer use.
+baseurl: /ns-rsi-anything-programme
+url: https://smu-diga.github.io
+repository: SMU-DIGA/ns-rsi-anything-programme
+markdown: kramdown
+permalink: /progress/:year/:month/:day/:title/
+nav:
+  - title: Overview
+    url: /
+  - title: Progress
+    url: /progress/
+  - title: Design
+    url: /design/
+  - title: Environments
+    url: /environments/
+  - title: Roadmap
+    url: /roadmap/
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+  - scope:
+      type: posts
+    values:
+      layout: post
