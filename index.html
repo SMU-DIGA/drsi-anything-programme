@@ -31,7 +31,7 @@ layout: default
   <div class="stats">
     <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input</p></div>
     <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>
-    <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 29,688</p><p class="stat-label">Ms. Pac-Man, hidden dev</p><p class="stat-sub">5 promotions in a row · human reference 6,952</p></div>
+    <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 32,295</p><p class="stat-label">Ms. Pac-Man, hidden dev</p><p class="stat-sub">7 promotions in a row · human reference 6,952</p></div>
     <div class="stat"><p class="stat-num">4</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari · poker · LIBERO robotics · OSWorld</p></div>
   </div>
 </section>
@@ -121,14 +121,15 @@ layout: default
     <table>
       <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
       <tbody>
-        <tr><td>Claude Code (agent with tools)</td><td class="num">7</td><td>Breakout g1 · Pong g1 · Space Invaders g1 · LIBERO-Spatial state g1 · LIBERO-Spatial vision g1 · LIBERO-10 g1 · OSWorld (pure code) g1</td></tr>
-        <tr><td>Codex CLI (agent with tools)</td><td class="num">11</td><td>Breakout g2, g4 · Ms. Pac-Man g1–g5 · Montezuma's Revenge g1, g2 · Leduc variants g1 · LIBERO-Spatial vision g2</td></tr>
+        <tr><td>Claude Code (agent with tools)</td><td class="num">9</td><td>Breakout g1 · Pong g1 · Space Invaders g1, g2 · Montezuma's Revenge g5 · LIBERO-Spatial state g1 · LIBERO-Spatial vision g1 · LIBERO-10 g1 · OSWorld (pure code) g1</td></tr>
+        <tr><td>Codex CLI (agent with tools)</td><td class="num">16</td><td>Breakout g2, g4 · Ms. Pac-Man g1–g7 · Montezuma's Revenge g1, g2, g4 · Leduc variants g1–g3 · LIBERO-Spatial vision g2</td></tr>
         <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">0</td><td>closest: Breakout g2 candidate, 849.8 on train</td></tr>
       </tbody>
     </table>
   </figure>
   <p>Rows marked <span class="legend-swatch best-swatch"></span> are promoted versions. Grey rows are references.
   Curves follow the incumbent on hidden dev; dashed lines are references; hover a point for its value.</p>
+  <p class="prog-link"><a class="pill" href="{{ '/programs/' | relative_url }}">Read the learned programs: what each champion discovered, with full source →</a></p>
   <div class="tabs" role="tablist">
     <button class="on" data-tab="games" role="tab">Games</button>
     <button data-tab="embodied" role="tab">Embodied robotics</button>
@@ -145,9 +146,9 @@ layout: default
         <tbody>
           <tr class="best"><td>Breakout</td><td class="num">2.5</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num">30.5</td><td>done after 4 generations</td></tr>
           <tr class="best"><td>Pong</td><td class="num">−19.9</td><td class="num">21.0</td><td class="num"><strong>21.0</strong></td><td class="num">14.6</td><td>done: maximum in generation 1</td></tr>
-          <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num"><strong>29,688</strong></td><td class="num">after the run</td><td class="num">6,952</td><td>5 promotions in 5 generations; running</td></tr>
-          <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>14,144</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>promoted in generations 1 and 2; running</td></tr>
-          <tr class="best"><td>Space Invaders</td><td class="num">112.0</td><td class="num"><strong>35,493</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generation 1; running</td></tr>
+          <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num"><strong>32,295</strong></td><td class="num">after the run</td><td class="num">6,952</td><td>7 promotions in 7 generations; running</td></tr>
+          <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>31,800</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>promoted in generations 1, 2, 4 and 5; running</td></tr>
+          <tr class="best"><td>Space Invaders</td><td class="num">112.0</td><td class="num"><strong>43,869</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generations 1 and 2; running</td></tr>
           <tr><td>Seaquest</td><td colspan="5">queued; starts when a running game finishes</td></tr>
           <tr class="ref"><td colspan="2"><em>Learning Beyond Gradients</em></td><td class="num" colspan="3">Breakout 864 (seed 0) · Pong 21 · Montezuma 400</td><td>different protocol</td></tr>
         </tbody>
@@ -168,9 +169,9 @@ layout: default
       </table>
     </figure>
     <div class="finding">
-      <p class="finding-label">Recursive improvement, five generations in a row</p>
-      <p>Ms. Pac-Man was promoted in every generation so far: 17,207, 19,173, 20,031, 25,663, then 29,688 on hidden
-      dev, each version built on the previous one and each winning the paired dev test. The first program decoded
+      <p class="finding-label">Recursive improvement, seven generations in a row</p>
+      <p>Ms. Pac-Man was promoted in every generation so far: 17,207, 19,173, 20,031, 25,663, 29,688, 30,715, then
+      32,295 on hidden dev, each version built on the previous one and each winning the paired dev test. The first program decoded
       the maze, dots and ghosts from RAM and planned over a maze graph. Later generations added escapes at junctions
       when a ghost is close, detours for fruit (worth up to 5,000 points on later boards) and more cautious routing
       after quick life losses; the changelog also records ideas that were tried and discarded, such as chasing
@@ -206,7 +207,7 @@ layout: default
       <table>
         <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
         <tbody>
-          <tr class="best"><td>Leduc variants (NashConv / max raise ↓)</td><td class="num">1.381 (uniform)</td><td class="num"><strong>0.154</strong></td><td class="num">after the run</td><td>generation 2 running</td></tr>
+          <tr class="best"><td>Leduc variants (NashConv / max raise ↓)</td><td class="num">1.381 (uniform)</td><td class="num"><strong>0.138</strong></td><td class="num">after the run</td><td>promoted in generations 1–3; running</td></tr>
           <tr><td>HUNL (mbb/hand ↑)</td><td class="num">−1,240 (always call)</td><td class="num">—</td><td class="num">—</td><td>restarted, see below</td></tr>
         </tbody>
       </table>
@@ -234,7 +235,7 @@ layout: default
         <tbody>
           <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">0%</td><td class="num">100%</td><td class="num"><strong>99.0%</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
           <tr class="best"><td>LIBERO-10 (long-horizon) · state</td><td class="num">0%</td><td class="num">100%</td><td class="num"><strong>99.0%</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
-          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0%</td><td class="num"><strong>95.0%</strong></td><td class="num">after the run</td><td>generation 6 running</td></tr>
+          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0%</td><td class="num">95.0%</td><td class="num"><strong>95.3%</strong> (381 / 400)</td><td>done after 10 generations</td></tr>
           <tr class="ref"><td>OpenVLA, fine-tuned (RGB; Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">84.7% / 53.7%</td><td>—</td></tr>
           <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">97.6% / 94.5%</td><td>—</td></tr>
         </tbody>
@@ -255,14 +256,14 @@ layout: default
       table on the first step, which no policy can solve.</p>
     </div>
     <p class="pending">LIBERO-Spatial vision finished its 10 generations at 95.0% on dev. In the last generation two
-    candidates reached 96.3%, but one extra win was not enough for the paired gate. Its test evaluation is running.
-    ManiSkill3 is queued.</p>
+    candidates reached 96.3%, but one extra win was not enough for the paired gate. On the 400 test episodes it scored
+    95.3%, in line with dev. ManiSkill3 is queued.</p>
   </div>
   <div data-panel="computer" hidden>
     <div class="empty">
-      <p class="empty-title">Running: generation 2</p>
+      <p class="empty-title">Running: generation 3</p>
       <p>Generation 1: the pure-code setting promoted a Claude Code program at <strong>2 / 24 dev tasks (8.3%)</strong>,
-      from 0; it scored 56.5% on the train tasks. It is a skill library: regular-expression parsers map an instruction
+      from 0; it scored 65% on the train tasks. It is a skill library: regular-expression parsers map an instruction
       to a generic skill (fill blanks, sort, freeze panes, rename a sheet, export to CSV or PDF), which scripts
       LibreOffice through its UNO interface. Dev tasks mostly need skills that no train task exercised, hence the gap.
       The setting with the small decision model had no promotion yet.</p>

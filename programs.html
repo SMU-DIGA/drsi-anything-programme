@@ -1,0 +1,18 @@
+---
+title: Learned programs
+permalink: /programs/
+layout: default
+---
+<link rel="stylesheet" href="{{ '/assets/code.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+<section class="article prog-page">
+  <p class="kicker"><a href="{{ '/#results' | relative_url }}">← Results</a></p>
+  <h1>What the programs learned</h1>
+  <p class="prog-lede">Every result on this site is produced by a readable program. These are the current
+  champions: the latest version of each task that won the paired test on hidden dev seeds. For each one we
+  summarise in plain words what the improvers discovered, show the most telling excerpt, and give the full source.
+  The code is exactly what was evaluated; only the improvers' private notes are left out.</p>
+  <nav class="prog-toc">
+    <a href="#breakout">Breakout</a><a href="#pong">Pong</a><a href="#ms-pacman">Ms. Pac-Man</a><a href="#montezuma">Montezuma's Revenge</a><a href="#space-invaders">Space Invaders</a><a href="#leduc">Leduc poker</a><a href="#libero-spatial-state">LIBERO-Spatial · state</a><a href="#libero-10-state">LIBERO-10 · state</a><a href="#libero-spatial-vision">LIBERO-Spatial · vision</a><a href="#osworld">OSWorld</a>
+  </nav>
+  {% include programs-body.html %}
+</section>
