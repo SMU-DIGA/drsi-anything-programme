@@ -1,0 +1,8 @@
+The fonts in this directory are licensed under the SIL Open Font License, Version 1.1
+(https://openfontlicense.org), and are redistributed unmodified from Google Fonts:
+
+- DM Sans: Copyright 2014 The DM Sans Project Authors (https://github.com/googlefonts/dm-fonts)
+- Manrope: Copyright 2018 The Manrope Project Authors (https://github.com/sharanda/manrope)
+- JetBrains Mono: Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)
+
+The full license text is available at https://openfontlicense.org/open-font-license-official-text/
