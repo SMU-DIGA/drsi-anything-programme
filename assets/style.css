@@ -59,10 +59,11 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .topbar nav a.active { font-weight: 600; }
 
 /* hero */
-.hero { max-width: 980px; margin: 0 auto; padding: 72px 24px 24px; text-align: center; }
+.hero { max-width: 1108px; margin: 0 auto; padding: 72px 24px 24px; text-align: center; }
 .kicker { margin: 0 0 10px; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
 .hero h1 { font-family: var(--serif); font-size: clamp(42px, 7vw, 72px); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 18px; }
 .hero-subtitle { font-family: var(--serif); font-size: clamp(19px, 2.6vw, 26px); line-height: 1.4; color: var(--muted); margin: 0 0 22px; }
+@media (min-width: 900px) { .hero-subtitle { white-space: nowrap; } }
 .affiliation { font-size: 16px; font-weight: 600; margin: 0 0 26px; }
 .pills { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 .pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 15px; font-weight: 600; }
