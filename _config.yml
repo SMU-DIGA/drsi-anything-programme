@@ -4,7 +4,7 @@ baseurl: /ns-rsi-anything-programme
 url: https://smu-diga.github.io
 repository: SMU-DIGA/ns-rsi-anything-programme
 markdown: kramdown
-permalink: /progress/:year/:month/:day/:title/
+permalink: /progress/:title/
 nav:
   - title: Overview
     url: /
@@ -25,3 +25,7 @@ defaults:
       type: posts
     values:
       layout: post
+exclude:
+  - README.md
+  - README.zh-CN.md
+  - LICENSE

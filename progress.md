@@ -6,7 +6,7 @@ permalink: /progress/
 # Progress
 
 Dated updates on the programme, newest first. Each entry is a Markdown file in
-[`docs/_posts/`](https://github.com/{{ site.repository }}/tree/main/docs/_posts).
+[`_posts/`](https://github.com/{{ site.repository }}/tree/main/_posts).
 
 <ul class="log">
 {% for post in site.posts %}

@@ -2,7 +2,7 @@
 
 **Recursive self-improvement of LLM-written programs: games, embodied robotics and computer use.**
 
-**[Project page & progress log](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](docs/design.md) · [Environments](docs/environments.md) · [Roadmap](docs/roadmap.md)
+**[Project page & progress log](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](design.md) · [Environments](environments.md) · [Roadmap](roadmap.md)
 
 An LLM writes a program that solves a task (a game bot, a robot controller, a desktop agent). Then LLMs
 improve that program over many generations, using only interaction feedback from the environment. The
@@ -30,7 +30,7 @@ The project combines two lines of work:
 ## Status
 
 Work in progress. The core loop and the EnvPool task families work end to end. See the
-[roadmap](docs/roadmap.md) for what remains. This repository hosts the programme's documents and results;
+[roadmap](roadmap.md) for what remains. This repository hosts the programme's documents and results;
 the implementation is not public.
 
 | Component | State |
@@ -50,8 +50,8 @@ such as "the ball must be served with FIRE" and which RAM bytes hold the paddle 
 
 ## Progress log
 
-The [project page](https://smu-diga.github.io/ns-rsi-anything-programme/) is built by GitHub Pages from
-`docs/`. To add an update, create `docs/_posts/YYYY-MM-DD-short-title.md`:
+The [project page](https://smu-diga.github.io/ns-rsi-anything-programme/) is built by GitHub Pages from the
+repository root. To add an update, create `_posts/YYYY-MM-DD-short-title.md`:
 
 ```markdown
 ---

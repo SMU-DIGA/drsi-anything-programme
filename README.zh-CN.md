@@ -2,7 +2,7 @@
 
 **LLM 编写程序完成任务，再由 LLM 递归地改进这个程序：游戏、具身机器人、计算机操作。**
 
-**[项目主页与进度日志](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [English](README.md) · [方案设计](docs/design.md) · [环境选型](docs/environments.md) · [路线图](docs/roadmap.md)
+**[项目主页与进度日志](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [English](README.md) · [方案设计](design.md) · [环境选型](environments.md) · [路线图](roadmap.md)
 
 LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制器或桌面 agent。之后多个 LLM 根据环境交互反馈，逐代改进这个程序。被改进的对象是**代码**，不是神经网络权重。一个程序包括策略、状态检测与技能函数，以及一份作为程序记忆的 `NOTES.md`。
 
@@ -35,6 +35,6 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 
 本仓库只公开方案文档与实验结果，不包含实现代码。
 
-添加进度记录：在 `docs/_posts/` 下新建 `YYYY-MM-DD-标题.md`，格式见 [README.md](README.md#progress-log)。
+添加进度记录：在 `_posts/` 下新建 `YYYY-MM-DD-标题.md`，格式见 [README.md](README.md#progress-log)。
 
 许可证：MIT。
