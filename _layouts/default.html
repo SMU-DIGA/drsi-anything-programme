@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page.title and page.url != "/" %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }}: Neuro-Symbolic Recursive Self-Improvement across General Domains{% endif %}</title>
+  <title>{{ site.title }}</title>
   <meta name="description" content="{{ page.summary | default: page.description | default: site.description }}">
   <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 </head>
