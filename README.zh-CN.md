@@ -8,7 +8,7 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 
 ## 循环
 
-1. 当前最优程序复制给 K 个 improver（Codex CLI、Claude Code、DeepSeek 等聊天 API），它们并行修改，并用 `./eval.sh` 在 train seeds 上自测。
+1. 当前最优程序复制给 K 个 improver（Codex CLI、Claude Code、DeepSeek 等聊天 API），它们并行修改，并在 train seeds 上自测。
 2. 评测器独立地重新评测每个候选，不采信 improver 自己报告的分数。
 3. 最好的候选在隐藏的 dev seeds 上与当前程序配对比较，通过 bootstrap 晋升门槛才替换当前程序。
 4. 可选的简化轮：让 improver 精简代码，dev 分数不下降才保留。

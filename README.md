@@ -11,7 +11,7 @@ skills, and a notes file that serves as the program's memory.
 
 ```
 incumbent program ──► K improvers edit it in parallel (Codex CLI · Claude Code · chat APIs such as DeepSeek)
-                        │ each one tests its own edits on the train seeds (./eval.sh)
+                        │ each one tests its own edits on the train seeds
                         ▼
                 independent re-evaluation on train ──► best candidate vs. incumbent on hidden dev seeds
                         │ paired bootstrap promotion gate
