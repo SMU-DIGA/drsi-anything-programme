@@ -111,103 +111,135 @@ layout: default
   {{ environments_md | markdownify }}
 
   <h2 id="results">Results</h2>
-  <p>Each panel follows the promoted program on <strong>hidden dev seeds</strong>, generation by generation
-  (status: 3 Nov 2026). Generation 0 is a trivial seed program. A candidate is promoted only if it beats the incumbent
-  in a paired bootstrap test on dev seeds that no improver has seen; test seeds are used once, at the end. Dashed lines
-  are references. Hover a point for its value.</p>
-  {% include rsi-curves.html %}
+  <p>Every number is the score of a <strong>program written and refined by LLM improvers</strong>: no gradient
+  training, no demonstrations. A candidate is promoted only if it beats the incumbent in a paired bootstrap test on
+  <strong>hidden dev seeds</strong> that no improver has seen. <strong>Test seeds</strong> are used once, after a run
+  stops. Status: 3 Nov 2026.</p>
+  <div class="stat-row">
+    <div class="stat"><p class="stat-value">864 / 864</p><p class="stat-label">Breakout, on all 64 unseen test seeds</p></div>
+    <div class="stat"><p class="stat-value">99.0%</p><p class="stat-label">LIBERO-10 (state), 400 test episodes</p></div>
+    <div class="stat"><p class="stat-value">9,700</p><p class="stat-label">Montezuma's Revenge, hidden dev (human 4,753)</p></div>
+    <div class="stat"><p class="stat-value">17,207</p><p class="stat-label">Ms. Pac-Man, hidden dev (human 6,952)</p></div>
+  </div>
   <figure class="table-figure">
     <figcaption><strong>Table 1.</strong> Who produced the promoted versions. Each generation runs one candidate per
     improver, in parallel, from the same incumbent.</figcaption>
     <table>
       <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
       <tbody>
-        <tr><td>Claude Code (agent with tools)</td><td class="num">4</td><td>Breakout gen 1 · LIBERO-Spatial state gen 1 · LIBERO-Spatial vision gen 1 · LIBERO-10 gen 1</td></tr>
-        <tr><td>Codex CLI (agent with tools)</td><td class="num">2</td><td>Breakout gen 2 · LIBERO-Spatial vision gen 2</td></tr>
-        <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">0</td><td>best: Breakout gen 2 candidate, 849.8 on train</td></tr>
+        <tr><td>Claude Code (agent with tools)</td><td class="num">5</td><td>Breakout g1 · Pong g1 · LIBERO-Spatial state g1 · LIBERO-Spatial vision g1 · LIBERO-10 g1</td></tr>
+        <tr><td>Codex CLI (agent with tools)</td><td class="num">5</td><td>Breakout g2, g4 · Ms. Pac-Man g1 · Montezuma's Revenge g1 · LIBERO-Spatial vision g2</td></tr>
+        <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">0</td><td>closest: Breakout g2 candidate, 849.8 on train</td></tr>
       </tbody>
     </table>
   </figure>
-  <p>Rows marked <span class="legend-swatch best-swatch"></span> are the promoted version. Grey rows are references.</p>
+  <p>Rows marked <span class="legend-swatch best-swatch"></span> are promoted versions. Grey rows are references.
+  Curves follow the incumbent on hidden dev; dashed lines are references; hover a point for its value.</p>
   <div class="tabs" role="tablist">
     <button class="on" data-tab="games" role="tab">Games</button>
     <button data-tab="embodied" role="tab">Embodied robotics</button>
     <button data-tab="computer" role="tab">Computer use</button>
   </div>
   <div data-panel="games">
+    {% include curves-games.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 2.</strong> Breakout from RAM (frame skip 4, no sticky actions, full game with five
-      lives, at most 27,000 steps). 8 train seeds, 32 hidden dev seeds. All candidates of the first two generations.</figcaption>
+      <figcaption><strong>Table 2.</strong> Atari from RAM: frame skip 4, full game with all lives, at most 27,000
+      steps, <strong>no sticky actions</strong>. 8 train, 32 hidden dev and 64 test seeds per game. Human scores are
+      the standard reference values.</figcaption>
       <table>
-        <thead><tr><th>Version</th><th>Improver</th><th class="num">Train</th><th class="num">Dev</th><th class="num">Lines</th><th>Gate</th></tr></thead>
+        <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
         <tbody>
-          <tr class="ref"><td>Seed program</td><td>—</td><td class="num">1.9</td><td class="num">2.5</td><td class="num">—</td><td>—</td></tr>
-          <tr><td>Gen 1</td><td>Codex</td><td class="num">354.0</td><td class="num">—</td><td class="num">43</td><td>—</td></tr>
-          <tr class="best"><td>Gen 1</td><td>Claude Code</td><td class="num">694.1</td><td class="num"><strong>702.8</strong></td><td class="num">359</td><td>promoted · won 32 / 32</td></tr>
-          <tr><td>Gen 1</td><td>DeepSeek</td><td class="num">0.4</td><td class="num">—</td><td class="num">227</td><td>—</td></tr>
-          <tr class="best"><td>Gen 2</td><td>Codex</td><td class="num">862.5</td><td class="num"><strong>849.9</strong></td><td class="num">339</td><td>promoted · won 21, lost 11, +147 mean</td></tr>
-          <tr><td>Gen 2</td><td>Claude Code</td><td class="num">763.8</td><td class="num">—</td><td class="num">410</td><td>—</td></tr>
-          <tr><td>Gen 2</td><td>DeepSeek</td><td class="num">849.8</td><td class="num">—</td><td class="num">358</td><td>—</td></tr>
-          <tr class="ref"><td colspan="2"><em>Learning Beyond Gradients</em>, RAM policy</td><td class="num" colspan="2">864 on seed 0 (3 episodes)</td><td class="num">—</td><td>different protocol</td></tr>
+          <tr class="best"><td>Breakout</td><td class="num">2.5</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num">30.5</td><td>done after 4 generations</td></tr>
+          <tr class="best"><td>Pong</td><td class="num">−19.9</td><td class="num"><strong>21.0</strong></td><td class="num">pending</td><td class="num">14.6</td><td>maximum in generation 1</td></tr>
+          <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num"><strong>17,207</strong></td><td class="num">pending</td><td class="num">6,952</td><td>promoted in generation 1; running</td></tr>
+          <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>9,700</strong></td><td class="num">pending</td><td class="num">4,753</td><td>promoted in generation 1; running</td></tr>
+          <tr><td>Space Invaders · Seaquest</td><td colspan="5">queued; they start when a running game finishes</td></tr>
+          <tr class="ref"><td colspan="2"><em>Learning Beyond Gradients</em></td><td class="num" colspan="3">Breakout 864 (seed 0) · Pong 21 · Montezuma 400</td><td>different protocol</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <figure class="table-figure">
+      <figcaption><strong>Table 3.</strong> Breakout, every promoted version and the one rejected candidate, with
+      test scores over 64 unseen seeds.</figcaption>
+      <table>
+        <thead><tr><th>Version</th><th>Improver</th><th class="num">Train</th><th class="num">Dev</th><th class="num">Test</th><th>Gate</th></tr></thead>
+        <tbody>
+          <tr class="ref"><td>Seed program</td><td>—</td><td class="num">1.9</td><td class="num">2.5</td><td class="num">2.2</td><td>—</td></tr>
+          <tr class="best"><td>Gen 1</td><td>Claude Code</td><td class="num">694.1</td><td class="num">702.8</td><td class="num">737.8</td><td>promoted · won 32 / 32</td></tr>
+          <tr class="best"><td>Gen 2</td><td>Codex</td><td class="num">862.5</td><td class="num">849.9</td><td class="num">854.3</td><td>promoted · won 21, lost 11</td></tr>
+          <tr><td>Gen 3</td><td>Codex</td><td class="num">864.0</td><td class="num">714.1</td><td class="num">—</td><td>rejected · won 11, lost 11</td></tr>
+          <tr class="best"><td>Gen 4</td><td>Codex</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num"><strong>864.0</strong></td><td>promoted · won 22, lost 0</td></tr>
         </tbody>
       </table>
     </figure>
     <div class="finding">
-      <p class="finding-label">Generation 2 fixed a failure mode, not just an average</p>
-      <p>In generation 1, 11 of 32 dev episodes ended at exactly 428 points: the program cleared most of the first wall
-      and then the ball settled into an endless loop. Generation 2, built on that program, has no episode below 827,
-      and 10 of 32 reach the maximum of 864 (both walls cleared).</p>
+      <p class="finding-label">The gate caught overfitting</p>
+      <p>In generation 3 a candidate scored the maximum on all 8 train seeds but only 714 on dev: it had tuned itself
+      to the few train trajectories. It was rejected. Generation 4 reached 864 on every dev seed and then on every
+      one of the 64 test seeds, which no improver or gate had ever touched.</p>
     </div>
     <div class="finding">
-      <p class="finding-label">What the program learned by itself</p>
-      <p>Its notes hold an exact paddle-motion rule found by probing (correct on 40k frames), a hit rule fitted with zero
-      errors on about 6,000 paddle contacts, and a full brick map in RAM. The policy simulates the ball frame by frame,
-      plans paddle moves to catch it, and chooses which half of the paddle to use so the next flight hits a brick.</p>
+      <p class="finding-label">Montezuma's Revenge without exploration bonuses</p>
+      <p>The promoted program follows an explicit room-by-room route over RAM state (room, position, inventory, enemy
+      positions, and a laser countdown it discovered). It times jumps on the skull's live position and laser crossings
+      on the countdown, collects keys, treasures and a sword, and opens four doors. Where a respawn keeps the inventory,
+      it loses a life on purpose as a shortcut back. Caveat: without sticky actions, different seeds mostly shift
+      start-up timing, so dev mainly tests robustness to timing. Evaluations with sticky actions are next.</p>
     </div>
-    <p class="pending">Cost so far: 8.6 M environment steps, counting every evaluation by every improver. The blog's
-    864 is a single deterministic seed; ours is the mean over 32 unseen seeds, so the two are not yet comparable.
-    Generation 3 is running.</p>
+    <div class="finding">
+      <p class="finding-label">Ms. Pac-Man as graph search</p>
+      <p>The program decoded the maze layout, every dot and power pellet, and the ghosts' positions and frightened
+      timers from RAM. It plans over a maze graph with tunnel links, weighting routes by distance to active ghosts and
+      turning to chase when they are frightened. Train episodes ranged from 8,370 to 30,611 points.</p>
+    </div>
+    <p class="pending">Cost: Breakout used 23.9 M environment steps over 4 generations, counting every evaluation by
+    every improver. Sample efficiency is not yet a strength of this loop.</p>
   </div>
   <div data-panel="embodied" hidden>
+    {% include curves-embodied.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 3.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
+      <figcaption><strong>Table 4.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
       each: scenes 0–1 are train, 2–9 hidden dev (80 episodes), 10–49 test (400 episodes, used once). <em>State</em>
       gives object poses (privileged). <em>Vision</em> gives only RGB-D from the agent-view and wrist cameras, camera
       parameters and proprioception.</figcaption>
       <table>
-        <thead><tr><th>Setting</th><th class="num">Seed</th><th class="num">Gen 1 dev</th><th class="num">Gen 2 dev</th><th class="num">Test</th></tr></thead>
+        <thead><tr><th>Setting</th><th class="num">Seed</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
         <tbody>
-          <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">0%</td><td class="num">100%</td><td class="num">stopped, saturated</td><td class="num"><strong>99.0%</strong> (396 / 400)</td></tr>
-          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0%</td><td class="num">86.3%</td><td class="num"><strong>95.0%</strong></td><td class="num">after the run</td></tr>
-          <tr class="best"><td>LIBERO-10 (long-horizon) · state</td><td class="num">0%</td><td class="num"><strong>100%</strong></td><td class="num">running</td><td class="num">after the run</td></tr>
-          <tr class="ref"><td>OpenVLA, fine-tuned (RGB, Spatial / 10)</td><td class="num" colspan="3">published, trained on demonstrations</td><td class="num">84.7% / 53.7%</td></tr>
-          <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="3">published, trained on demonstrations</td><td class="num">97.6% / 94.5%</td></tr>
+          <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">0%</td><td class="num">100%</td><td class="num"><strong>99.0%</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
+          <tr class="best"><td>LIBERO-10 (long-horizon) · state</td><td class="num">0%</td><td class="num">100%</td><td class="num"><strong>99.0%</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
+          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0%</td><td class="num"><strong>95.0%</strong></td><td class="num">after the run</td><td>generation 6 running</td></tr>
+          <tr class="ref"><td>OpenVLA, fine-tuned (RGB; Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">84.7% / 53.7%</td><td>—</td></tr>
+          <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">97.6% / 94.5%</td><td>—</td></tr>
         </tbody>
       </table>
     </figure>
     <div class="finding">
       <p class="finding-label">How to read these numbers</p>
-      <p>No demonstrations and no learned weights: every policy is readable code written and refined by the improvers.
-      State mode is easier than the VLA setting and is not comparable to it. Vision mode is the closest match, but it
-      uses depth and camera calibration, which the VLA models do not. Programs contain routines per task family;
-      they generalize across unseen initial scenes, which is what LIBERO's protocol tests.</p>
+      <p>No demonstrations and no learned weights: every policy is readable code. State mode is easier than the VLA
+      setting and is not comparable to it. Vision mode is the closest match, but it uses depth and camera calibration,
+      which the VLA models do not. Programs contain routines per task family and generalize across unseen initial
+      scenes, which is what LIBERO's protocol tests.</p>
     </div>
     <div class="finding">
       <p class="finding-label">What the programs found by probing</p>
-      <p>The vision program measured that its agent-view estimate of a bowl's centre is biased by about 4 cm (the
-      camera sees the far inner wall), so it re-centres with the wrist camera before grasping. The LIBERO-10 program
-      worked out each goal condition (e.g. the stove counts as on once its knob turns past about 0.45 rad) and found
-      initial scenes where objects fly off the table on the first step, which no policy can solve.</p>
+      <p>The vision program measured that its agent-view estimate of a bowl's centre is biased by about 4 cm, so it
+      re-centres with the wrist camera before grasping. The LIBERO-10 program worked out each goal condition (e.g. the
+      stove counts as on once its knob turns past about 0.45 rad) and found initial scenes where objects fly off the
+      table on the first step, which no policy can solve.</p>
     </div>
-    <p class="pending">ManiSkill3 runs are queued after these.</p>
+    <p class="pending">LIBERO-Spatial vision has stayed at 95.0% on dev for three generations; candidates now enter the
+    dev gate on ties, and programs may learn from their own train episodes. ManiSkill3 is queued.</p>
   </div>
   <div data-panel="computer" hidden>
     <div class="empty">
-      <p class="empty-title">In progress</p>
-      <p>OSWorld, starting with LibreOffice Calc and OS tasks (71 tasks, split 23 / 24 / 24 by task into train, dev and
-      test). Here the program is an agent harness around one fixed <strong>small</strong> model, Qwen3.5-2B: the
-      improvers rewrite the code around it (screen parsing, action primitives, per-application skills, error
-      recovery), never the model. OSWorld's own checkers score the final desktop state.</p>
+      <p class="empty-title">Running: generation 1</p>
+      <p>OSWorld, LibreOffice Calc and OS tasks (71 tasks, split 23 / 24 / 24 into train, dev and test), scored by
+      OSWorld's own checkers. The program decides every action in code, including running code inside the desktop
+      and reading its output. Two settings are compared: <strong>pure code</strong>, and code that may also ask one
+      fixed <strong>small model</strong> (Qwen3.5-2B) typed multiple-choice questions, in the style of TypeSafe's
+      Jev. The model never writes text or actions; it returns a probability per option and acts as a smart
+      if-statement inside the program. In both settings the program may learn a memory from its own train
+      episodes, frozen during dev and test.</p>
     </div>
   </div>
 

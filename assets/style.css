@@ -256,3 +256,9 @@ td.delta { color: var(--good); font-weight: 650; }
 .c-hit { fill: transparent; }
 .c-pt:hover .c-dot { r: 6; }
 .results-table td.note { color: var(--muted); font-size: 14px; }
+
+/* headline numbers above the results tables */
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 18px 0 8px; }
+.stat { padding: 14px 18px; border-radius: 12px; background: var(--panel); border: 1px solid var(--border); }
+.stat-value { margin: 0; font: 800 28px var(--display); color: var(--accent); letter-spacing: -0.01em; }
+.stat-label { margin: 4px 0 0; font-size: 14px; color: var(--muted); line-height: 1.45; }

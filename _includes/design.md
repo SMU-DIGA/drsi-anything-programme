@@ -4,12 +4,14 @@ A **program** consists of three parts:
 
 - **a policy** that maps each observation to an action,
 - **helper modules** (state detectors, skills, planners) that the policy is free to grow,
-- **notes**: the program's memory, holding environment facts, failed ideas and a dated changelog.
+- **notes**: the program's memory, holding environment facts, failed ideas and a dated changelog,
+- optionally, **a learning step** (`learn`) and the **memory** it produces (see *Memory* below).
 
 Following *Learning Beyond Gradients*, the program is the whole "heuristic system": the policy, its state
 representation, and its accumulated knowledge. Weights are never trained. The default constraints are:
 no neural networks, no reading the environment's source code, no network access. Each experiment can
-change them.
+change them. In computer use, for example, a program may call one fixed small model, but only as a typed
+decision function (see *Results → Computer use*).
 
 ### The loop
 
@@ -25,8 +27,8 @@ Each generation does the following:
      exactly as the evaluator does.
 2. **Re-evaluate.** After an improver finishes, the evaluator scores its program on the train seeds again.
    Scores the improver reports about itself are never used.
-3. **Gate.** The top candidates by train score, and only if they beat the incumbent on train, are evaluated
-   on the **hidden dev seeds**. A candidate is promoted if its mean paired gain over the incumbent exceeds
+3. **Gate.** The top candidates by train score, if they at least match the incumbent on train, are evaluated
+   on the **hidden dev seeds**. Ties go to dev because train scores saturate first. A candidate is promoted if its mean paired gain over the incumbent exceeds
    a minimum and the bootstrap probability of a gain reaches a confidence threshold.
 4. **Simplify (optional).** The improver whose candidate won is asked to simplify it. The simpler version is
    kept only if it has fewer lines and its dev score does not drop. This counters the "big ball of mud"
@@ -35,7 +37,22 @@ Each generation does the following:
    evaluations, the improver logs, and a ledger of all environment steps, including the improvers' own
    test runs.
 
-**Test seeds** are used only once, after the loop has finished.
+**Stop rule.** A run stops after a fixed number of generations, or earlier once several generations in a row
+produce no promotion. **Test seeds** are used only once, after the loop has finished.
+
+### Memory
+
+Programs have three kinds of memory:
+
+- **Working memory within an episode.** The policy object lives across steps, so it can keep a history,
+  a plan or a stack of subgoals.
+- **Knowledge built by the improvers.** Notes, knowledge files and verified routines written into the
+  program between generations.
+- **Memory the program learns by itself.** After every train evaluation, a program that defines a
+  learning step receives its own train episodes (what it saw, what it did, and the outcome) and writes
+  a memory directory. Dev and test evaluations only read that memory; they never write to it or feed
+  anything back, so scores stay reproducible and independent of task order. Improvers can therefore
+  improve how the program learns, not only how it acts.
 
 ### Improvers
 
@@ -66,6 +83,7 @@ attempts, so the population shares one memory.
 |---|---|---|
 | L1 | the task program | <span class="badge done">Done</span> |
 | L1.5 | the program's memory (its notes) and the shared attempt history | <span class="badge done">Done</span> |
+| L1.75 | the program's own learning step, which turns train experience into frozen memory | <span class="badge running">Running</span> |
 | L2 | a cross-task skill library (e.g. *grasp an object*, *open an application*), distilled from train tasks | <span class="badge planned">Planned</span> |
 | L3 | the improver itself: prompts, feedback format, search strategy, chosen by meta-evaluation | <span class="badge planned">Planned</span> |
 | L4 | the LLM's weights, fine-tuned on its own successful edits (open models only, optional) | <span class="badge planned">Planned</span> |

@@ -4,7 +4,7 @@ Following *Learning Beyond Gradients*, all games run through [EnvPool](https://g
 
 | Family | Tasks | Observation | Score | Status |
 |---|---|---|---|---|
-| Atari (ALE) | Breakout, Pong, Montezuma's Revenge, … Atari57 | RAM (128 bytes), RGB image, or both | episode return (unclipped, no sticky actions, full game) | <span class="badge running">Running</span> |
+| Atari (ALE) | Breakout, Pong, Ms. Pac-Man, Montezuma's Revenge, Space Invaders, Seaquest, … Atari57 | RAM (128 bytes), RGB image, or both | episode return (unclipped, no sticky actions, full game) | <span class="badge running">Running</span> |
 | VizDoom | D1 Basic, D3 Battle | stacked screen + game variables | episode return | <span class="badge done">Done</span> |
 
 ### Embodied robotics
@@ -38,4 +38,4 @@ feedback and skill synthesis recover much of the gap.
 
 | Benchmark | Plan | Status |
 |---|---|---|
-| **OSWorld** | The program is a desktop agent harness around one fixed small model (Qwen3.5-2B): screenshot and accessibility-tree parsing, pyautogui actions and per-application skills. Only the code is improved, never the model. Scored by OSWorld's own task checkers. First apps: LibreOffice Calc and OS, with tasks split into train, dev and test. | <span class="badge wip">In progress</span> |
+| **OSWorld** | The program decides every action in code: it parses the screenshot, the accessibility tree and the output of code it runs inside the desktop. Two settings: pure code, or code that may also ask one fixed small model (Qwen3.5-2B) typed multiple-choice questions, never free text. Scored by OSWorld's own task checkers. First apps: LibreOffice Calc and OS, with tasks split into train, dev and test. | <span class="badge running">Running</span> |
