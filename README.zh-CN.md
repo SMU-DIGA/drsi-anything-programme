@@ -1,6 +1,6 @@
 # NS-RSI-Anything
 
-**LLM 编写程序完成任务，再由 LLM 递归地改进这个程序：游戏、具身机器人、计算机操作。**
+**Neuro-Symbolic Recursive Self-Improvement across General Domains（跨通用领域的神经-符号递归自我改进）**：LLM（神经）编写程序（符号）来完成任务，再递归地改进这个程序，覆盖游戏、具身机器人和计算机操作。
 
 **[项目主页与进度日志](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [English](README.md) · [方案设计](design.md) · [环境选型](environments.md) · [路线图](roadmap.md)
 

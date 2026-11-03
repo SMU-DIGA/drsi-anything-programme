@@ -1,6 +1,6 @@
 # NS-RSI-Anything
 
-**Recursive self-improvement of LLM-written programs: games, embodied robotics and computer use.**
+**Neuro-Symbolic Recursive Self-Improvement across General Domains**: LLMs (neural) write and repeatedly improve programs (symbolic) for games, embodied robotics and computer use.
 
 **[Project page & progress log](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](design.md) · [Environments](environments.md) · [Roadmap](roadmap.md)
 
