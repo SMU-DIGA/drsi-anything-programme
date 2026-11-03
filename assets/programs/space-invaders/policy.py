@@ -23,8 +23,10 @@ PLAYER_SPEED = 2
 BULLET_SPEED = 2
 HORIZON = 14                    # dodge look-ahead (steps)
 BOX_SAFE = (84, 96, -1, 7)      # (y_lo, y_hi, dx_lo, dx_hi): bullet y and bx - px that hit the player
+BOX_LAST = (84, 96, -1, 10)     # extra room for a repeated movement on the last life
 BOX_CORE = (86, 94, 1, 5)       # tighter box used only when pinned (accepts some risk)
 STUCK_LIMIT = 20
+WAVE_WAIT_LIMIT = 20
 
 # formation and aiming
 COL_SPACING = 16
@@ -42,11 +44,12 @@ IDLE_FIRE = 1000                # fire anyway after this many free-missile steps
 REACH_SLACK = 2
 UNREACHABLE_COST = 1000
 INNER_COST = 200
-DANGER_LEVEL = 20               # landing is near when ram[16] - 9*lowest_row reaches this
+DANGER_LEVEL = 18               # landing is near when ram[16] - 9*lowest_row reaches this
 DANGER_COST = 500
 EDGE_LOW_COST = 60              # lowest row at landing level: prefer the edge column holding it
 DANGER_STEPS_PER_KILL = 15
 DANGER_MARGIN = 40
+BOUNCE_SPEED_FLOOR = 1.0        # avoid optimistic estimates between formation movement bursts
 
 # mystery ship
 UFO_IDLE = 180
@@ -69,6 +72,7 @@ class Policy:
         self.vel = (0.0, 0)
         self.idle = 0
         self.stuck = 0
+        self.wave_wait = 0
 
     # ---------------------------------------------------------------- dodging
     @staticmethod
@@ -91,7 +95,7 @@ class Policy:
         return HORIZON + 1, cost
 
     def _plan(self, px, target, danger):
-        """First move of the best two-segment plan: latest hit (safe = never), then closest to target."""
+        """Return first move and hit step for the safest, then closest, two-segment plan."""
         best_key, best_move = None, 0
         for m1 in (-1, 0, 1):
             for j in range(1, HORIZON + 1):
@@ -100,7 +104,7 @@ class Policy:
                     key = (-hit, cost)
                     if best_key is None or key < best_key:
                         best_key, best_move = key, m1
-        return best_move
+        return best_move, -best_key[0]
 
     # ---------------------------------------------------------------- aiming
     def _ex_velocity(self):
@@ -141,7 +145,7 @@ class Policy:
         """True if the next edge bounce may come before we can clear the lowest row."""
         speed, direction = self.vel
         dist = (EX_RIGHT - width - ex) if direction >= 0 else (ex - EX_LEFT)
-        t_bounce = max(dist, 0) / max(speed, 0.125)
+        t_bounce = max(dist, 0) / max(speed, BOUNCE_SPEED_FLOOR)
         n_low = sum(1 for r in lows.values() if r == rlow)
         return t_bounce < DANGER_STEPS_PER_KILL * n_low + DANGER_MARGIN
 
@@ -166,6 +170,8 @@ class Policy:
         for k, low in lows.items():
             hit_y = ROW_Y0 + int(o[16]) - ROW_DY * low
             T = max(0.0, (MISSILE_Y0 - hit_y) / MISSILE_SPEED)
+            if low_level and self.vel[0] >= FAST_SPEED:
+                T += 0.5  # account for delayed launches against fast, low invaders
             off = COL_SPACING * (k - kmin)
             cols.append((k, low, off, T, self._predict_ex(ex, T, width) + off))
         strict = any(HIT_LO <= px - aim <= HIT_HI for *_, aim in cols)
@@ -228,14 +234,23 @@ class Policy:
         want = 1 if target > px + 1 else -1 if target < px - 1 else 0
         missile_free = o[85] >= 200
 
-        # pinned (e.g. by a bullet stream) for a while: plan with the tight core hit box instead
-        # (only while a spare life remains: losing the last life ends the game)
-        box = BOX_CORE if (self.stuck > STUCK_LIMIT and o[73] >= 2) else BOX_SAFE
+        # Risk a tight-box crossing only when pinned away from the left wall,
+        # a landing is near, and a spare life remains.
+        if self.stuck > STUCK_LIMIT and o[73] >= 2 and landing and px > 43:
+            box = BOX_CORE
+        elif o[73] == 1:
+            box = BOX_LAST
+        else:
+            box = BOX_SAFE
         danger = self._danger(o, box)
         if self._rollout(px, target, danger, want, HORIZON, want)[0] > HORIZON:
             move = want
         else:
-            move = self._plan(px, target, danger)
+            move, hit = self._plan(px, target, danger)
+            # When the last-life margin says every path is about to be hit,
+            # retry with the normal box to find a possible escape.
+            if o[73] == 1 and hit <= 2:
+                move, _ = self._plan(px, target, self._danger(o, BOX_SAFE))
         aligned = wide if move == 1 else strict
         if ufo is not None and not landing:
             # Still take an aligned invader shot if the UFO firing point is far away.
@@ -251,4 +266,19 @@ class Policy:
             fire = aligned or self.idle > IDLE_FIRE
             if fire:
                 self.idle = 0
+        # At the beginning of low waves, let an initial bullet just to the
+        # right pass before moving into its stream. Abort the wait if staying
+        # itself is threatened or the first bullet is elsewhere.
+        if o[42] == 1 and o[16] >= 20 and o[17] == 36:
+            self.wave_wait = 1
+            return 0
+        if self.wave_wait and o[42] == 0:
+            self.wave_wait += 1
+            bullets = [(int(o[y]), int(o[x]) - px) for y, x in ((81, 83), (82, 84))
+                       if o[y] < 120]
+            threatened = any(by <= 96 and -1 <= dx <= 7 for by, dx in bullets)
+            blocked = any(by <= 96 and 8 <= dx <= 12 for by, dx in bullets)
+            if not threatened and self.wave_wait <= WAVE_WAIT_LIMIT and (not bullets or blocked):
+                return 0
+            self.wave_wait = 0
         return ACTIONS[(move, fire)]

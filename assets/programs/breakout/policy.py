@@ -8,6 +8,8 @@ RAM map (probed, see NOTES.md):
   ram[76], ram[77] score (hundreds; BCD tens/ones)
   ram[99]  ball x (walls at ~55 and ~201)
   ram[101] ball y (grows downward; 0 = no ball in play)
+  ram[103:105] vertical velocity as signed 8.8 fixed point
+  ram[105:107] negated horizontal velocity as signed 8.8 fixed point
   ram[108] half paddle width w (8 normal; 6 after the paddle shrinks)
 Actions: 0 NOOP, 1 FIRE, 2 RIGHT, 3 LEFT. One agent step = 4 frames.
 
@@ -17,10 +19,8 @@ the ball left, [w+1, 2w+1] send it right.
 
 Each step:
   1. simulate the ball (walls + bricks) until it passes the paddle band;
-  2. pick the paddle half that sends the next flight into a brick (steering);
-  3. enumerate short action sequences, simulate the paddle frame by frame and pick the one with
-     the largest hit margin (or, if the ball is still far away, the one that ends at rest under
-     the landing point).
+  2. enumerate short paddle action sequences under several sticky-action delays;
+  3. select a safe interception, preferring early, steady movement.
 If no brick is scored for a long time, perturb the aim point and finally drop the ball on
 purpose (a fresh life restarts the ball slowly with new angles).
 """
@@ -50,19 +50,17 @@ R_FRAME = 5.6           # controller change per frame while moving
 R_C = 234               # resting paddle x = R_C - r
 # planning
 HORIZON = 10            # planning horizon in steps
-VMAX = 20               # max plausible per-step ball displacement
 OFF_D = 1               # default aim: ball_x - paddle_x = w + OFF_D (centre of the hit window)
-SAFE = 3                # wanted margin (px) inside the hit window
+SAFE = 5                # wanted margin (px) inside the hit window
 PEN = 10.0              # cost per px of missing margin
 DEAD_PEN = 0.02         # cost per unit of controller travel inside a wall dead zone (per step)
 SIM_FRAMES = 400        # max frames of ball flight to simulate
-SIDE_MIN_MARGIN = 1.5   # only steer if the planner can hit the chosen half with this margin
-SIDE_MIN_MARGIN_STALLED = -0.5  # same, while stalled (riskier: the alternative is a drop)
-LOOKAHEAD = 12          # extra bounces searched when no direction hits a brick right away
+DELAY_WEIGHTS = np.array([.75, .1875, .0625])
+SCENARIO_WEIGHTS = np.outer(DELAY_WEIGHTS, DELAY_WEIGHTS).reshape(-1)
 # stall breaking
 STALL = 400             # steps without scoring before perturbing the aim point
 JIT_EDGE = 3            # keep the jittered aim at least this far from the window edges
-STALL2 = 2000           # steps without scoring before dropping, if another life remains
+STALL2 = 3000           # steps without scoring before dropping, if another life remains
 
 
 def ball_step(x, y, fx, fy):
@@ -109,81 +107,90 @@ class Policy:
         self.reset()
 
     def reset(self) -> None:
+        self.last_move = 0              # last requested paddle direction
         self.prev = None                # ball (x, y) at the previous step
-        self.prev2 = None
         self.rng = np.random.default_rng(12345)
         self.last_score = 0
         self.lives = None
         self.since_score = 0            # steps since the score (or lives) last changed
         self.jitter = 0                 # stall breaker: shift of the aim point
         self.dropping = False           # stall breaker: losing the ball on purpose
+        self.prev_vy_sign = 0
+        self.loop_history = []
+        self.escape_moves = []
 
     # ------------------------------------------------------------------ main loop
     def act(self, obs, info: dict) -> int:
+        action = self._act(obs, info)
+        self.last_move = 1 if action == RIGHT else -1 if action == LEFT else 0
+        return action
+
+    def _act(self, obs, info: dict) -> int:
         ram = np.asarray(obs, dtype=np.int32)
         r, px, bx, by = int(ram[70]), int(ram[72]), int(ram[99]), int(ram[101])
         w = int(ram[108])
-        prev, prev2 = self.prev, self.prev2
-        self.prev, self.prev2 = (bx, by), prev
+        prev = self.prev
+        self.prev = (bx, by)
 
-        self._update_stall(ram, prev, by, w)
+        vy_byte = int(ram[103])
+        vy_sign = 0 if vy_byte == 0 else (1 if vy_byte < 128 else -1)
+        returned = self.prev_vy_sign > 0 and vy_sign < 0 and by > 150
+        self._update_stall(ram, prev, by, w, returned)
+        self.prev_vy_sign = vy_sign
         if by == 0:
             self.dropping = False
+            self.escape_moves.clear()
             return FIRE
+
+        # Exact one- or two-return cycles can trap the ball indefinitely.
+        # Pulse both directions to find a different controller position before
+        # spending a life on a stall. Do not interrupt a deliberate drop.
+        if self.since_score <= 2000:
+            self.loop_history.clear()
+        elif returned and (self.lives == 1 or self.since_score <= STALL2):
+            signature = tuple(int(ram[i]) for i in (99, 100, 101, 102, 105, 106))
+            self.loop_history.append(signature)
+            self.loop_history = self.loop_history[-8:]
+            if len(self.loop_history) == 8 and self.loop_history[2:] == self.loop_history[:-2]:
+                direction = RIGHT if prev is not None and prev[0] - px > w else LEFT
+                opposite = LEFT if direction == RIGHT else RIGHT
+                self.escape_moves = [direction, NOOP, opposite, NOOP]
+                self.loop_history.clear()
+        if self.escape_moves:
+            return self.escape_moves.pop(0)
 
         # long stall: the fast ball's paths form a closed lattice that misses the remaining
         # bricks; losing a life restarts the ball slowly with new angles and a full paddle.
-        if self.since_score > STALL2 and self.lives > 1:
+        # Two cleared walls give the maximum 864 points; end that finished
+        # game instead of spending the remaining episode on an empty board.
+        if self.last_score >= 864 or (self.since_score > STALL2 and self.lives > 1):
             self.dropping = True
-        vel = self._velocity(bx, by, prev, prev2)
+        # Ball velocities are stored as signed 8.8 fixed-point numbers;
+        # horizontal RAM velocity has the opposite sign to the screen axis.
+        vx_byte = int(ram[105])
+        vx = -((vx_byte if vx_byte < 128 else vx_byte - 256) + int(ram[106]) / 256.0)
+        vy = (vy_byte if vy_byte < 128 else vy_byte - 256) + int(ram[104]) / 256.0
+        vel = (vx, vy) if 0 < abs(vy) <= 4 and abs(vx) <= 2 else None
         bricks = read_bricks(ram)
         sim = None if vel is None else self._sim_ball(bx, by, *vel, bricks)
-        rebound = False
-        # A wall rebound between observations can hide the true horizontal speed.
-        # Use the preceding speed only if reflection explains the observed endpoint
-        # and the corrected landing exposes a miss hidden by the original forecast.
-        if sim is not None and prev is not None and prev2 is not None and by >= 130:
-            old_dx = prev[0] - prev2[0]
-            dx = bx - prev[0]
-            projected = prev[0] + old_dx
-            reflected = (2 * X_MAX - projected if old_dx > 0 and projected > X_MAX else
-                         2 * X_MIN - projected if old_dx < 0 and projected < X_MIN else None)
-            if (prev2[1] < prev[1] < by and abs(old_dx) >= 4 and dx * old_dx <= 0
-                    and reflected is not None and abs(bx - reflected) <= 3):
-                corrected = self._sim_ball(bx, by, -old_dx / 4.0, vel[1], bricks)
-                if corrected is not None:
-                    old_offset = sim[0][0][1] - px
-                    new_offset = corrected[0][0][1] - px
-                    if 1 <= old_offset <= 2 * w + 1 and not 1 <= new_offset <= 2 * w + 1:
-                        sim, rebound = corrected, True
         if self.dropping:
             # move the paddle to the wall farthest from where the ball will come down
             land = bx if sim is None else sim[0][0][1]
             return LEFT if land > 128 else RIGHT
 
         lo, hi = 1, 2 * w + 1               # hit window for (ball_x - paddle_x)
-        aim = w + OFF_D + (0 if rebound else self.jitter)
+        aim = w + OFF_D + self.jitter
         pos, dead = self._simulate_paddle(r, px)
         if sim is None:
             return self._choose(self._goal_cost(pos, bx - aim), dead)
-        band, out_vx, out_vy, bricks_left = sim
+        band, out_vx = sim
 
-        # which half of the paddle should the ball hit? (left half -> ball goes left)
-        stalled = self.since_score > STALL
         # On long scoreless loops, deliberately make the ball meet the paddle
         # later in the contact band. This shifts the next trajectory to a new lattice.
-        late = (not rebound and self.since_score > 1000 and len(band) > 1 and abs(out_vx) >= 1.5
+        late = (self.since_score > 1000 and len(band) > 1 and abs(out_vx) >= 1.5
                 and P_MIN + hi + 2 <= band[0][1] <= P_MAX - 2)
         if late:
             aim = 0 if out_vx > 0 else hi + 1
-        side = 0
-        # After an urgent correction, use the whole paddle rather than steering.
-        if bricks_left.any() and not late and not rebound:
-            side = self._pick_side(band[0][1], abs(out_vx), abs(out_vy), bricks_left, stalled)
-        if side != 0:
-            lo_s, hi_s = (lo, w) if side < 0 else (w + 1, hi)
-            aim = 0.5 * (lo_s + hi_s)
-
         F = pos.shape[1] - 1
         if band[0][0] >= F:
             # ball is beyond the planning horizon: be at rest under its landing point
@@ -195,17 +202,10 @@ class Policy:
             if m >= 0.5:
                 return self._choose(cost, dead)
             aim = w + OFF_D + self.jitter
-        if side != 0:
-            # when stalled, steering is worth more risk (the alternative is a deliberate drop)
-            cost, m = self._contact_cost(pos, js, xs, lo_s, hi_s, aim,
-                                         robust=not stalled, full=(lo, hi))
-            if m >= (SIDE_MIN_MARGIN_STALLED if stalled else SIDE_MIN_MARGIN):
-                return self._choose(cost, dead)
-            aim = w + OFF_D + self.jitter
         cost, _ = self._contact_cost(pos, js, xs, lo, hi, aim)
         return self._choose(cost, dead)
 
-    def _update_stall(self, ram, prev, by, w):
+    def _update_stall(self, ram, prev, by, w, returned):
         """Count steps without scoring; once stalled, re-randomise the aim after each return."""
         score = int(ram[76]) * 100 + (int(ram[77]) >> 4) * 10 + (int(ram[77]) & 15)
         lives = int(ram[57])
@@ -218,146 +218,108 @@ class Policy:
             self.jitter = 0
         else:
             self.since_score += 1
-        just_returned = prev is not None and prev[1] > by > 150
+        # On the second wall or in a prolonged stall, draw a single jitter
+        # per bounce instead of redrawing on each ascending observation.
+        if score >= 432 or self.since_score > 1000:
+            just_returned = returned
+        else:
+            just_returned = prev is not None and prev[1] > by > 150
         if self.since_score > STALL and just_returned:
             lim = max(0, w - JIT_EDGE)
             self.jitter = int(self.rng.integers(-lim, lim + 1))
-
-    @staticmethod
-    def _velocity(bx, by, prev, prev2):
-        """Estimate per-frame velocity, averaging eight consistent frames when possible.
-        Return None if there is no plausible previous position."""
-        if prev is None or prev[1] == 0:
-            return None
-        vx, vy = bx - prev[0], by - prev[1]
-        if not (abs(vx) <= VMAX and 0 < abs(vy) <= VMAX):
-            return None
-        if prev2 is not None and prev2[1] != 0:
-            vx2, vy2 = prev[0] - prev2[0], prev[1] - prev2[1]
-            if vx * vx2 > 0 and vy * vy2 > 0 and abs(vx2) <= VMAX and abs(vy2) <= VMAX:
-                return (vx + vx2) / 8.0, (vy + vy2) / 8.0
-            # A horizontal wall bounce does not change vertical speed. Keep its
-            # more accurate eight-frame estimate near the paddle independently.
-            if by >= 130 and vy * vy2 > 0 and abs(vy2) <= VMAX:
-                return vx / 4.0, (vy + vy2) / 8.0
-        return vx / 4.0, vy / 4.0
 
     # ------------------------------------------------------------------ paddle planning
     def _simulate_paddle(self, r, px):
         """Paddle x at every future frame (0..4H) for every plan -> (P, 4H+1), plus the
         controller travel wasted inside the wall dead zones per plan."""
         P, H = self.plans.shape
-        pos = np.empty((P, 4 * H + 1))
-        rr = np.full(P, float(r))
-        pp = np.full(P, float(px))
+        # Delays at the first and subsequent changes are independent. This
+        # captures, for example, a late start followed by an immediate stop.
+        plans = np.tile(self.plans, (9, 1))
+        first_delays = np.repeat(np.repeat(np.arange(3), 3), P)
+        later_delays = np.repeat(np.tile(np.arange(3), 3), P)
+        pos = np.empty((9 * P, 4 * H + 1))
+        rr = np.full(9 * P, float(r))
+        pp = np.full(9 * P, float(px))
         pos[:, 0] = pp
-        dead = np.zeros(P)
+        dead = np.zeros(9 * P)
         lo_r, hi_r = R_C - P_MAX, R_C - P_MIN
+        previous = np.full(9 * P, self.last_move)
+        changed = np.zeros(9 * P, dtype=bool)
         for t in range(H):
-            d = -R_FRAME * self.plans[:, t]
+            current = plans[:, t]
+            delays = np.where(changed, later_delays, first_delays)
+            changed |= current != previous
             for i in range(4):
+                move = np.where(i < delays, previous, current)
                 pp = np.clip(np.ceil((pp + R_C - rr) / 2.0), P_MIN, P_MAX)
-                rr = np.clip(rr + d, R_MIN, R_MAX)
+                rr = np.clip(rr - R_FRAME * move, R_MIN, R_MAX)
                 pos[:, 4 * t + i + 1] = pp
-            # controller pushed past the point where the paddle is already at the wall:
-            # wasted travel that has to be undone before the paddle can come back
+            previous = current
             dead += np.maximum(0.0, lo_r - rr) + np.maximum(0.0, rr - hi_r)
         return pos, dead
 
     @staticmethod
     def _goal_cost(pos, goal):
         """Ball still far away: be at the goal at the end of the horizon, at rest."""
-        return np.abs(pos[:, -1] - goal) + 0.1 * np.abs(pos[:, 4::4] - goal).mean(axis=1)
+        return np.abs(pos[:, -1] - goal) + 0.5 * np.abs(pos[:, 4::4] - goal).mean(axis=1)
 
     @staticmethod
-    def _contact_cost(pos, js, xs, lo, hi, aim, robust=True, full=None, safe=SAFE):
-        """Cost per plan of returning the ball with offset in [lo, hi], and the best plan's margin.
+    def _contact_cost(pos, js, xs, lo, hi, aim, safe=SAFE):
+        """Cost the nominal catch and report the worst timing-shift margin.
 
-        The ball returns if ANY band frame is inside the window; to be robust to a 1-frame error
-        in the predicted arrival time, the margin is the worst over arrival shifts -1/0/+1.
-        full=(lo, hi) of the whole paddle when (lo, hi) is only one half: the bounce happens at
-        the FIRST band frame inside the whole paddle, and that frame decides the direction."""
+        A catch can occur on any frame in the contact band. The worst margin
+        across timing shifts is used to gate risky late-contact stall breaking.
+        """
         F = pos.shape[1] - 1
-        rows = np.arange(pos.shape[0])
-        best_m = None
-        for s in ((0, -1, 1) if robust else (0,)):
-            off = xs[None, :] - pos[:, np.clip(js + s, 0, F)]
-            if full is None:
-                m = np.minimum(off - lo, hi - off).max(axis=1)
-            else:
-                inside = (off >= full[0]) & (off <= full[1])
-                of = off[rows, np.argmax(inside, axis=1)]
-                m_full = np.minimum(off - full[0], full[1] - off).max(axis=1)
-                m = np.where(inside.any(axis=1), np.minimum(of - lo, hi - of), m_full - (hi - lo))
-            best_m = m if best_m is None else np.minimum(best_m, m)
+        off = xs[None, :] - pos[:, js]
+        nominal_m = np.minimum(off - lo, hi - off).max(axis=1)
+        best_m = nominal_m
+        for shift in (-1, 1):
+            off = xs[None, :] - pos[:, np.clip(js + shift, 0, F)]
+            margin = np.minimum(off - lo, hi - off).max(axis=1)
+            best_m = np.minimum(best_m, margin)
         off0 = xs[0] - pos[:, js[0]]
-        cost = PEN * np.maximum(0.0, safe - best_m) + np.abs(off0 - aim)
-        return cost, float(best_m[int(np.argmin(cost))])
+        cost = PEN * np.maximum(0.0, safe - nominal_m) + np.abs(off0 - aim)
+        # Move towards the interception point early, leaving time for the
+        # paddle to settle and for sticky-action errors to be corrected.
+        goal = xs[0] - aim
+        cost += 0.5 * np.abs(pos[:, :int(js[0]) + 1:4] - goal).mean(axis=1)
+        cost_by_scenario = cost.reshape(9, -1)
+        margin_by_scenario = best_m.reshape(9, -1)
+        aggregate = SCENARIO_WEIGHTS @ cost_by_scenario
+        best = int(np.argmin(aggregate))
+        return cost, float(np.min(margin_by_scenario[:, best]))
 
     def _choose(self, cost, dead):
-        # avoid driving the controller into the wall dead zones; tie-break: prefer fewer moves
-        cost = cost + DEAD_PEN * dead + 1e-3 * np.abs(self.plans).sum(axis=1)
+        # Weight the delay scenarios and avoid wasted wall travel.
+        cost = (cost + DEAD_PEN * dead).reshape(9, -1)
+        cost = SCENARIO_WEIGHTS @ cost
+        # Do not drive into a wall and reverse solely for a slightly better
+        # final pixel: extra changes are unreliable with sticky actions.
+        moves = np.abs(self.plans).sum(axis=1)
+        reversals = (self.plans[:, 1:] * self.plans[:, :-1] < 0).sum(axis=1)
+        cost += 1.0 * moves + 30.0 * reversals
         return S2A[int(self.plans[int(np.argmin(cost)), 0])]
 
     # ------------------------------------------------------------------ ball model
     @staticmethod
     def _sim_ball(x, y, fx, fy, bricks):
         """Frame-level ball flight (breaking bricks) until it passes the paddle band descending.
-        Returns ([(frame, x)] in the band, vx, vy at contact, bricks left) or None."""
-        g = bricks.copy()
+        Mutates the fresh brick map; returns ([(frame, x)] in the band, vx at contact) or None."""
         band = []
         if fy > 0 and Y_HIT <= y <= Y_BOT:
             band.append((0, float(x)))
         for j in range(1, SIM_FRAMES + 1):
             x, y, fx, fy = ball_step(x, y, fx, fy)
             cell = brick_cell(x, y, fy)
-            if cell is not None and g[cell]:
-                g[cell] = False
+            if cell is not None and bricks[cell]:
+                bricks[cell] = False
                 fy = -fy
                 continue
             if fy > 0 and y >= Y_HIT:
                 if y > Y_BOT:
                     break
                 band.append((j, x))
-        return (band, fx, fy, g) if band else None
+        return (band, fx) if band else None
 
-    @staticmethod
-    def _flight(x, fx, fy, bricks):
-        """Ball leaving the paddle at x: (hits a brick?, landing x if it does not)."""
-        y = float(Y_HIT)
-        for _ in range(SIM_FRAMES):
-            x, y, fx, fy = ball_step(x, y, fx, fy)
-            cell = brick_cell(x, y, fy)
-            if cell is not None and bricks[cell]:
-                return True, None
-            if fy > 0 and y >= Y_HIT:
-                return False, x
-        return False, None
-
-    def _pick_side(self, xc, avx, avy, bricks, stalled):
-        """-1/+1 to send the ball left/right from contact x xc, 0 = no preference."""
-        hits, lands = {}, {}
-        for d in (-1, 1):
-            hits[d], lands[d] = self._flight(xc, d * avx, -avy, bricks)
-        if hits[-1] != hits[1]:
-            return -1 if hits[-1] else 1
-        if hits[-1]:
-            return 0
-        # neither direction hits a brick now: breadth-first search over future landing points
-        # (deduplicated) for the first direction that leads to a brick soonest
-        frontier = [(d, lands[d]) for d in (-1, 1) if lands[d] is not None]
-        seen = {int(round(x)) for _, x in frontier}
-        for _ in range(LOOKAHEAD):
-            nxt = []
-            for first, xl in frontier:
-                for d in (-1, 1):
-                    hit, land = self._flight(xl, d * avx, -avy, bricks)
-                    if hit:
-                        return first
-                    if land is not None and int(round(land)) not in seen:
-                        seen.add(int(round(land)))
-                        nxt.append((first, land))
-            frontier = nxt
-            if not frontier:
-                break
-        return int(self.rng.choice((-1, 1))) if stalled else 0

@@ -29,9 +29,9 @@ layout: default
     we evaluate on the game, embodied-robotics and computer-use benchmarks the community reports on most often.</p>
   </div>
   <div class="stats">
-    <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input · 456 with sticky actions</p></div>
+    <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input · 788 test with sticky actions</p></div>
     <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>
-    <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 50,545</p><p class="stat-label">Ms. Pac-Man, hidden dev</p><p class="stat-sub">9 promotions in a row · 10,831 with sticky actions · human 6,952</p></div>
+    <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
     <div class="stat"><p class="stat-num">4</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari · poker · LIBERO robotics · OSWorld</p></div>
   </div>
 </section>
@@ -121,8 +121,8 @@ layout: default
     <table>
       <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
       <tbody>
-        <tr><td>Claude Code (agent with tools)</td><td class="num">11</td><td>Breakout g1 · Pong g1 · Space Invaders g1, g2 · Montezuma's Revenge g5 · Leduc variants g5 · LIBERO-Spatial state g1 · LIBERO-Spatial vision g1 · LIBERO-10 g1 · OSWorld pure code g1, small model g3</td></tr>
-        <tr><td>Codex CLI (agent with tools)</td><td class="num">21</td><td>Breakout g2, g4 · Ms. Pac-Man g1–g9 · Montezuma's Revenge g1, g2, g4, g6 · Space Invaders g3 · Leduc variants g1–g4 · LIBERO-Spatial vision g2</td></tr>
+        <tr><td>Claude Code (agent with tools)</td><td class="num">16</td><td>Breakout g1 · Pong g1 · Space Invaders g1, g2 · Montezuma's Revenge g5 · Leduc variants g5, g9 · LIBERO-Spatial state g1 · LIBERO-Spatial vision g1 · LIBERO-10 g1 · OSWorld pure code g1, model-available run g3, g6 · <em>sticky:</em> Ms. Pac-Man g1, g2 · Montezuma's Revenge g5</td></tr>
+        <tr><td>Codex CLI (agent with tools)</td><td class="num">37</td><td>Breakout g2, g4 · Ms. Pac-Man g1–g9 · Montezuma's Revenge g1, g2, g4, g6, g7 · Space Invaders g3, g5 · Leduc variants g1–g4, g6–g8, g10 · LIBERO-Spatial vision g2 · <em>sticky:</em> Breakout g1–g3 · Ms. Pac-Man g4 · Montezuma's Revenge g1–g3, g6, g7 · Space Invaders g1</td></tr>
         <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">0</td><td>closest: Breakout g2 candidate, 849.8 on train</td></tr>
       </tbody>
     </table>
@@ -139,17 +139,18 @@ layout: default
     {% include curves-games.html %}
     <figure class="table-figure">
       <figcaption><strong>Table 2.</strong> Atari from RAM: frame skip 4, full game with all lives, at most 27,000
-      steps, <strong>no sticky actions</strong>. 8 train, 32 hidden dev and 64 test seeds per game. Human scores are
-      the standard reference values.</figcaption>
+      steps, <strong>no sticky actions</strong>, so the game is nearly deterministic. 8 train, 32 hidden dev and 64 test seeds per
+      game. Human scores are the standard reference values. These runs are superseded by the sticky-action runs in
+      Table 4.</figcaption>
       <table>
         <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
         <tbody>
           <tr class="best"><td>Breakout</td><td class="num">2.5</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num">30.5</td><td>done after 4 generations</td></tr>
           <tr class="best"><td>Pong</td><td class="num">−19.9</td><td class="num">21.0</td><td class="num"><strong>21.0</strong></td><td class="num">14.6</td><td>done: maximum in generation 1</td></tr>
-          <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num"><strong>50,545</strong></td><td class="num">after the run</td><td class="num">6,952</td><td>9 promotions in 9 generations; running</td></tr>
-          <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>53,700</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>promoted in generations 1, 2, 4, 5 and 6; running</td></tr>
-          <tr class="best"><td>Space Invaders</td><td class="num">112.0</td><td class="num"><strong>44,221</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generations 1–3; running</td></tr>
-          <tr><td>Seaquest</td><td colspan="5">queued; starts when a running game finishes</td></tr>
+          <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num">50,545</td><td class="num"><strong>57,606</strong></td><td class="num">6,952</td><td>done: 9 promotions in 10 generations</td></tr>
+          <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>65,506</strong></td><td class="num">—</td><td class="num">4,753</td><td>stopped at generation 7 for the sticky run</td></tr>
+          <tr class="best"><td>Space Invaders</td><td class="num">112.0</td><td class="num"><strong>45,376</strong></td><td class="num">—</td><td class="num">1,669</td><td>stopped at generation 5 for the sticky run</td></tr>
+          <tr><td>Seaquest</td><td colspan="5">planned, with sticky actions</td></tr>
           <tr class="ref"><td colspan="2"><em>Learning Beyond Gradients</em></td><td class="num" colspan="3">Breakout 864 (seed 0) · Pong 21 · Montezuma 400</td><td>different protocol</td></tr>
         </tbody>
       </table>
@@ -182,7 +183,30 @@ layout: default
       overfitted; the weakness is determinism.</p>
     </div>
     <figure class="table-figure">
-      <figcaption><strong>Table 4.</strong> Breakout, every promoted version and the one rejected candidate, with
+      <figcaption><strong>Table 4.</strong> <strong>Sticky-action runs</strong> (p = 0.25). Each run starts from the
+      no-sticky champion and keeps improving it with sticky actions in train, dev and test. All seeds are new: 16 train,
+      32 hidden dev and 64 test. <em>Start</em> is the starting program's dev score with sticky actions.</figcaption>
+      <table>
+        <thead><tr><th>Game</th><th class="num">Start (dev)</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>Ms. Pac-Man</td><td class="num">10,029</td><td class="num">44,257</td><td class="num"><strong>38,306</strong></td><td class="num">6,952</td><td>done: 3 promotions in 7 generations</td></tr>
+          <tr class="best"><td>Breakout</td><td class="num">479</td><td class="num">766</td><td class="num"><strong>788</strong></td><td class="num">30.5</td><td>done: 3 promotions in 6 generations</td></tr>
+          <tr class="best"><td>Montezuma's Revenge</td><td class="num">3,441</td><td class="num"><strong>80,184</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>6 promotions in 7 generations; running</td></tr>
+          <tr class="best"><td>Space Invaders</td><td class="num">28,219</td><td class="num"><strong>43,351</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generation 1; running</td></tr>
+          <tr><td>Pong</td><td class="num">16.6</td><td class="num">—</td><td class="num">after the run</td><td class="num">14.6</td><td>generation 1 running</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <div class="finding">
+      <p class="finding-label">Robustness can be improved too</p>
+      <p>With sticky actions in the loop, the improvers made the same programs robust. Ms. Pac-Man went from 10,029 to
+      38,306 on sticky test seeds, two thirds of its no-sticky test score. Montezuma's Revenge went from 3,441 to 80,184
+      on dev, above its no-sticky score, with real spread across seeds (28,200 to 65,300 for the generation 6 champion),
+      so it is not one memorised game. Under sticky actions dev seeds also stopped tying: all 32 Ms. Pac-Man dev seeds
+      score differently, which makes the paired gate a real test of generalization.</p>
+    </div>
+    <figure class="table-figure">
+      <figcaption><strong>Table 5.</strong> Breakout, every promoted version and the one rejected candidate, with
       test scores over 64 unseen seeds.</figcaption>
       <table>
         <thead><tr><th>Version</th><th>Improver</th><th class="num">Train</th><th class="num">Dev</th><th class="num">Test</th><th>Gate</th></tr></thead>
@@ -220,7 +244,7 @@ layout: default
       positions, and a laser countdown it discovered). It times jumps on the skull's live position and laser crossings
       on the countdown, collects keys, treasures and a sword, and opens four doors. Where a respawn keeps the inventory,
       it loses a life on purpose as a shortcut back. Generation 6 extended the route through level 2, keeping both keys for the exit doors and collecting its prizes, and into level 3 (53,700 on every dev seed). Caveat: without sticky actions, different seeds mostly shift
-      start-up timing, so dev mainly tests robustness to timing; under sticky actions it keeps only 5% (Table 3).</p>
+      start-up timing, so dev mainly tests robustness to timing; under sticky actions it keeps only 5% (Table 3); the sticky run brought it back (Table 4).</p>
     </div>
     <div class="finding">
       <p class="finding-label">Space Invaders by aiming, not by luck</p>
@@ -229,7 +253,7 @@ layout: default
       steps out of the path of falling bullets.</p>
     </div>
     <figure class="table-figure">
-      <figcaption><strong>Table 5.</strong> Poker (OpenSpiel <code>universal_poker</code>). <em>Leduc variants</em>: 72
+      <figcaption><strong>Table 6.</strong> Poker (OpenSpiel <code>universal_poker</code>). <em>Leduc variants</em>: 72
       Leduc-like limit games with different ranks, suits, raise sizes and raise caps, split 24 / 24 / 24; the
       standard Leduc game is a test variant. The program is queried at every information set and scored by
       NashConv divided by the largest raise (lower is better, 0 is a Nash equilibrium). Programs must be readable
@@ -238,7 +262,7 @@ layout: default
       <table>
         <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
         <tbody>
-          <tr class="best"><td>Leduc variants (NashConv / max raise ↓)</td><td class="num">1.381 (uniform)</td><td class="num"><strong>0.122</strong></td><td class="num">after the run</td><td>promoted in generations 1–5; running</td></tr>
+          <tr class="best"><td>Leduc variants (NashConv / max raise ↓)</td><td class="num">1.381 (uniform)</td><td class="num"><strong>0.109</strong></td><td class="num"><strong>0.106</strong> (standard Leduc 0.087)</td><td>done: promoted in all 10 generations</td></tr>
           <tr><td>HUNL (mbb/hand ↑)</td><td class="num">−1,240 (always call)</td><td class="num">39,512*</td><td class="num">pending</td><td>stopped after 3 generations without promotion</td></tr>
         </tbody>
       </table>
@@ -260,7 +284,7 @@ layout: default
   <div data-panel="embodied" hidden>
     {% include curves-embodied.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 6.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
+      <figcaption><strong>Table 7.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
       each: scenes 0–1 are train, 2–9 hidden dev (80 episodes), 10–49 test (400 episodes, used once). <em>State</em>
       gives object poses (privileged). <em>Vision</em> gives only RGB-D from the agent-view and wrist cameras, camera
       parameters and proprioception.</figcaption>
@@ -295,12 +319,16 @@ layout: default
   </div>
   <div data-panel="computer" hidden>
     <div class="empty">
-      <p class="empty-title">Running: generation 3–4</p>
+      <p class="empty-title">Running: generation 7–8</p>
       <p>Generation 1: the pure-code setting promoted a Claude Code program at <strong>2 / 24 dev tasks (8.3%)</strong>,
       from 0; it scored 65% on the train tasks. It is a skill library: regular-expression parsers map an instruction
       to a generic skill (fill blanks, sort, freeze panes, rename a sheet, export to CSV or PDF), which scripts
       LibreOffice through its UNO interface. Dev tasks mostly need skills that no train task exercised, hence the gap.
-      The setting with the small decision model was promoted for the first time in generation 3, also at 2 / 24 dev tasks.</p>
+      The run that may ask the small decision model reached <strong>5 / 24 dev tasks (20.8%)</strong> in generation 6,
+      with 78% on train, but its champion <strong>never calls the model</strong>: it is a larger skill library (28
+      spreadsheet handlers and about 20 desktop ones, with a probe of the desktop first). Only DeepSeek candidates
+      used the model, and none was promoted. So this run does not yet show that the model helps; it shows a better
+      pure-code program found in a second run. The pure-code run has not been promoted since generation 1.</p>
       <p>OSWorld, LibreOffice Calc and OS tasks (71 tasks, split 23 / 24 / 24 into train, dev and test), scored by
       OSWorld's own checkers. The program decides every action in code, including running code inside the desktop
       and reading its output. Two settings are compared: <strong>pure code</strong>, and code that may also ask one
