@@ -29,9 +29,9 @@ layout: default
     we evaluate on the game, embodied-robotics and computer-use benchmarks the community reports on most often.</p>
   </div>
   <div class="stats">
-    <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input</p></div>
+    <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input · 456 with sticky actions</p></div>
     <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>
-    <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 50,545</p><p class="stat-label">Ms. Pac-Man, hidden dev</p><p class="stat-sub">9 promotions in a row · human reference 6,952</p></div>
+    <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 50,545</p><p class="stat-label">Ms. Pac-Man, hidden dev</p><p class="stat-sub">9 promotions in a row · 10,831 with sticky actions · human 6,952</p></div>
     <div class="stat"><p class="stat-num">4</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari · poker · LIBERO robotics · OSWorld</p></div>
   </div>
 </section>
@@ -155,7 +155,34 @@ layout: default
       </table>
     </figure>
     <figure class="table-figure">
-      <figcaption><strong>Table 3.</strong> Breakout, every promoted version and the one rejected candidate, with
+      <figcaption><strong>Table 3.</strong> The same champions under <strong>sticky actions</strong> (each step repeats the
+      previous action with probability 0.25, the protocol of Machado et al., 2018). 64 fresh seeds that no loop ever
+      used, each played with and without sticky actions. The programs were improved without sticky actions; this
+      measures how much of each score survives random perturbation.</figcaption>
+      <table>
+        <thead><tr><th>Game</th><th>Champion</th><th class="num">No sticky</th><th class="num">Sticky 0.25</th><th class="num">Kept</th><th class="num">Sticky median / min</th><th class="num">Human</th></tr></thead>
+        <tbody>
+          <tr><td>Breakout</td><td>gen 4</td><td class="num">864</td><td class="num"><strong>456</strong></td><td class="num">53%</td><td class="num">425 / 286</td><td class="num">30.5</td></tr>
+          <tr><td>Pong</td><td>gen 1</td><td class="num">21.0</td><td class="num"><strong>15.8</strong></td><td class="num">75%</td><td class="num">16 / 8</td><td class="num">14.6</td></tr>
+          <tr><td>Space Invaders</td><td>gen 3</td><td class="num">44,469</td><td class="num"><strong>20,878</strong></td><td class="num">47%</td><td class="num">18,595 / 3,900</td><td class="num">1,669</td></tr>
+          <tr><td>Ms. Pac-Man</td><td>gen 9</td><td class="num">61,084</td><td class="num"><strong>10,831</strong></td><td class="num">18%</td><td class="num">8,700 / 3,920</td><td class="num">6,952</td></tr>
+          <tr><td>Montezuma's Revenge</td><td>gen 6</td><td class="num">53,700</td><td class="num"><strong>2,781</strong></td><td class="num">5%</td><td class="num">2,400 / 0</td><td class="num">4,753</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <div class="finding">
+      <p class="finding-label">Sticky actions: what survives</p>
+      <p>Every score drops, so part of each no-sticky result came from a deterministic game whose play can be memorised.
+      How much drops follows how the program works. Pong, Breakout and Space Invaders re-plan from the live state at
+      every step and keep half or more. Ms. Pac-Man keeps 18%: it relies on exact timing, such as passing a junction just
+      ahead of a ghost. Montezuma's Revenge keeps 5%: its route is scripted against countdowns and distances, and one
+      mistimed jump costs a life. Under sticky actions four of the five champions still score above the human reference
+      (Breakout about 15×, Space Invaders about 12×, Ms. Pac-Man 1.6×, Pong slightly); Montezuma's Revenge does not. On the
+      same fresh seeds without sticky actions Ms. Pac-Man scored 61,084, above its dev score, so dev itself was not
+      overfitted; the weakness is determinism.</p>
+    </div>
+    <figure class="table-figure">
+      <figcaption><strong>Table 4.</strong> Breakout, every promoted version and the one rejected candidate, with
       test scores over 64 unseen seeds.</figcaption>
       <table>
         <thead><tr><th>Version</th><th>Improver</th><th class="num">Train</th><th class="num">Dev</th><th class="num">Test</th><th>Gate</th></tr></thead>
@@ -178,8 +205,8 @@ layout: default
       <p>A caveat on what dev measures here. Without sticky actions the game is nearly deterministic, so many dev seeds
       replay the same game. Generation 9 tied its parent exactly on 25 of 32 seeds and won on 7: on those 7 it no longer
       dies at the same spot and plays to the 27,000-step limit (37,491 → about 112,330). The gain is real, but it fixes
-      one failure that recurs across seeds rather than showing broad generalization. Evaluations with sticky actions are
-      next.</p>
+      one failure that recurs across seeds rather than showing broad generalization; Table 3 shows the cost under sticky
+      actions.</p>
     </div>
     <div class="finding">
       <p class="finding-label">The gate caught overfitting</p>
@@ -193,7 +220,7 @@ layout: default
       positions, and a laser countdown it discovered). It times jumps on the skull's live position and laser crossings
       on the countdown, collects keys, treasures and a sword, and opens four doors. Where a respawn keeps the inventory,
       it loses a life on purpose as a shortcut back. Generation 6 extended the route through level 2, keeping both keys for the exit doors and collecting its prizes, and into level 3 (53,700 on every dev seed). Caveat: without sticky actions, different seeds mostly shift
-      start-up timing, so dev mainly tests robustness to timing. Evaluations with sticky actions are next.</p>
+      start-up timing, so dev mainly tests robustness to timing; under sticky actions it keeps only 5% (Table 3).</p>
     </div>
     <div class="finding">
       <p class="finding-label">Space Invaders by aiming, not by luck</p>
@@ -202,7 +229,7 @@ layout: default
       steps out of the path of falling bullets.</p>
     </div>
     <figure class="table-figure">
-      <figcaption><strong>Table 4.</strong> Poker (OpenSpiel <code>universal_poker</code>). <em>Leduc variants</em>: 72
+      <figcaption><strong>Table 5.</strong> Poker (OpenSpiel <code>universal_poker</code>). <em>Leduc variants</em>: 72
       Leduc-like limit games with different ranks, suits, raise sizes and raise caps, split 24 / 24 / 24; the
       standard Leduc game is a test variant. The program is queried at every information set and scored by
       NashConv divided by the largest raise (lower is better, 0 is a Nash equilibrium). Programs must be readable
@@ -233,7 +260,7 @@ layout: default
   <div data-panel="embodied" hidden>
     {% include curves-embodied.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 5.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
+      <figcaption><strong>Table 6.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
       each: scenes 0–1 are train, 2–9 hidden dev (80 episodes), 10–49 test (400 episodes, used once). <em>State</em>
       gives object poses (privileged). <em>Vision</em> gives only RGB-D from the agent-view and wrist cameras, camera
       parameters and proprioception.</figcaption>
