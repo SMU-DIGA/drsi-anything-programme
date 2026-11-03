@@ -1,7 +1,6 @@
 ---
 title: Design
 permalink: /design/
-kicker: Method
 summary: "How programs are improved: the loop, isolation, improvers, levels of recursion and the evaluation protocol."
 numbered: true
 ---

@@ -1,7 +1,6 @@
 ---
 title: Progress
 permalink: /progress/
-kicker: Log
 summary: Dated updates on the programme, newest first.
 ---
 

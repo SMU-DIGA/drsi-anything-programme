@@ -5,32 +5,6 @@ url: https://smu-diga.github.io
 repository: SMU-DIGA/ns-rsi-anything-programme
 markdown: kramdown
 permalink: /progress/:title/
-nav:
-  - title: Overview
-    url: /
-  - title: Progress
-    url: /progress/
-  - title: Design
-    url: /design/
-  - title: Environments
-    url: /environments/
-  - title: Roadmap
-    url: /roadmap/
-home_nav:
-  - title: TL;DR
-    url: "#tldr"
-  - title: Method
-    url: "#method"
-  - title: Domains
-    url: "#domains"
-  - title: Results
-    url: "#results"
-  - title: Progress
-    url: "#progress"
-  - title: Roadmap
-    url: "#roadmap"
-  - title: BibTeX
-    url: "#bibtex"
 defaults:
   - scope:
       path: ""
@@ -44,3 +18,18 @@ exclude:
   - README.md
   - README.zh-CN.md
   - LICENSE
+nav:
+  - title: Overview
+    url: /
+  - title: Design
+    url: /design/
+  - title: Environments
+    url: /environments/
+  - title: Results
+    url: /#results
+  - title: Progress
+    url: /progress/
+  - title: Roadmap
+    url: /roadmap/
+  - title: BibTeX
+    url: /#bibtex

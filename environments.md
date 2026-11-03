@@ -1,7 +1,6 @@
 ---
 title: Environments
 permalink: /environments/
-kicker: Benchmarks
 summary: "Games, embodied robotics and computer use, chosen from the benchmarks the community reports on most often."
 numbered: true
 ---
