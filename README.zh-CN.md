@@ -28,12 +28,12 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 | Improver：Codex CLI、Claude Code、OpenAI 兼容 API（DeepSeek） | Done |
 | 游戏：Atari（Breakout RAM 实验） | Running |
 | 游戏：VizDoom | Done |
-| 机器人：MuJoCo 运动控制、MetaWorld、ManiSkill3 | Done |
-| 机器人：LIBERO（LIBERO-Spatial 实验） | Running |
-| 机器人：SimplerEnv、RoboTwin 2.0 | Planned |
+| 具身机器人：MuJoCo 运动控制、MetaWorld、ManiSkill3 | Done |
+| 具身机器人：LIBERO（LIBERO-Spatial 实验） | Running |
+| 具身机器人：SimplerEnv、RoboTwin 2.0 | Planned |
 | 计算机操作：OSWorld | Planned |
 
-状态说明：Done（已接入并测试）· Running（实验进行中）· In progress（开发中）· Planned（计划中）。
+状态：Done（已接入并测试）· Running（实验进行中）· In progress（开发中）· Planned（尚未开始）。
 
 首次冒烟实验设置为 Breakout、RAM 输入、1 代、1 个 DeepSeek improver。隐藏 dev 集均分从随机初始程序的 2.1 提升到 13.0。程序还自己在 NOTES 里记下了发现的环境规律，比如需要先按 FIRE 发球、RAM 中挡板和球的位置字节。
 

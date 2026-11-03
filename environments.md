@@ -17,7 +17,9 @@ Following *Learning Beyond Gradients*, all games run through [EnvPool](https://g
 | Atari (ALE) | Breakout, Pong, Montezuma's Revenge, … Atari57 | RAM (128 bytes), RGB image, or both | episode return (unclipped, no sticky actions, full game) | <span class="badge running">Running</span> |
 | VizDoom | D1 Basic, D3 Battle | stacked screen + game variables | episode return | <span class="badge done">Done</span> |
 
-## Embodied robotics (simulation)
+## Embodied robotics
+
+All embodied work currently runs in simulation.
 
 | Benchmark | Why it matters | Status |
 |---|---|---|
@@ -44,6 +46,6 @@ feedback and skill synthesis recover much of the gap.
 
 ## Computer use
 
-| Benchmark | Plan |
-|---|---|
-| **OSWorld** | The program is a desktop agent: screenshot and accessibility-tree parsing, plus pyautogui actions and an app-level skill library. Scored by OSWorld's own task checkers. Tasks are split by application to prevent overfitting. Many VMs run in parallel. |
+| Benchmark | Plan | Status |
+|---|---|---|
+| **OSWorld** | The program is a desktop agent: screenshot and accessibility-tree parsing, plus pyautogui actions and an app-level skill library. Scored by OSWorld's own task checkers. Tasks are split by application to prevent overfitting. Many VMs run in parallel. | <span class="badge planned">Planned</span> |

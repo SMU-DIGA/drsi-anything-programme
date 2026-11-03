@@ -5,7 +5,7 @@ summary: "Phases of the programme and the research questions it is designed to a
 numbered: true
 ---
 
-## Phase 0: framework
+## Phase 0: Framework
 
 <span class="badge done">Done</span>
 
@@ -15,7 +15,7 @@ numbered: true
 - [x] EnvPool families: Atari, VizDoom, MuJoCo, MetaWorld
 - [x] End-to-end smoke run (Breakout RAM, DeepSeek): dev 2.1 → 13.0 in one generation
 
-## Phase 1: games
+## Phase 1: Games
 
 <span class="badge running">Running</span>
 
@@ -24,7 +24,7 @@ numbered: true
 - [ ] Atari57 sweep with a fixed env-step budget, reporting human-normalized scores against PPO curves
 - [ ] Ablations: single improver vs. mixed population; with and without shared history; with and without simplification
 
-## Phase 2: embodied robotics
+## Phase 2: Embodied robotics
 
 <span class="badge wip">In progress</span>
 
@@ -35,14 +35,14 @@ numbered: true
 - [ ] RoboTwin 2.0 (bimanual)
 - [ ] L2: a cross-task skill library distilled from train tasks and reused on held-out tasks
 
-## Phase 3: computer use
+## Phase 3: Computer use
 
 <span class="badge planned">Planned</span>
 
 - [ ] OSWorld adapter with parallel VMs, split by application
 - [ ] App-level skill library
 
-## Phase 4: deeper recursion
+## Phase 4: Deeper recursion
 
 <span class="badge planned">Planned</span>
 

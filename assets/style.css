@@ -143,7 +143,11 @@ table.roadmap td:first-child { width: 90px; }
 .badge.running { background: var(--accent-soft); color: var(--accent-ink); }
 .badge.wip { background: var(--warn-soft); color: var(--warn); }
 .badge.planned { background: var(--panel-2); color: var(--muted); }
-.tag { display: inline-block; font-size: 12px; padding: 1px 9px; margin-right: 6px; border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink); }
+.tag { display: inline-block; font-size: 12px; padding: 0 9px; margin-right: 6px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--muted); }
+.article-body .lead { margin: -6px 0 14px; font-family: var(--display); font-size: 19px; font-weight: 600; letter-spacing: -0.01em; color: var(--muted); }
+.status-legend { font-size: 14px; color: var(--muted); margin: 6px 0 0; }
+.status-legend .badge { margin: 0 4px 0 12px; }
+.status-legend .badge:first-child { margin-left: 0; }
 
 /* domains grid */
 .domains { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 20px 0; }

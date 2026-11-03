@@ -40,12 +40,12 @@ the implementation is not public.
 | Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
 | Games: Atari (Breakout RAM experiment) | Running |
 | Games: VizDoom | Done |
-| Robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
-| Robotics: LIBERO (LIBERO-Spatial experiment) | Running |
-| Robotics: SimplerEnv, RoboTwin 2.0 | Planned |
+| Embodied robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
+| Embodied robotics: LIBERO (LIBERO-Spatial experiment) | Running |
+| Embodied robotics: SimplerEnv, RoboTwin 2.0 | Planned |
 | Computer use: OSWorld | Planned |
 
-Status vocabulary: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned.
+Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).
 
 First smoke test (Breakout, RAM observations, one generation, one DeepSeek improver): hidden dev mean
 went from 2.1 (random seed program) to 13.0. Along the way the program wrote down facts it discovered,

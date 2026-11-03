@@ -1,7 +1,7 @@
 ---
-title: Choosing embodied environments; LIBERO and ManiSkill3 running
-summary: Robotics work will focus on widely recognized benchmarks, in the order LIBERO → ManiSkill3 → SimplerEnv → RoboTwin 2.0. LIBERO and ManiSkill3 now run headless on our servers.
-tags: [robotics]
+title: Choosing embodied robotics environments; LIBERO and ManiSkill3 integrated
+summary: Embodied robotics work will focus on widely recognized benchmarks, in the order LIBERO → ManiSkill3 → SimplerEnv → RoboTwin 2.0. LIBERO and ManiSkill3 are integrated and run headless.
+tags: [Embodied robotics]
 ---
 
 ## Selection principle

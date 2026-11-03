@@ -1,7 +1,7 @@
 ---
 title: Framework built; first self-improvement run on Breakout
 summary: The RSI loop, isolated evaluator and three kinds of improvers are working. In one generation, a DeepSeek improver raised Breakout (RAM) from 2.1 to 13.0 on hidden dev seeds.
-tags: [framework, games]
+tags: [Framework, Games]
 ---
 
 ## What was built

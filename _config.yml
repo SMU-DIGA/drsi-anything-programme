@@ -14,6 +14,7 @@ defaults:
       type: posts
     values:
       layout: post
+      numbered: true
 exclude:
   - README.md
   - README.zh-CN.md

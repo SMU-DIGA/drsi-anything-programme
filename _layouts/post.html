@@ -8,7 +8,7 @@ layout: default
   {% if page.tags.size > 0 %}<p class="tags">{% for tag in page.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</p>{% endif %}
 </section>
 <div class="article-layout">
-  <article class="article-body">
+  <article class="article-body"{% if page.numbered %} data-numbered{% endif %}>
     {{ content }}
     <p class="back"><a href="{{ '/progress/' | relative_url }}">← All progress updates</a></p>
   </article>
