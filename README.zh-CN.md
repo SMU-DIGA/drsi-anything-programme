@@ -35,7 +35,11 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 
 状态：Done（已接入并测试）· Running（实验进行中）· In progress（开发中）· Planned（尚未开始）。
 
-首次冒烟实验设置为 Breakout、RAM 输入、1 代、1 个 DeepSeek improver。隐藏 dev 集均分从随机初始程序的 2.1 提升到 13.0。程序还自己在 NOTES 里记下了发现的环境规律，比如需要先按 FIRE 发球、RAM 中挡板和球的位置字节。
+主要结果（全部由 LLM 改进者编写和改进的程序取得，没有梯度训练，也没有示范数据）：
+
+- **Breakout（RAM）：** 4 代后，在 64 个从未用过的 test seed 上全部拿到满分 864（初始程序 2.2）。
+- **LIBERO（state）：** LIBERO-Spatial 和 LIBERO-10 都只用 1 代，400 局 test 成功率均为 99.0%。
+- **Montezuma's Revenge / Ms. Pac-Man / Pong（RAM，隐藏 dev）：** 1 代后分别为 9,700 / 17,207 / 21。
 
 本仓库只公开方案文档与实验结果，不包含实现代码。
 

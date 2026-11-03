@@ -47,9 +47,11 @@ the implementation is not public.
 
 Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).
 
-First smoke test (Breakout, RAM observations, one generation, one DeepSeek improver): hidden dev mean
-went from 2.1 (random seed program) to 13.0. Along the way the program wrote down facts it discovered,
-such as "the ball must be served with FIRE" and which RAM bytes hold the paddle and ball positions.
+Headline results (programs written and refined by LLM improvers; no gradient training, no demonstrations):
+
+- **Breakout (RAM):** 864, the maximum, on all 64 unseen test seeds after 4 generations (seed program: 2.2).
+- **LIBERO (state):** 99.0% on 400 test episodes for both LIBERO-Spatial and LIBERO-10, each after 1 generation.
+- **Montezuma's Revenge / Ms. Pac-Man / Pong (RAM, hidden dev):** 9,700 / 17,207 / 21 after 1 generation.
 
 
 ## Progress log

@@ -29,10 +29,10 @@ layout: default
     we evaluate on the game, embodied-robotics and computer-use benchmarks the community reports on most often.</p>
   </div>
   <div class="stats">
-    <div class="stat"><p class="stat-num">2.1 <span class="arrow">→</span> 13.0</p><p class="stat-label">Breakout dev score</p><p class="stat-sub">1 generation · pipeline smoke test</p></div>
-    <div class="stat"><p class="stat-num">4</p><p class="stat-label">Game and control families integrated</p><p class="stat-sub">Atari · VizDoom · MuJoCo · MetaWorld</p></div>
-    <div class="stat"><p class="stat-num">2</p><p class="stat-label">Embodied robotics benchmarks integrated</p><p class="stat-sub">LIBERO · ManiSkill3</p></div>
-    <div class="stat"><p class="stat-num">3</p><p class="stat-label">Improver kinds, one population</p><p class="stat-sub">Codex CLI · Claude Code · chat API</p></div>
+    <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input</p></div>
+    <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>
+    <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 9,700</p><p class="stat-label">Montezuma's Revenge, hidden dev</p><p class="stat-sub">1 generation · human reference 4,753</p></div>
+    <div class="stat"><p class="stat-num">3</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari games · LIBERO robotics · OSWorld</p></div>
   </div>
 </section>
 
@@ -115,12 +115,6 @@ layout: default
   training, no demonstrations. A candidate is promoted only if it beats the incumbent in a paired bootstrap test on
   <strong>hidden dev seeds</strong> that no improver has seen. <strong>Test seeds</strong> are used once, after a run
   stops. Status: 3 Nov 2026.</p>
-  <div class="stat-row">
-    <div class="stat"><p class="stat-value">864 / 864</p><p class="stat-label">Breakout, on all 64 unseen test seeds</p></div>
-    <div class="stat"><p class="stat-value">99.0%</p><p class="stat-label">LIBERO-10 (state), 400 test episodes</p></div>
-    <div class="stat"><p class="stat-value">9,700</p><p class="stat-label">Montezuma's Revenge, hidden dev (human 4,753)</p></div>
-    <div class="stat"><p class="stat-value">17,207</p><p class="stat-label">Ms. Pac-Man, hidden dev (human 6,952)</p></div>
-  </div>
   <figure class="table-figure">
     <figcaption><strong>Table 1.</strong> Who produced the promoted versions. Each generation runs one candidate per
     improver, in parallel, from the same incumbent.</figcaption>
