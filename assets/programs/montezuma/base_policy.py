@@ -4,6 +4,27 @@
 WAIT, JUMP, UP, RIGHT, LEFT, DOWN = 0, 1, 2, 3, 4, 5
 JUMP_RIGHT, JUMP_LEFT = 11, 12
 
+# Action held during each navigate_lasers stage (WAIT when absent).
+LASER_ACTIONS = {1: LEFT, 3: LEFT, 4: LEFT, 6: LEFT, 15: LEFT,
+                 9: RIGHT, 10: RIGHT, 11: DOWN, 13: DOWN, 14: DOWN}
+
+# explore_lower_rooms timed phases: (total steps including the step that
+# entered the phase, action, action on the last step).
+TIMED = {
+    6: (10, WAIT, LEFT),
+    8: (7, JUMP_LEFT, JUMP_LEFT),
+    13: (7, JUMP_LEFT, JUMP_LEFT),
+    23: (7, JUMP_RIGHT, JUMP_RIGHT),
+    25: (7, JUMP_RIGHT, JUMP_RIGHT),
+    30: (7, JUMP_RIGHT, JUMP_RIGHT),
+    31: (9, WAIT, LEFT),
+    40: (6, JUMP_RIGHT, JUMP_RIGHT),
+    42: (6, JUMP_RIGHT, JUMP_RIGHT),
+    57: (9, WAIT, WAIT),
+    83: (7, JUMP_LEFT, JUMP_LEFT),
+    93: (7, JUMP_LEFT, JUMP_LEFT),
+}
+
 
 class Policy:
     # A zero duration waits for the observation checks in act().
@@ -78,63 +99,38 @@ class Policy:
         return action
 
     def navigate_lasers(self, obs, info):
-        # Room 0 treasure, then room 4 spider and the room 10 treasure.
-        room, x, timer = int(obs[3]), int(obs[42]), int(obs[83])
+        """Room 0 lasers and treasure, then the room 4 spider and room 10 treasure."""
+        room, x, y, spider, timer = (int(obs[j]) for j in (3, 42, 43, 44, 83))
         if not self.laser_entered:
             if room != 0 or x < 140:
                 return LEFT
             self.laser_entered = True
-        if self.laser_phase == 0 and timer >= 32:
-            self.laser_phase = 1
-        if self.laser_phase == 1 and x <= 130:
-            self.laser_phase = 2
-        if self.laser_phase == 2 and timer >= 32:
-            self.laser_phase = 3
-        if self.laser_phase == 3 and x <= 102:
-            self.laser_phase = 4
-        if self.laser_phase == 4 and x <= 54:
-            self.laser_phase = 5
-        if self.laser_phase == 5 and timer >= 32:
-            self.laser_phase = 6
-        if self.laser_phase == 6 and x <= 26:
-            self.laser_phase = 7
-        if self.laser_phase == 7:
-            self.jump_steps += 1
-            if self.jump_steps <= 8:
-                return JUMP
-            self.laser_phase = 8
-        if self.laser_phase == 8 and timer >= 32:
-            self.laser_phase = 9
-        if self.laser_phase == 9 and x >= 54:
-            self.laser_phase = 10
-        if self.laser_phase == 10 and x >= 74:
-            self.laser_phase = 11
-        y = int(obs[43])
-        if self.laser_phase == 11 and room == 4 and y >= 240:
-            self.laser_phase = 12
-        if self.laser_phase == 12:
-            spider = int(obs[44])
-            if spider <= 55 and self.prev_spider is not None and spider < self.prev_spider:
-                self.laser_phase = 13
-            self.prev_spider = spider
-        if self.laser_phase == 13 and room == 10 and y >= 240:
-            self.laser_phase = 14
-        if self.laser_phase == 14 and y <= 235:
-            self.laser_phase = 15
-        if self.laser_phase == 15 and x <= 15:
-            self.laser_phase = 16
-        if self.laser_phase == 16:
-            self.jump_steps += 1
-            if self.jump_steps <= 18:
-                return JUMP
-            return self.explore_lower_rooms(obs, info)
-        if self.laser_phase in (1, 3, 4, 6, 15):
-            return LEFT
-        if self.laser_phase in (9, 10):
-            return RIGHT
-        if self.laser_phase in (11, 13, 14):
-            return DOWN
-        return WAIT
+        # Completion test of each stage; several stages may end on one step.
+        ends = {0: timer >= 32, 1: x <= 130, 2: timer >= 32, 3: x <= 102,
+                4: x <= 54, 5: timer >= 32, 6: x <= 26, 8: timer >= 32,
+                9: x >= 54, 10: x >= 74, 11: room == 4 and y >= 240,
+                13: room == 10 and y >= 240, 14: y <= 235, 15: x <= 15}
+        while True:
+            stage = self.laser_phase
+            if stage in (7, 16):
+                # Hold JUMP for the treasure: steps 1-8 in room 0, then
+                # (with the same counter) steps 10-18 in room 10.
+                self.jump_steps += 1
+                if self.jump_steps <= (8 if stage == 7 else 18):
+                    return JUMP
+                if stage == 16:
+                    return self.explore_lower_rooms(obs, info)
+                done = True
+            elif stage == 12:
+                # Descend the room 4 ladder once the spider moves away left.
+                done = (spider <= 55 and self.prev_spider is not None
+                        and spider < self.prev_spider)
+                self.prev_spider = spider
+            else:
+                done = ends[stage]
+            if not done:
+                return LASER_ACTIONS.get(stage, WAIT)
+            self.laser_phase += 1
 
     def explore_lower_rooms(self, obs, info):
         room, x, y, spider = (int(obs[j]) for j in (3, 42, 43, 44))
@@ -151,16 +147,20 @@ class Policy:
                 return self.room23_detour(obs, info)
             return WAIT
 
-        # A row is (completion condition, action while waiting, action on completion).
+        # A row is (completion condition, action while waiting, action on
+        # completion). The completing step counts as step 1 of a TIMED phase.
         movement, timer = int(obs[53]), int(obs[83])
         lost_life = self.extra_lives is not None and int(info['lives']) < self.extra_lives
         transitions = {
             # Return from room 10 and descend toward the room 8 key.
             1: (x == 77 and y > 240, WAIT, UP),
             4: (y >= 232, UP, LEFT),
+            5: (room == 3 and x > 100, LEFT, WAIT),
+            7: (x <= 125, LEFT, JUMP_LEFT),
             9: (x <= 79, LEFT, DOWN),
             10: (room == 9 and y > 240, DOWN, DOWN),
             11: (y <= 235, DOWN, LEFT),
+            12: (x <= 61, LEFT, JUMP_LEFT),
             14: (x <= 31, LEFT, JUMP_LEFT),
             15: (room == 8 and x > 100, JUMP_LEFT, DOWN),
             16: (x <= 110, LEFT, JUMP_LEFT),
@@ -169,9 +169,12 @@ class Policy:
             # Return to room 1 and unlock the right door.
             20: (room == 8 and x > 130 and y == 235, WAIT, RIGHT),
             21: (room == 9 and x <= 10, RIGHT, RIGHT),
+            22: (x >= 5, RIGHT, JUMP_RIGHT),
+            24: (x >= 41, RIGHT, JUMP_RIGHT),
             26: (x >= 75, RIGHT, UP),
             27: (room == 3 and 230 <= y <= 240, UP, RIGHT),
             28: (room == 4 and x < 50, RIGHT, RIGHT),
+            29: (spider - x <= 14, RIGHT, JUMP_RIGHT),
             32: (x <= 76, LEFT, UP),
             33: (room == 0 and 230 <= y <= 235, UP, RIGHT),
             34: (x >= 102, RIGHT, WAIT),
@@ -179,6 +182,8 @@ class Policy:
             36: (x >= 130, RIGHT, WAIT),
             37: (timer >= 32, WAIT, RIGHT),
             38: (room == 1 and x < 15, RIGHT, RIGHT),
+            39: (x >= 50, RIGHT, JUMP_RIGHT),
+            41: (x >= 88, RIGHT, JUMP_RIGHT),
             43: (room == 2 and x < 20, RIGHT, RIGHT),
             # Collect the sword and the keys in rooms 7 and 14.
             44: (x >= 75, RIGHT, DOWN),
@@ -193,6 +198,7 @@ class Policy:
             53: (x >= 55, RIGHT, RIGHT),
             54: (x >= 103, RIGHT, WAIT),
             55: (timer >= 32, WAIT, RIGHT),
+            56: (x >= 131, RIGHT, JUMP),
             58: (timer >= 32, WAIT, LEFT),
             59: (x <= 103, LEFT, LEFT),
             60: (x <= 75, LEFT, DOWN),
@@ -200,11 +206,16 @@ class Policy:
             64: (room == 14 and x < 20, RIGHT, RIGHT),
             65: (x >= 34, RIGHT, JUMP_RIGHT),
             66: (movement == 4, JUMP_RIGHT, DOWN),
+            67: (y <= 185, DOWN, JUMP_RIGHT),
             # Return from the room 23 detour to the room 12 lasers.
             71: (room == 12 and x > 100, LEFT, WAIT),
             # Cross room 12 and open the room 5 doors.
             72: (x <= 131, LEFT, WAIT),
+            **{p: (timer >= 32, WAIT, LEFT) for p in (73, 75, 77, 79)},
+            **{p: (x <= t, LEFT, WAIT)
+               for p, t in ((74, 103), (76, 79), (78, 51), (80, 27))},
             81: (room == 11 and x > 120, LEFT, LEFT),
+            82: (x <= 120, LEFT, JUMP_LEFT),
             84: (x <= 78, LEFT, UP),
             85: (room == 5 and 155 <= y <= 165, UP, LEFT),
             86: (x <= 57, LEFT, RIGHT),
@@ -217,11 +228,13 @@ class Policy:
             95: (movement == 4, JUMP_LEFT, UP),
             96: (y >= 228, UP, JUMP_RIGHT),
             97: (x >= 74, JUMP_RIGHT, WAIT),
+            98: (True, WAIT, JUMP),
         }
         if phase in transitions:
             complete, action, on_complete = transitions[phase]
             if complete:
                 self.extra_phase += 1
+                self.extra_steps = 1
                 return on_complete
             return action
 
@@ -247,47 +260,14 @@ class Policy:
                 return JUMP_LEFT
             return WAIT
 
-        # Start and hold each timed jump. The start counts as its first step.
-        jump_starts = {
-            7: (x <= 125, LEFT, JUMP_LEFT),
-            12: (x <= 61, LEFT, JUMP_LEFT),
-            22: (x >= 5, RIGHT, JUMP_RIGHT),
-            24: (x >= 41, RIGHT, JUMP_RIGHT),
-            29: (spider - x <= 14, RIGHT, JUMP_RIGHT),
-            39: (x >= 50, RIGHT, JUMP_RIGHT),
-            41: (x >= 88, RIGHT, JUMP_RIGHT),
-            82: (x <= 120, LEFT, JUMP_LEFT),
-        }
-        if phase in jump_starts:
-            ready, action, jump = jump_starts[phase]
-            if ready:
-                self.extra_phase += 1
-                self.extra_steps = 1
-                return jump
-            return action
-
-        # Timed pauses and jump holds: (number of steps, action, last action).
-        timed = {
-            6: (9, WAIT, LEFT),
-            8: (7, JUMP_LEFT, JUMP_LEFT),
-            13: (7, JUMP_LEFT, JUMP_LEFT),
-            23: (7, JUMP_RIGHT, JUMP_RIGHT),
-            25: (7, JUMP_RIGHT, JUMP_RIGHT),
-            30: (7, JUMP_RIGHT, JUMP_RIGHT),
-            31: (8, WAIT, LEFT),
-            40: (6, JUMP_RIGHT, JUMP_RIGHT),
-            42: (6, JUMP_RIGHT, JUMP_RIGHT),
-            57: (8, WAIT, WAIT),
-            83: (7, JUMP_LEFT, JUMP_LEFT),
-            93: (7, JUMP_LEFT, JUMP_LEFT),
-        }
-        if phase in timed:
-            duration, action, last_action = timed[phase]
+        # Timed pauses and jump holds, counting the step that entered them:
+        # (total steps, action, last action).
+        if phase in TIMED:
+            duration, action, last_action = TIMED[phase]
             self.extra_steps += 1
             if self.extra_steps >= duration:
                 self.extra_phase += 1
-                if phase == 30:
-                    self.extra_steps = 0
+                self.extra_steps = 1
                 return last_action
             return action
 
@@ -312,56 +292,16 @@ class Policy:
                 self.extra_phase = 4
                 return UP
             return WAIT
-        if phase == 5:
-            if room == 3 and x > 100:
-                self.extra_phase = 6
-                self.extra_steps = 0
-                return WAIT
-            return LEFT
         if phase == 18:
             if y >= 235:
                 self.extra_phase = 19
                 self.extra_lives = int(info['lives'])
                 return JUMP
             return UP
-        if phase == 56:
-            if x >= 131:
-                self.extra_phase = 57
-                self.extra_steps = 0
-                return JUMP
-            return RIGHT
         if phase == 61:
-            if room == 13 and y > 240:
-                self.extra_phase = 62
-                self.prev_spider = None
-                return WAIT
+            # Descend into room 13; alternate_sword.Alternate takes over there
+            # and resumes this route at phase 63.
             return DOWN
-        if phase == 62:
-            moving_left = self.prev_spider is not None and spider < self.prev_spider
-            self.prev_spider = spider
-            if spider <= 55 and moving_left:
-                self.extra_phase = 63
-                return DOWN
-            return WAIT
-        if phase == 67:
-            if y <= 185:
-                self.extra_phase = 68
-                return JUMP_RIGHT
-            return DOWN
-        if phase in (73, 75, 77, 79):
-            if timer >= 32:
-                self.extra_phase += 1
-                return LEFT
-            return WAIT
-        if phase in (74, 76, 78, 80):
-            target = {74: 103, 76: 79, 78: 51, 80: 27}[phase]
-            if x <= target:
-                self.extra_phase += 1
-                return WAIT
-            return LEFT
-        if phase == 98:
-            self.extra_phase = 99
-            return JUMP
         return WAIT
 
     def after_treasure(self, obs, info):
@@ -391,9 +331,11 @@ class Policy:
                 self.extra_phase = 113
                 return WAIT
         # Rows are (completion condition, action while waiting, action on completion).
+        # Phases 100 and 103 end ready to watch the skull in 101 and 104.
         transitions = {
-            99: (y == 235 and movement == 8, WAIT, JUMP_LEFT),
+            100: (movement == 4, JUMP_LEFT, WAIT),
             102: (y == 198 and x >= 58, JUMP_RIGHT, RIGHT),
+            103: (x >= 66, RIGHT, WAIT),
             105: (x >= 96 and y == 198, JUMP_RIGHT, RIGHT),
             106: (True, JUMP_RIGHT, JUMP_RIGHT),
             107: (movement == 4, JUMP_RIGHT, DOWN),
@@ -412,15 +354,10 @@ class Policy:
             complete, action, on_complete = transitions[phase]
             if complete:
                 self.extra_phase += 1
+                self.return_skull = skull
                 return on_complete
             return action
 
-        if phase == 100:
-            if movement == 4:
-                self.extra_phase = 101
-                self.return_skull = skull
-                return WAIT
-            return JUMP_LEFT
         if phase == 101:
             moving_right = self.return_skull is not None and skull > self.return_skull
             self.return_skull = skull
@@ -428,12 +365,6 @@ class Policy:
                 self.extra_phase = 102
                 return JUMP_RIGHT
             return WAIT
-        if phase == 103:
-            if x >= 66:
-                self.extra_phase = 104
-                self.return_skull = skull
-                return WAIT
-            return RIGHT
         if phase == 104:
             moving_left = self.return_skull is not None and skull < self.return_skull
             self.return_skull = skull

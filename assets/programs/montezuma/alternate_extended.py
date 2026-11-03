@@ -12,13 +12,13 @@ class Extended(SwordAlternate):
         self.visit_skull = None
         self.entered15 = False
 
-    def act(self, o, i):
-        (room, x, y, skull, mv, timer) = map(int, o[[3, 42, 43, 47, 53, 83]])
+    def act(self, obs, info):
+        room, x, y, skull, mv, timer = map(int, obs[[3, 42, 43, 47, 53, 83]])
         if self.visit == 0 and self.extra_phase == 112:
             self.visit = 1
         st = self.visit
         if st == 0:
-            return super().act(o, i)
+            return super().act(obs, info)
         if st in (2, 23):
             # Approach from the safe right ledge on either room 18 crossing.
             if room == 18 and 100 <= x <= 134:
@@ -74,7 +74,7 @@ class Extended(SwordAlternate):
             if self.extra_phase >= 118:
                 self.visit = 17
                 return WAIT
-            return super().act(o, i)
+            return super().act(obs, info)
         if st == 29:
             # The room number may update before the x coordinate wraps.
             if room == 15 and x > 100:

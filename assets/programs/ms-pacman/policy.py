@@ -67,13 +67,15 @@ class Policy:
         self.last_loss = None
         self.cautious = False
         self.needed_caution = False
+        self.prev_ghosts = None
 
     def nearest(self, x, y):
         return min(self.graph, key=lambda p: abs(p[0]-x)+abs(p[1]-y))
 
     def active_ghosts(self, obs):
+        frightened = (int(obs[116]) & 63) > 8
         for i in range(4):
-            if int(obs[1+i]) & 128 and (int(obs[116]) & 63) > 8:
+            if frightened and int(obs[1+i]) & 128:
                 continue
             x, y = int(obs[6+i]), int(obs[12+i])
             if not (74 <= x <= 102 and 60 <= y <= 88):
@@ -152,10 +154,8 @@ class Policy:
             previous, node, elapsed = start, q, cost
             margin = danger.get(node, 22) - elapsed
             while len(self.graph[node]) == 2 and elapsed < 16:
-                following = next((edge for edge in self.graph[node]
-                                  if edge[0] != previous), None)
-                if following is None:
-                    break
+                # Every two-edge corridor in the fixed mazes has a forward edge.
+                following = next(edge for edge in self.graph[node] if edge[0] != previous)
                 previous, node = node, following[0]
                 elapsed += following[2]
                 margin = min(margin, danger.get(node, 22) - elapsed)
@@ -167,12 +167,17 @@ class Policy:
         recovered = self.needed_caution and not self.cautious and self.last_lives == 1
         x, y = int(obs[10]), int(obs[16])
         dx, dy = DIRS[self.heading]
+        reverse = REVERSE[self.heading]
+
+        def ghost_offsets():
+            for gx, gy in self.active_ghosts(obs):
+                yield (gx-x)*dx + (gy-y)*dy, abs((gx-x)*dy - (gy-y)*dx)
+
         # In caution or recovery, compare interception margins at
         # corridor exits. Recovery can also permit a safe reversal.
         if maze_type >= 2 and (self.cautious or (recovered and len(self.graph[p]) >= 3)):
             margins = self.corridor_margins(p, danger)
             planned_margin = next((m for m, a in margins if a == choice), 100)
-            reverse = REVERSE[self.heading]
             forward_margins = [(m, a) for m, a in margins if a != reverse]
             if self.cautious and forward_margins:
                 safe_margin, safe_action = max(forward_margins)
@@ -189,27 +194,36 @@ class Policy:
         planned = next((d for d, a in exits if a == choice), 100)
         if exits:
             safe, escape = max(exits)
-            if planned < 6 and safe > 8 and safe > planned + 5 and escape != REVERSE[self.heading]:
+            if planned < 6 and safe > 8 and safe > planned + 5 and escape != reverse:
                 choice = escape
         # When a ghost is directly behind us, a comparably safe side
         # exit can break pursuit before another narrow passage.
         if recovered and choice == self.heading and len(self.graph[p]) >= 3:
-            chased = False
-            for gx, gy in self.active_ghosts(obs):
-                behind = (gx-x)*dx + (gy-y)*dy
-                cross = abs((gx-x)*dy - (gy-y)*dx)
-                if -8 <= behind < 0 and cross <= 2:
-                    chased = True
-                    break
+            chased = any(-8 <= along < 0 and cross <= 2
+                         for along, cross in ghost_offsets())
             if chased:
-                forward = next((danger.get(q, 100) for q, a, _ in self.graph[p]
-                                if a == self.heading), 0)
-                sides = [(danger.get(q, 100), a) for q, a, _ in self.graph[p]
-                         if a not in (self.heading, REVERSE[self.heading])]
+                forward = next((d for d, a in exits if a == self.heading), 0)
+                sides = [(d, a) for d, a in exits
+                         if a not in (self.heading, reverse)]
                 if sides:
                     side_distance, side_action = max(sides)
                     if side_distance > 5 and side_distance >= forward - 2:
                         choice = side_action
+        # Turning with a close pursuer behind can let it catch up.
+        # In cautious mode, continue straight when that exit is comparably safe.
+        if (self.cautious
+                and choice not in (self.heading, reverse)):
+            chased = any(-20 <= along < 0 and cross <= 4
+                         for along, cross in ghost_offsets())
+            forward = next((d for d, a in exits if a == self.heading), None)
+            side = next((d for d, a in exits if a == choice), 100)
+            # Do not commit to a long straight escape if another ghost is
+            # already near the corridor ahead and could intercept it.
+            threatened_ahead = any(0 < along <= 60 and cross <= 32
+                                   for along, cross in ghost_offsets())
+            if (chased and not threatened_ahead and forward is not None
+                    and forward > 5 and forward >= side - 2):
+                choice = self.heading
         return choice
 
     def act(self, obs, info):
@@ -289,4 +303,43 @@ class Policy:
             self.action=self.choose(p,self.heading,pellets,danger)
             self.decision=(p,self.heading)
             self.still=0
+        # A head-on ghost in a corridor can collide between graph decisions.
+        # In the recovery state, reverse if it approaches and the rear is clear.
+        ghosts = list(self.active_ghosts(obs))
+        if (self.needed_caution and not self.cautious and lives == 1
+                and maze_type >= 2 and self.action == self.heading
+                and self.prev_ghosts is not None):
+            dx, dy = DIRS[self.heading]
+            ahead = False
+            behind_clear = True
+            for gx, gy in ghosts:
+                along = (gx-x)*dx + (gy-y)*dy
+                cross = abs((gx-x)*dy - (gy-y)*dx)
+                if cross <= 3 and -30 <= along < 0:
+                    behind_clear = False
+                if cross <= 3 and 0 < along <= 24:
+                    for j in range(4):
+                        if (gx, gy) == (int(obs[6+j]), int(obs[12+j])):
+                            if int(obs[116]) & 63 and int(obs[1+j]) & 128:
+                                break
+                            px, py = self.prev_ghosts[j]
+                            if (gx-px)*dx + (gy-py)*dy < 0:
+                                ahead = True
+                            # A ghost entering the junction ahead from a side
+                            # can turn into the corridor before we reach it.
+                            if 0 < along <= 12 and (gx-px)*dx + (gy-py)*dy == 0:
+                                for nx, ny in self.graph:
+                                    node_along = (nx-x)*dx + (ny-y)*dy
+                                    node_cross = abs((nx-x)*dy - (ny-y)*dx)
+                                    if (len(self.graph[(nx, ny)]) >= 3
+                                            and 0 < node_along <= 12 and node_cross <= 2
+                                            and abs(gx-nx) + abs(gy-ny) <= 4
+                                            and abs(px-nx) + abs(py-ny) > abs(gx-nx) + abs(gy-ny)):
+                                        ahead = True
+                                        break
+                            break
+            if ahead and behind_clear:
+                self.action = REVERSE[self.heading]
+                self.decision = None
+        self.prev_ghosts = [(int(obs[6+j]), int(obs[12+j])) for j in range(4)]
         return self.action

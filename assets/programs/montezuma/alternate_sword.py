@@ -11,11 +11,13 @@ class Alternate(Alt):
         self.sword_route = 0
         self.sword_spider = None
 
-    def act(self, o, i):
-        (room, y, spider) = map(int, o[[3, 43, 44]])
+    def act(self, obs, info):
+        room, y, spider = map(int, obs[[3, 43, 44]])
+        # With the room 13 spider gone there is nothing to wait for.
         if self.alt13_gone and self.detour_phase == 41:
             self.detour_phase = 42
-        if self.sword_route == 0 and self.alt == 5 and (self.extra_phase == 61) and (room == 13) and (y >= 240):
+        if (self.sword_route == 0 and self.alt == 5 and self.extra_phase == 61
+                and room == 13 and y >= 240):
             self.sword_route = 1
             self.sword_spider = None
         stage = self.sword_route
@@ -31,7 +33,7 @@ class Alternate(Alt):
         transitions = {
             2: (room == 21 and y >= 240, DOWN, WAIT),
             3: (70 <= spider <= 80, WAIT, DOWN),
-            4: (not int(o[65]) & 32, DOWN, UP),
+            4: (not int(obs[65]) & 32, DOWN, UP),  # sword used on the spider
             5: (room == 13 and y >= 195, UP, WAIT),
             7: (y >= 232, UP, RIGHT),
         }
@@ -45,4 +47,4 @@ class Alternate(Alt):
                     self.extra_phase = 63
                 return on_complete
             return action
-        return super().act(o, i)
+        return super().act(obs, info)

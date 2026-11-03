@@ -34,7 +34,7 @@ MISSILE_Y0, MISSILE_SPEED = 89, 4
 HIT_LO, HIT_HI = -3, 2          # fire when px - predicted column x is in this window
 VEL_WINDOW = 8                  # formation speed = mean |d ram[26]| over this many steps
 JUMP = 8                        # larger ram[26] changes are re-references, not motion
-FAST_SPEED = 2.0                # fast phase: clamp-then-reverse bounces, go to earliest intercept
+FAST_SPEED = 1.75                # fast phase: clamp-then-reverse bounces, go to earliest intercept
 INTERCEPT_HORIZON = 60
 IDLE_FIRE = 1000                # fire anyway after this many free-missile steps without a shot
 
@@ -146,7 +146,7 @@ class Policy:
         return t_bounce < DANGER_STEPS_PER_KILL * n_low + DANGER_MARGIN
 
     def _target(self, o, px):
-        """Return (aim_x, aligned_now, landing_danger) for the best invader column."""
+        """Return target, strict/wide shot alignment, and landing danger."""
         lows = {}  # column -> lowest alive row
         for k in range(6):
             for r in range(6):
@@ -154,7 +154,7 @@ class Policy:
                     lows[k] = r
                     break
         if not lows:
-            return px, False, False
+            return px, False, False, False
         ex = int(o[26])
         kmin, kmax = min(lows), max(lows)
         width = COL_SPACING * (kmax - kmin)
@@ -168,7 +168,10 @@ class Policy:
             T = max(0.0, (MISSILE_Y0 - hit_y) / MISSILE_SPEED)
             off = COL_SPACING * (k - kmin)
             cols.append((k, low, off, T, self._predict_ex(ex, T, width) + off))
-        aligned = any(HIT_LO <= px - aim <= HIT_HI for *_, aim in cols)
+        strict = any(HIT_LO <= px - aim <= HIT_HI for *_, aim in cols)
+        # The extra left-side window is usable only for a rightward move.
+        wide = strict or (self.stuck > 5 and low_level and
+                          any(HIT_LO - 2 <= px - aim <= HIT_HI for *_, aim in cols))
 
         if self.vel[0] >= FAST_SPEED:
             # walk to the earliest (tau) predicted firing point reachable in time, then wait there
@@ -179,7 +182,7 @@ class Policy:
                     if PX_MIN <= a <= PX_MAX and abs(a - px) <= PLAYER_SPEED * tau:
                         best_tau, best = tau, a
                         break
-            return best, aligned, danger
+            return best, strict, wide, danger
 
         best, bestd = None, 1e9
         for k, low, _, _, aim in cols:
@@ -196,7 +199,7 @@ class Policy:
                 d += EDGE_LOW_COST
             if d < bestd:
                 best, bestd = x, d
-        return best, aligned, danger
+        return best, strict, wide, danger
 
     def _ufo_aim(self, o):
         """Player x from which a shot hits the mystery ship, or None (absent / out of reach)."""
@@ -218,12 +221,10 @@ class Policy:
         px = int(o[28])
         self.ex_hist.append(int(o[26]))
         self.vel = self._ex_velocity()
-        target, aligned, landing = self._target(o, px)
+        target, strict, wide, landing = self._target(o, px)
         ufo = self._ufo_aim(o)
         if ufo is not None and not landing:
             target = ufo
-            # still take an aligned invader shot while the UFO firing point is far away
-            aligned = abs(px - ufo) <= UFO_TOL or (aligned and abs(px - ufo) > UFO_FAR)
         want = 1 if target > px + 1 else -1 if target < px - 1 else 0
         missile_free = o[85] >= 200
 
@@ -235,6 +236,10 @@ class Policy:
             move = want
         else:
             move = self._plan(px, target, danger)
+        aligned = wide if move == 1 else strict
+        if ufo is not None and not landing:
+            # Still take an aligned invader shot if the UFO firing point is far away.
+            aligned = abs(px - ufo) <= UFO_TOL or (aligned and abs(px - ufo) > UFO_FAR)
         if want != 0 and move != want and missile_free and not aligned:
             self.stuck += 1
         else:
