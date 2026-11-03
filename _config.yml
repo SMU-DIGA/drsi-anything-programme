@@ -21,8 +21,6 @@ nav:
     url: /#environments
   - title: Results
     url: /#results
-  - title: Programs
-    url: /programs/
   - title: Progress
     url: /#progress
   - title: Roadmap
