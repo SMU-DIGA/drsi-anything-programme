@@ -40,6 +40,7 @@ the implementation is not public.
 | Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
 | Games: Atari RAM: Breakout 864 on all test seeds; Pong 21, Ms. Pac-Man 17,207, Montezuma 9,700 on dev | Running |
 | Games: VizDoom | Done |
+| Games: poker (Leduc variants by NashConv; heads-up no-limit hold'em, duplicate) | Running |
 | Embodied robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
 | Embodied robotics: LIBERO (Spatial state 99.0% test; LIBERO-10 state 99.0% test; Spatial vision 95.0% dev) | Running |
 | Embodied robotics: SimplerEnv, RoboTwin 2.0 | Planned |

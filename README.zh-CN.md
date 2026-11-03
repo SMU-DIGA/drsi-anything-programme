@@ -28,6 +28,7 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 | Improver：Codex CLI、Claude Code、OpenAI 兼容 API（DeepSeek） | Done |
 | 游戏：Atari RAM：Breakout 全部 test seed 864；Pong 21、Ms. Pac-Man 17,207、Montezuma 9,700（dev） | Running |
 | 游戏：VizDoom | Done |
+| 游戏：扑克（Leduc 变体，用 NashConv 评测；单挑无限注德州，复式对局） | Running |
 | 具身机器人：MuJoCo 运动控制、MetaWorld、ManiSkill3 | Done |
 | 具身机器人：LIBERO（Spatial state test 99.0%；LIBERO-10 state test 99.0%；Spatial vision dev 95.0%） | Running |
 | 具身机器人：SimplerEnv、RoboTwin 2.0 | Planned |

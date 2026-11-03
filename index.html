@@ -31,8 +31,8 @@ layout: default
   <div class="stats">
     <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input</p></div>
     <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>
-    <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 9,700</p><p class="stat-label">Montezuma's Revenge, hidden dev</p><p class="stat-sub">1 generation · human reference 4,753</p></div>
-    <div class="stat"><p class="stat-num">3</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari games · LIBERO robotics · OSWorld</p></div>
+    <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 29,688</p><p class="stat-label">Ms. Pac-Man, hidden dev</p><p class="stat-sub">5 promotions in a row · human reference 6,952</p></div>
+    <div class="stat"><p class="stat-num">4</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari · poker · LIBERO robotics · OSWorld</p></div>
   </div>
 </section>
 
@@ -121,8 +121,8 @@ layout: default
     <table>
       <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
       <tbody>
-        <tr><td>Claude Code (agent with tools)</td><td class="num">5</td><td>Breakout g1 · Pong g1 · LIBERO-Spatial state g1 · LIBERO-Spatial vision g1 · LIBERO-10 g1</td></tr>
-        <tr><td>Codex CLI (agent with tools)</td><td class="num">5</td><td>Breakout g2, g4 · Ms. Pac-Man g1 · Montezuma's Revenge g1 · LIBERO-Spatial vision g2</td></tr>
+        <tr><td>Claude Code (agent with tools)</td><td class="num">7</td><td>Breakout g1 · Pong g1 · Space Invaders g1 · LIBERO-Spatial state g1 · LIBERO-Spatial vision g1 · LIBERO-10 g1 · OSWorld (pure code) g1</td></tr>
+        <tr><td>Codex CLI (agent with tools)</td><td class="num">11</td><td>Breakout g2, g4 · Ms. Pac-Man g1–g5 · Montezuma's Revenge g1, g2 · Leduc variants g1 · LIBERO-Spatial vision g2</td></tr>
         <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">0</td><td>closest: Breakout g2 candidate, 849.8 on train</td></tr>
       </tbody>
     </table>
@@ -144,10 +144,11 @@ layout: default
         <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
         <tbody>
           <tr class="best"><td>Breakout</td><td class="num">2.5</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num">30.5</td><td>done after 4 generations</td></tr>
-          <tr class="best"><td>Pong</td><td class="num">−19.9</td><td class="num"><strong>21.0</strong></td><td class="num">pending</td><td class="num">14.6</td><td>maximum in generation 1</td></tr>
-          <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num"><strong>17,207</strong></td><td class="num">pending</td><td class="num">6,952</td><td>promoted in generation 1; running</td></tr>
-          <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>9,700</strong></td><td class="num">pending</td><td class="num">4,753</td><td>promoted in generation 1; running</td></tr>
-          <tr><td>Space Invaders · Seaquest</td><td colspan="5">queued; they start when a running game finishes</td></tr>
+          <tr class="best"><td>Pong</td><td class="num">−19.9</td><td class="num">21.0</td><td class="num"><strong>21.0</strong></td><td class="num">14.6</td><td>done: maximum in generation 1</td></tr>
+          <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num"><strong>29,688</strong></td><td class="num">after the run</td><td class="num">6,952</td><td>5 promotions in 5 generations; running</td></tr>
+          <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>14,144</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>promoted in generations 1 and 2; running</td></tr>
+          <tr class="best"><td>Space Invaders</td><td class="num">112.0</td><td class="num"><strong>35,493</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generation 1; running</td></tr>
+          <tr><td>Seaquest</td><td colspan="5">queued; starts when a running game finishes</td></tr>
           <tr class="ref"><td colspan="2"><em>Learning Beyond Gradients</em></td><td class="num" colspan="3">Breakout 864 (seed 0) · Pong 21 · Montezuma 400</td><td>different protocol</td></tr>
         </tbody>
       </table>
@@ -167,6 +168,15 @@ layout: default
       </table>
     </figure>
     <div class="finding">
+      <p class="finding-label">Recursive improvement, five generations in a row</p>
+      <p>Ms. Pac-Man was promoted in every generation so far: 17,207, 19,173, 20,031, 25,663, then 29,688 on hidden
+      dev, each version built on the previous one and each winning the paired dev test. The first program decoded
+      the maze, dots and ghosts from RAM and planned over a maze graph. Later generations added escapes at junctions
+      when a ghost is close, detours for fruit (worth up to 5,000 points on later boards) and more cautious routing
+      after quick life losses; the changelog also records ideas that were tried and discarded, such as chasing
+      frightened ghosts.</p>
+    </div>
+    <div class="finding">
       <p class="finding-label">The gate caught overfitting</p>
       <p>In generation 3 a candidate scored the maximum on all 8 train seeds but only 714 on dev: it had tuned itself
       to the few train trajectories. It was rejected. Generation 4 reached 864 on every dev seed and then on every
@@ -181,10 +191,33 @@ layout: default
       start-up timing, so dev mainly tests robustness to timing. Evaluations with sticky actions are next.</p>
     </div>
     <div class="finding">
-      <p class="finding-label">Ms. Pac-Man as graph search</p>
-      <p>The program decoded the maze layout, every dot and power pellet, and the ghosts' positions and frightened
-      timers from RAM. It plans over a maze graph with tunnel links, weighting routes by distance to active ghosts and
-      turning to chase when they are frightened. Train episodes ranged from 8,370 to 30,611 points.</p>
+      <p class="finding-label">Space Invaders by aiming, not by luck</p>
+      <p>The program located the invader grid, its speed and descent, both enemy bullets and the shields in RAM, and
+      fitted the missile's flight time from about 1,700 kills. It fires with a lead computed from the grid's motion and
+      steps out of the path of falling bullets.</p>
+    </div>
+    <figure class="table-figure">
+      <figcaption><strong>Table 4.</strong> Poker (OpenSpiel <code>universal_poker</code>). <em>Leduc variants</em>: 72
+      Leduc-like limit games with different ranks, suits, raise sizes and raise caps, split 24 / 24 / 24; the
+      standard Leduc game is a test variant. The program is queried at every information set and scored by
+      NashConv divided by the largest raise (lower is better, 0 is a Nash equilibrium). Programs must be readable
+      rules: no search or equilibrium computation at run time and at most 8 KB of data. <em>HUNL</em>: heads-up
+      no-limit hold'em, duplicate matches against rule bots and the three most recent champions, in mbb/hand.</figcaption>
+      <table>
+        <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>Leduc variants (NashConv / max raise ↓)</td><td class="num">1.381 (uniform)</td><td class="num"><strong>0.154</strong></td><td class="num">after the run</td><td>generation 2 running</td></tr>
+          <tr><td>HUNL (mbb/hand ↑)</td><td class="num">−1,240 (always call)</td><td class="num">—</td><td class="num">—</td><td>restarted, see below</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <div class="finding">
+      <p class="finding-label">A run we threw away</p>
+      <p>The first HUNL run reported +62,790 mbb/hand, which was too good to be true. Its program had found a hole in
+      our harness: the mirrored hand of each duplicate pair was replayed right away in the same process, so it could
+      remember the board and its own earlier cards, which were now its opponent's. Each seat is now played by a
+      separate, fresh process; every deal is seen once per process; and temp files, sockets, subprocesses and
+      native code are rejected. The run was restarted from scratch.</p>
     </div>
     <p class="pending">Cost: Breakout used 23.9 M environment steps over 4 generations, counting every evaluation by
     every improver. Sample efficiency is not yet a strength of this loop.</p>
@@ -192,7 +225,7 @@ layout: default
   <div data-panel="embodied" hidden>
     {% include curves-embodied.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 4.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
+      <figcaption><strong>Table 5.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
       each: scenes 0–1 are train, 2–9 hidden dev (80 episodes), 10–49 test (400 episodes, used once). <em>State</em>
       gives object poses (privileged). <em>Vision</em> gives only RGB-D from the agent-view and wrist cameras, camera
       parameters and proprioception.</figcaption>
@@ -221,12 +254,18 @@ layout: default
       stove counts as on once its knob turns past about 0.45 rad) and found initial scenes where objects fly off the
       table on the first step, which no policy can solve.</p>
     </div>
-    <p class="pending">LIBERO-Spatial vision has stayed at 95.0% on dev for three generations; candidates now enter the
-    dev gate on ties, and programs may learn from their own train episodes. ManiSkill3 is queued.</p>
+    <p class="pending">LIBERO-Spatial vision finished its 10 generations at 95.0% on dev. In the last generation two
+    candidates reached 96.3%, but one extra win was not enough for the paired gate. Its test evaluation is running.
+    ManiSkill3 is queued.</p>
   </div>
   <div data-panel="computer" hidden>
     <div class="empty">
-      <p class="empty-title">Running: generation 1</p>
+      <p class="empty-title">Running: generation 2</p>
+      <p>Generation 1: the pure-code setting promoted a Claude Code program at <strong>2 / 24 dev tasks (8.3%)</strong>,
+      from 0; it scored 56.5% on the train tasks. It is a skill library: regular-expression parsers map an instruction
+      to a generic skill (fill blanks, sort, freeze panes, rename a sheet, export to CSV or PDF), which scripts
+      LibreOffice through its UNO interface. Dev tasks mostly need skills that no train task exercised, hence the gap.
+      The setting with the small decision model had no promotion yet.</p>
       <p>OSWorld, LibreOffice Calc and OS tasks (71 tasks, split 23 / 24 / 24 into train, dev and test), scored by
       OSWorld's own checkers. The program decides every action in code, including running code inside the desktop
       and reading its output. Two settings are compared: <strong>pure code</strong>, and code that may also ask one
