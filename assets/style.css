@@ -289,3 +289,9 @@ td.delta { color: var(--good); font-weight: 650; }
 .prog-link { margin: 18px 0 0; }
 .prog pre, .prog code { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
 .prog .hltable td.linenos .normal, .prog .hltable td.linenos span { background: none; border: 0; padding: 0; color: var(--faint); }
+details.more { margin: 28px 0 0; border-top: 1px solid var(--border); padding-top: 14px; }
+details.more > summary { cursor: pointer; width: fit-content; font-family: var(--display); font-size: 18px; font-weight: 700; color: var(--fg); list-style: none; }
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary::before { content: "+ "; color: var(--accent); }
+details.more[open] > summary::before { content: "− "; }
+.tabs { flex-wrap: wrap; }

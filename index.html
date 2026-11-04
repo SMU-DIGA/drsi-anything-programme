@@ -114,76 +114,40 @@ layout: default
   <p>Every number is the score of a <strong>program written and refined by LLM improvers</strong>: no gradient
   training, no demonstrations. A candidate is promoted only if it beats the incumbent in a paired bootstrap test on
   <strong>hidden dev seeds</strong> that no improver has seen. <strong>Test seeds</strong> are used once, after a run
-  stops. Status: 3 Nov 2026.</p>
+  stops. Status: 4 Nov 2026.</p>
   <figure class="table-figure">
-    <figcaption><strong>Table 1.</strong> Who produced the promoted versions. Each generation runs one candidate per
-    improver, in parallel, from the same incumbent.</figcaption>
+    <figcaption><strong>Table 1.</strong> Headline results, one row per benchmark, on test seeds or tasks that no
+    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below.</figcaption>
     <table>
-      <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
+      <thead><tr><th>Domain</th><th>Benchmark</th><th>Protocol</th><th class="num">Seed program</th><th class="num">Best program</th><th class="num">Reference</th></tr></thead>
       <tbody>
-        <tr><td>Claude Code (agent with tools)</td><td class="num">16</td><td>Breakout g1 · Pong g1 · Space Invaders g1, g2 · Montezuma's Revenge g5 · Leduc variants g5, g9 · LIBERO-Spatial state g1 · LIBERO-Spatial vision g1 · LIBERO-10 g1 · OSWorld pure code g1, model-available run g3, g6 · <em>sticky:</em> Ms. Pac-Man g1, g2 · Montezuma's Revenge g5</td></tr>
-        <tr><td>Codex CLI (agent with tools)</td><td class="num">37</td><td>Breakout g2, g4 · Ms. Pac-Man g1–g9 · Montezuma's Revenge g1, g2, g4, g6, g7 · Space Invaders g3, g5 · Leduc variants g1–g4, g6–g8, g10 · LIBERO-Spatial vision g2 · <em>sticky:</em> Breakout g1–g3 · Ms. Pac-Man g4 · Montezuma's Revenge g1–g3, g6, g7 · Space Invaders g1</td></tr>
-        <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">0</td><td>closest: Breakout g2 candidate, 849.8 on train</td></tr>
+        <tr><td>Atari</td><td>Ms. Pac-Man</td><td>sticky actions, test</td><td class="num">9,781</td><td class="num"><strong>38,306</strong></td><td class="num">human 6,952</td></tr>
+        <tr><td>Atari</td><td>Breakout</td><td>sticky actions, test</td><td class="num">473</td><td class="num"><strong>788</strong></td><td class="num">human 30.5</td></tr>
+        <tr><td>Atari</td><td>Montezuma's Revenge</td><td>sticky actions, dev (running)</td><td class="num">3,441</td><td class="num"><strong>113,659</strong></td><td class="num">human 4,753</td></tr>
+        <tr><td>Poker</td><td>Leduc variants, NashConv ↓</td><td>24 unseen variants, test</td><td class="num">1.381</td><td class="num"><strong>0.106</strong></td><td class="num">CFR, 100 iterations 0.045</td></tr>
+        <tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0%</td><td class="num"><strong>95.3%</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>
+        <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0%</td><td class="num"><strong>99.0% / 99.0%</strong></td><td class="num">privileged state</td></tr>
+        <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0%</td><td class="num"><strong>20.8%</strong></td><td class="num">—</td></tr>
       </tbody>
     </table>
   </figure>
-  <p>Rows marked <span class="legend-swatch best-swatch"></span> are promoted versions. Grey rows are references.
-  Curves follow the incumbent on hidden dev; dashed lines are references; hover a point for its value.</p>
+  <p class="pending">In every table, shaded rows are promoted versions and grey rows are references. Curves follow
+  the incumbent on hidden dev, one point per generation; dashed lines are references; hover a point for its value.</p>
   <p class="prog-link"><a class="pill" href="{{ '/programs/' | relative_url }}">Read the learned programs: what each champion discovered, with full source →</a></p>
   <div class="tabs" role="tablist">
-    <button class="on" data-tab="games" role="tab">Games</button>
+    <button class="on" data-tab="atari" role="tab">Atari</button>
+    <button data-tab="poker" role="tab">Poker</button>
     <button data-tab="embodied" role="tab">Embodied robotics</button>
     <button data-tab="computer" role="tab">Computer use</button>
+    <button data-tab="process" role="tab">Improvers and cost</button>
   </div>
-  <div data-panel="games">
-    {% include curves-games.html %}
+  <div data-panel="atari">
+    <p>Atari from RAM with <strong>sticky actions</strong> (each step repeats the previous action with probability
+    0.25, the protocol of Machado et al., 2018), frame skip 4, full game with all lives, at most 27,000 steps. Each run
+    starts from the champion of an earlier run without sticky actions (below) and uses new seeds.</p>
+    {% include curves-atari.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 2.</strong> Atari from RAM: frame skip 4, full game with all lives, at most 27,000
-      steps, <strong>no sticky actions</strong>, so the game is nearly deterministic. 8 train, 32 hidden dev and 64 test seeds per
-      game. Human scores are the standard reference values. These runs are superseded by the sticky-action runs in
-      Table 4.</figcaption>
-      <table>
-        <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr class="best"><td>Breakout</td><td class="num">2.5</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num">30.5</td><td>done after 4 generations</td></tr>
-          <tr class="best"><td>Pong</td><td class="num">−19.9</td><td class="num">21.0</td><td class="num"><strong>21.0</strong></td><td class="num">14.6</td><td>done: maximum in generation 1</td></tr>
-          <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num">50,545</td><td class="num"><strong>57,606</strong></td><td class="num">6,952</td><td>done: 9 promotions in 10 generations</td></tr>
-          <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>65,506</strong></td><td class="num">—</td><td class="num">4,753</td><td>stopped at generation 7 for the sticky run</td></tr>
-          <tr class="best"><td>Space Invaders</td><td class="num">112.0</td><td class="num"><strong>45,376</strong></td><td class="num">—</td><td class="num">1,669</td><td>stopped at generation 5 for the sticky run</td></tr>
-          <tr><td>Seaquest</td><td colspan="5">planned, with sticky actions</td></tr>
-          <tr class="ref"><td colspan="2"><em>Learning Beyond Gradients</em></td><td class="num" colspan="3">Breakout 864 (seed 0) · Pong 21 · Montezuma 400</td><td>different protocol</td></tr>
-        </tbody>
-      </table>
-    </figure>
-    <figure class="table-figure">
-      <figcaption><strong>Table 3.</strong> The same champions under <strong>sticky actions</strong> (each step repeats the
-      previous action with probability 0.25, the protocol of Machado et al., 2018). 64 fresh seeds that no loop ever
-      used, each played with and without sticky actions. The programs were improved without sticky actions; this
-      measures how much of each score survives random perturbation.</figcaption>
-      <table>
-        <thead><tr><th>Game</th><th>Champion</th><th class="num">No sticky</th><th class="num">Sticky 0.25</th><th class="num">Kept</th><th class="num">Sticky median / min</th><th class="num">Human</th></tr></thead>
-        <tbody>
-          <tr><td>Breakout</td><td>gen 4</td><td class="num">864</td><td class="num"><strong>456</strong></td><td class="num">53%</td><td class="num">425 / 286</td><td class="num">30.5</td></tr>
-          <tr><td>Pong</td><td>gen 1</td><td class="num">21.0</td><td class="num"><strong>15.8</strong></td><td class="num">75%</td><td class="num">16 / 8</td><td class="num">14.6</td></tr>
-          <tr><td>Space Invaders</td><td>gen 3</td><td class="num">44,469</td><td class="num"><strong>20,878</strong></td><td class="num">47%</td><td class="num">18,595 / 3,900</td><td class="num">1,669</td></tr>
-          <tr><td>Ms. Pac-Man</td><td>gen 9</td><td class="num">61,084</td><td class="num"><strong>10,831</strong></td><td class="num">18%</td><td class="num">8,700 / 3,920</td><td class="num">6,952</td></tr>
-          <tr><td>Montezuma's Revenge</td><td>gen 6</td><td class="num">53,700</td><td class="num"><strong>2,781</strong></td><td class="num">5%</td><td class="num">2,400 / 0</td><td class="num">4,753</td></tr>
-        </tbody>
-      </table>
-    </figure>
-    <div class="finding">
-      <p class="finding-label">Sticky actions: what survives</p>
-      <p>Every score drops, so part of each no-sticky result came from a deterministic game whose play can be memorised.
-      How much drops follows how the program works. Pong, Breakout and Space Invaders re-plan from the live state at
-      every step and keep half or more. Ms. Pac-Man keeps 18%: it relies on exact timing, such as passing a junction just
-      ahead of a ghost. Montezuma's Revenge keeps 5%: its route is scripted against countdowns and distances, and one
-      mistimed jump costs a life. Under sticky actions four of the five champions still score above the human reference
-      (Breakout about 15×, Space Invaders about 12×, Ms. Pac-Man 1.6×, Pong slightly); Montezuma's Revenge does not. On the
-      same fresh seeds without sticky actions Ms. Pac-Man scored 61,084, above its dev score, so dev itself was not
-      overfitted; the weakness is determinism.</p>
-    </div>
-    <figure class="table-figure">
-      <figcaption><strong>Table 4.</strong> <strong>Sticky-action runs</strong> (p = 0.25). Each run starts from the
+      <figcaption><strong>Table 2.</strong> <strong>Sticky-action runs</strong> (p = 0.25). Each run starts from the
       no-sticky champion and keeps improving it with sticky actions in train, dev and test. All seeds are new: 16 train,
       32 hidden dev and 64 test. <em>Start</em> is the starting program's dev score with sticky actions.</figcaption>
       <table>
@@ -205,53 +169,112 @@ layout: default
       so it is not one memorised game. Under sticky actions dev seeds also stopped tying: all 32 Ms. Pac-Man dev seeds
       score differently, which makes the paired gate a real test of generalization.</p>
     </div>
-    <figure class="table-figure">
-      <figcaption><strong>Table 5.</strong> Breakout, every promoted version and the one rejected candidate, with
-      test scores over 64 unseen seeds.</figcaption>
-      <table>
-        <thead><tr><th>Version</th><th>Improver</th><th class="num">Train</th><th class="num">Dev</th><th class="num">Test</th><th>Gate</th></tr></thead>
-        <tbody>
-          <tr class="ref"><td>Seed program</td><td>—</td><td class="num">1.9</td><td class="num">2.5</td><td class="num">2.2</td><td>—</td></tr>
-          <tr class="best"><td>Gen 1</td><td>Claude Code</td><td class="num">694.1</td><td class="num">702.8</td><td class="num">737.8</td><td>promoted · won 32 / 32</td></tr>
-          <tr class="best"><td>Gen 2</td><td>Codex</td><td class="num">862.5</td><td class="num">849.9</td><td class="num">854.3</td><td>promoted · won 21, lost 11</td></tr>
-          <tr><td>Gen 3</td><td>Codex</td><td class="num">864.0</td><td class="num">714.1</td><td class="num">—</td><td>rejected · won 11, lost 11</td></tr>
-          <tr class="best"><td>Gen 4</td><td>Codex</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num"><strong>864.0</strong></td><td>promoted · won 22, lost 0</td></tr>
-        </tbody>
-      </table>
-    </figure>
-    <div class="finding">
-      <p class="finding-label">Recursive improvement, nine generations in a row</p>
-      <p>Ms. Pac-Man was promoted in every generation so far: 17,207, 19,173, 20,031, 25,663, 29,688, 30,715, 32,295,
-      34,174, then 50,545 on hidden dev, each version built on the previous one and each winning the paired dev test.
-      The first program decoded the maze, dots and ghosts from RAM and planned over a maze graph. Later generations
-      added escapes at junctions when a ghost is close, detours for fruit, more cautious routing after quick life
-      losses and, in generation 9, a reflex that reverses when a ghost comes head-on on the last life.</p>
-      <p>A caveat on what dev measures here. Without sticky actions the game is nearly deterministic, so many dev seeds
-      replay the same game. Generation 9 tied its parent exactly on 25 of 32 seeds and won on 7: on those 7 it no longer
-      dies at the same spot and plays to the 27,000-step limit (37,491 → about 112,330). The gain is real, but it fixes
-      one failure that recurs across seeds rather than showing broad generalization; Table 3 shows the cost under sticky
-      actions.</p>
-    </div>
-    <div class="finding">
-      <p class="finding-label">The gate caught overfitting</p>
-      <p>In generation 3 a candidate scored the maximum on all 8 train seeds but only 714 on dev: it had tuned itself
-      to the few train trajectories. It was rejected. Generation 4 reached 864 on every dev seed and then on every
-      one of the 64 test seeds, which no improver or gate had ever touched.</p>
-    </div>
-    <div class="finding">
-      <p class="finding-label">Montezuma's Revenge without exploration bonuses</p>
-      <p>The promoted program follows an explicit room-by-room route over RAM state (room, position, inventory, enemy
-      positions, and a laser countdown it discovered). It times jumps on the skull's live position and laser crossings
-      on the countdown, collects keys, treasures and a sword, and opens four doors. Where a respawn keeps the inventory,
-      it loses a life on purpose as a shortcut back. Generation 6 extended the route through level 2, keeping both keys for the exit doors and collecting its prizes, and into level 3 (53,700 on every dev seed). Caveat: without sticky actions, different seeds mostly shift
-      start-up timing, so dev mainly tests robustness to timing; under sticky actions it keeps only 5% (Table 3); the sticky run brought it back (Table 4).</p>
-    </div>
-    <div class="finding">
-      <p class="finding-label">Space Invaders by aiming, not by luck</p>
-      <p>The program located the invader grid, its speed and descent, both enemy bullets and the shields in RAM, and
-      fitted the missile's flight time from about 1,700 kills. It fires with a lead computed from the grid's motion and
-      steps out of the path of falling bullets.</p>
-    </div>
+    <p class="pending">Running now, all with sticky actions and from the generic seed program: the
+    <strong>Atari-5</strong> subset (Battle Zone, Double Dunk, Name This Game, Phoenix, Q*bert; Aitchison et al., 2023),
+    whose scores predict performance on the full suite, then the remaining games of <strong>Atari-57</strong>, six runs at
+    a time. Costs are in Table 10, under <em>Improvers and cost</em>.</p>
+    <details class="more">
+      <summary>Earlier runs without sticky actions</summary>
+      <p>Our first protocol had no sticky actions, so the game was nearly deterministic and many seeds replayed the same
+      game. These runs produced the starting programs above; the tables show what they scored and how much of it
+      survived sticky actions.</p>
+      {% include curves-atari-nosticky.html %}
+      <figure class="table-figure">
+        <figcaption><strong>Table 3.</strong> Atari from RAM: frame skip 4, full game with all lives, at most 27,000
+        steps, <strong>no sticky actions</strong>, so the game is nearly deterministic. 8 train, 32 hidden dev and 64 test seeds per
+        game. Human scores are the standard reference values. These runs are superseded by the sticky-action runs in
+        Table 2.</figcaption>
+        <table>
+          <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr class="best"><td>Breakout</td><td class="num">2.5</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num">30.5</td><td>done after 4 generations</td></tr>
+            <tr class="best"><td>Pong</td><td class="num">−19.9</td><td class="num">21.0</td><td class="num"><strong>21.0</strong></td><td class="num">14.6</td><td>done: maximum in generation 1</td></tr>
+            <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num">50,545</td><td class="num"><strong>57,606</strong></td><td class="num">6,952</td><td>done: 9 promotions in 10 generations</td></tr>
+            <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>65,506</strong></td><td class="num">—</td><td class="num">4,753</td><td>stopped at generation 7 for the sticky run</td></tr>
+            <tr class="best"><td>Space Invaders</td><td class="num">112.0</td><td class="num"><strong>45,376</strong></td><td class="num">—</td><td class="num">1,669</td><td>stopped at generation 5 for the sticky run</td></tr>
+            <tr><td>Seaquest</td><td colspan="5">planned, with sticky actions</td></tr>
+            <tr class="ref"><td colspan="2"><em>Learning Beyond Gradients</em></td><td class="num" colspan="3">Breakout 864 (seed 0) · Pong 21 · Montezuma 400</td><td>different protocol</td></tr>
+          </tbody>
+        </table>
+      </figure>
+      <figure class="table-figure">
+        <figcaption><strong>Table 4.</strong> The same champions under <strong>sticky actions</strong> (each step repeats the
+        previous action with probability 0.25, the protocol of Machado et al., 2018). 64 fresh seeds that no loop ever
+        used, each played with and without sticky actions. The programs were improved without sticky actions; this
+        measures how much of each score survives random perturbation.</figcaption>
+        <table>
+          <thead><tr><th>Game</th><th>Champion</th><th class="num">No sticky</th><th class="num">Sticky 0.25</th><th class="num">Kept</th><th class="num">Sticky median / min</th><th class="num">Human</th></tr></thead>
+          <tbody>
+            <tr><td>Breakout</td><td>gen 4</td><td class="num">864</td><td class="num"><strong>456</strong></td><td class="num">53%</td><td class="num">425 / 286</td><td class="num">30.5</td></tr>
+            <tr><td>Pong</td><td>gen 1</td><td class="num">21.0</td><td class="num"><strong>15.8</strong></td><td class="num">75%</td><td class="num">16 / 8</td><td class="num">14.6</td></tr>
+            <tr><td>Space Invaders</td><td>gen 3</td><td class="num">44,469</td><td class="num"><strong>20,878</strong></td><td class="num">47%</td><td class="num">18,595 / 3,900</td><td class="num">1,669</td></tr>
+            <tr><td>Ms. Pac-Man</td><td>gen 9</td><td class="num">61,084</td><td class="num"><strong>10,831</strong></td><td class="num">18%</td><td class="num">8,700 / 3,920</td><td class="num">6,952</td></tr>
+            <tr><td>Montezuma's Revenge</td><td>gen 6</td><td class="num">53,700</td><td class="num"><strong>2,781</strong></td><td class="num">5%</td><td class="num">2,400 / 0</td><td class="num">4,753</td></tr>
+          </tbody>
+        </table>
+      </figure>
+      <div class="finding">
+        <p class="finding-label">Sticky actions: what survives</p>
+        <p>Every score drops, so part of each no-sticky result came from a deterministic game whose play can be memorised.
+        How much drops follows how the program works. Pong, Breakout and Space Invaders re-plan from the live state at
+        every step and keep half or more. Ms. Pac-Man keeps 18%: it relies on exact timing, such as passing a junction just
+        ahead of a ghost. Montezuma's Revenge keeps 5%: its route is scripted against countdowns and distances, and one
+        mistimed jump costs a life. Under sticky actions four of the five champions still score above the human reference
+        (Breakout about 15×, Space Invaders about 12×, Ms. Pac-Man 1.6×, Pong slightly); Montezuma's Revenge does not. On the
+        same fresh seeds without sticky actions Ms. Pac-Man scored 61,084, above its dev score, so dev itself was not
+        overfitted; the weakness is determinism.</p>
+      </div>
+      <figure class="table-figure">
+        <figcaption><strong>Table 5.</strong> Breakout, every promoted version and the one rejected candidate, with
+        test scores over 64 unseen seeds.</figcaption>
+        <table>
+          <thead><tr><th>Version</th><th>Improver</th><th class="num">Train</th><th class="num">Dev</th><th class="num">Test</th><th>Gate</th></tr></thead>
+          <tbody>
+            <tr class="ref"><td>Seed program</td><td>—</td><td class="num">1.9</td><td class="num">2.5</td><td class="num">2.2</td><td>—</td></tr>
+            <tr class="best"><td>Gen 1</td><td>Claude Code</td><td class="num">694.1</td><td class="num">702.8</td><td class="num">737.8</td><td>promoted · won 32 / 32</td></tr>
+            <tr class="best"><td>Gen 2</td><td>Codex</td><td class="num">862.5</td><td class="num">849.9</td><td class="num">854.3</td><td>promoted · won 21, lost 11</td></tr>
+            <tr><td>Gen 3</td><td>Codex</td><td class="num">864.0</td><td class="num">714.1</td><td class="num">—</td><td>rejected · won 11, lost 11</td></tr>
+            <tr class="best"><td>Gen 4</td><td>Codex</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num"><strong>864.0</strong></td><td>promoted · won 22, lost 0</td></tr>
+          </tbody>
+        </table>
+      </figure>
+      <div class="finding">
+        <p class="finding-label">The gate caught overfitting</p>
+        <p>In generation 3 a candidate scored the maximum on all 8 train seeds but only 714 on dev: it had tuned itself
+        to the few train trajectories. It was rejected. Generation 4 reached 864 on every dev seed and then on every
+        one of the 64 test seeds, which no improver or gate had ever touched.</p>
+      </div>
+      <div class="finding">
+        <p class="finding-label">Recursive improvement, nine generations in a row</p>
+        <p>Ms. Pac-Man was promoted in every generation so far: 17,207, 19,173, 20,031, 25,663, 29,688, 30,715, 32,295,
+        34,174, then 50,545 on hidden dev, each version built on the previous one and each winning the paired dev test.
+        The first program decoded the maze, dots and ghosts from RAM and planned over a maze graph. Later generations
+        added escapes at junctions when a ghost is close, detours for fruit, more cautious routing after quick life
+        losses and, in generation 9, a reflex that reverses when a ghost comes head-on on the last life.</p>
+        <p>A caveat on what dev measures here. Without sticky actions the game is nearly deterministic, so many dev seeds
+        replay the same game. Generation 9 tied its parent exactly on 25 of 32 seeds and won on 7: on those 7 it no longer
+        dies at the same spot and plays to the 27,000-step limit (37,491 → about 112,330). The gain is real, but it fixes
+        one failure that recurs across seeds rather than showing broad generalization; Table 4 shows the cost under sticky
+        actions.</p>
+      </div>
+      <div class="finding">
+        <p class="finding-label">Montezuma's Revenge without exploration bonuses</p>
+        <p>The promoted program follows an explicit room-by-room route over RAM state (room, position, inventory, enemy
+        positions, and a laser countdown it discovered). It times jumps on the skull's live position and laser crossings
+        on the countdown, collects keys, treasures and a sword, and opens four doors. Where a respawn keeps the inventory,
+        it loses a life on purpose as a shortcut back. Generation 6 extended the route through level 2, keeping both keys for the exit doors and collecting its prizes, and into level 3 (53,700 on every dev seed). Caveat: without sticky actions, different seeds mostly shift
+        start-up timing, so dev mainly tests robustness to timing; under sticky actions it keeps only 5% (Table 4); the sticky run brought it back (Table 2).</p>
+      </div>
+      <div class="finding">
+        <p class="finding-label">Space Invaders by aiming, not by luck</p>
+        <p>The program located the invader grid, its speed and descent, both enemy bullets and the shields in RAM, and
+        fitted the missile's flight time from about 1,700 kills. It fires with a lead computed from the grid's motion and
+        steps out of the path of falling bullets.</p>
+      </div>
+    </details>
+  </div>
+  <div data-panel="poker" hidden>
+    {% include curves-poker.html %}
     <figure class="table-figure">
       <figcaption><strong>Table 6.</strong> Poker (OpenSpiel <code>universal_poker</code>). <em>Leduc variants</em>: 72
       Leduc-like limit games with different ranks, suits, raise sizes and raise caps, split 24 / 24 / 24; the
@@ -282,10 +305,6 @@ layout: default
       separate, fresh process; every deal is seen once per process; and temp files, sockets, subprocesses and
       native code are rejected. The run was restarted from scratch.</p>
     </div>
-    <p class="pending">Running next, all with sticky actions and from the generic seed program: the
-    <strong>Atari-5</strong> subset (Battle Zone, Double Dunk, Name This Game, Phoenix, Q*bert; Aitchison et al., 2023),
-    whose scores predict performance on the full suite, then the remaining games of <strong>Atari-57</strong>, six runs at
-    a time. Costs are in Table 9.</p>
   </div>
   <div data-panel="embodied" hidden>
     {% include curves-embodied.html %}
@@ -360,36 +379,50 @@ layout: default
     if-statement inside the program (in the style of TypeSafe's Jev). In both settings the program may learn a memory
     from its own train episodes, frozen during dev and test.</p>
   </div>
-
-  <figure class="table-figure">
-    <figcaption><strong>Table 9.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
-    gates, the tests and the improvers' own trial runs (for Atari, one step is four frames). <em>Agent hours</em> is the
-    wall time of all improver sessions. Claude Code reports its cost in USD; Codex CLI reports tokens only. Runs still in
-    progress are not listed.</figcaption>
-    <table>
-      <thead><tr><th>Task</th><th>Setting</th><th class="num">Env steps</th><th class="num">Agent hours</th><th class="num">Claude Code</th><th class="num">Codex tokens</th><th class="num">Candidates</th></tr></thead>
-      <tbody>
-          <tr><td>Breakout</td><td>no sticky</td><td class="num">28.4 M</td><td class="num">6.0</td><td class="num">$7</td><td class="num">0.7 M</td><td class="num">15</td></tr>
-          <tr><td>Pong</td><td>no sticky</td><td class="num">14.7 M</td><td class="num">2.9</td><td class="num">$19</td><td class="num">0.3 M</td><td class="num">13</td></tr>
-          <tr><td>Ms. Pac-Man</td><td>no sticky</td><td class="num">65.8 M</td><td class="num">13.3</td><td class="num">$29</td><td class="num">2.4 M</td><td class="num">39</td></tr>
-          <tr><td>Montezuma's Revenge</td><td>no sticky</td><td class="num">53.6 M</td><td class="num">12.0</td><td class="num">$22</td><td class="num">3.0 M</td><td class="num">27</td></tr>
-          <tr><td>Space Invaders</td><td>no sticky</td><td class="num">54.0 M</td><td class="num">9.1</td><td class="num">$23</td><td class="num">1.0 M</td><td class="num">21</td></tr>
-          <tr><td>Breakout</td><td>sticky</td><td class="num">34.9 M</td><td class="num">8.2</td><td class="num">$13</td><td class="num">1.3 M</td><td class="num">21</td></tr>
-          <tr><td>Ms. Pac-Man</td><td>sticky</td><td class="num">97.1 M</td><td class="num">11.3</td><td class="num">$18</td><td class="num">2.3 M</td><td class="num">24</td></tr>
-          <tr><td>Montezuma's Revenge</td><td>sticky</td><td class="num">79.9 M</td><td class="num">13.0</td><td class="num">$32</td><td class="num">3.7 M</td><td class="num">30</td></tr>
-          <tr><td>LIBERO-Spatial</td><td>state</td><td class="num">0.3 M</td><td class="num">1.0</td><td class="num">$2</td><td class="num">0.1 M</td><td class="num">6</td></tr>
-          <tr><td>LIBERO-10</td><td>state</td><td class="num">1.7 M</td><td class="num">4.8</td><td class="num">$20</td><td class="num">0.5 M</td><td class="num">21</td></tr>
-          <tr><td>LIBERO-Spatial</td><td>vision</td><td class="num">1.0 M</td><td class="num">11.5</td><td class="num">$27</td><td class="num">1.3 M</td><td class="num">32</td></tr>
-          <tr><td>Leduc variants</td><td>10 generations</td><td class="num">—</td><td class="num">16.0</td><td class="num">$31</td><td class="num">2.6 M</td><td class="num">40</td></tr>
-          <tr><td>OSWorld</td><td>pure code</td><td class="num">—</td><td class="num">23.5</td><td class="num">$29</td><td class="num">1.1 M</td><td class="num">24</td></tr>
-          <tr><td>OSWorld</td><td>model available</td><td class="num">—</td><td class="num">23.6</td><td class="num">$38</td><td class="num">0.9 M</td><td class="num">23</td></tr>
-      </tbody>
-    </table>
-  </figure>
-  <p class="pending">Most environment steps are spent by the improvers' own trial runs (64–90% for Atari), not by the
-  gates. An Atari run uses 15–100 M steps (60–400 M frames): the same order as the standard deep-RL budget of 200 M
-  frames, and far above sample-efficient settings such as Atari 100k (400 K frames). Sample efficiency is a weakness of
-  this loop. In money a run costs tens of dollars of agent time.</p>
+  </div>
+  <div data-panel="process" hidden>
+    <figure class="table-figure">
+      <figcaption><strong>Table 9.</strong> Who produced the promoted versions. Each generation runs one candidate per
+      improver, in parallel, from the same incumbent.</figcaption>
+      <table>
+        <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Claude Code (agent with tools)</td><td class="num">16</td><td>Breakout g1 · Pong g1 · Space Invaders g1, g2 · Montezuma's Revenge g5 · Leduc variants g5, g9 · LIBERO-Spatial state g1 · LIBERO-Spatial vision g1 · LIBERO-10 g1 · OSWorld pure code g1, model-available run g3, g6 · <em>sticky:</em> Ms. Pac-Man g1, g2 · Montezuma's Revenge g5</td></tr>
+          <tr><td>Codex CLI (agent with tools)</td><td class="num">37</td><td>Breakout g2, g4 · Ms. Pac-Man g1–g9 · Montezuma's Revenge g1, g2, g4, g6, g7 · Space Invaders g3, g5 · Leduc variants g1–g4, g6–g8, g10 · LIBERO-Spatial vision g2 · <em>sticky:</em> Breakout g1–g3 · Ms. Pac-Man g4 · Montezuma's Revenge g1–g3, g6, g7 · Space Invaders g1</td></tr>
+          <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">0</td><td>closest: Breakout g2 candidate, 849.8 on train</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <figure class="table-figure">
+      <figcaption><strong>Table 10.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
+      gates, the tests and the improvers' own trial runs (for Atari, one step is four frames). <em>Agent hours</em> is the
+      wall time of all improver sessions. Claude Code reports its cost in USD; Codex CLI reports tokens only. Runs still in
+      progress are not listed.</figcaption>
+      <table>
+        <thead><tr><th>Task</th><th>Setting</th><th class="num">Env steps</th><th class="num">Agent hours</th><th class="num">Claude Code</th><th class="num">Codex tokens</th><th class="num">Candidates</th></tr></thead>
+        <tbody>
+            <tr><td>Breakout</td><td>no sticky</td><td class="num">28.4 M</td><td class="num">6.0</td><td class="num">$7</td><td class="num">0.7 M</td><td class="num">15</td></tr>
+            <tr><td>Pong</td><td>no sticky</td><td class="num">14.7 M</td><td class="num">2.9</td><td class="num">$19</td><td class="num">0.3 M</td><td class="num">13</td></tr>
+            <tr><td>Ms. Pac-Man</td><td>no sticky</td><td class="num">65.8 M</td><td class="num">13.3</td><td class="num">$29</td><td class="num">2.4 M</td><td class="num">39</td></tr>
+            <tr><td>Montezuma's Revenge</td><td>no sticky</td><td class="num">53.6 M</td><td class="num">12.0</td><td class="num">$22</td><td class="num">3.0 M</td><td class="num">27</td></tr>
+            <tr><td>Space Invaders</td><td>no sticky</td><td class="num">54.0 M</td><td class="num">9.1</td><td class="num">$23</td><td class="num">1.0 M</td><td class="num">21</td></tr>
+            <tr><td>Breakout</td><td>sticky</td><td class="num">34.9 M</td><td class="num">8.2</td><td class="num">$13</td><td class="num">1.3 M</td><td class="num">21</td></tr>
+            <tr><td>Ms. Pac-Man</td><td>sticky</td><td class="num">97.1 M</td><td class="num">11.3</td><td class="num">$18</td><td class="num">2.3 M</td><td class="num">24</td></tr>
+            <tr><td>Montezuma's Revenge</td><td>sticky</td><td class="num">79.9 M</td><td class="num">13.0</td><td class="num">$32</td><td class="num">3.7 M</td><td class="num">30</td></tr>
+            <tr><td>LIBERO-Spatial</td><td>state</td><td class="num">0.3 M</td><td class="num">1.0</td><td class="num">$2</td><td class="num">0.1 M</td><td class="num">6</td></tr>
+            <tr><td>LIBERO-10</td><td>state</td><td class="num">1.7 M</td><td class="num">4.8</td><td class="num">$20</td><td class="num">0.5 M</td><td class="num">21</td></tr>
+            <tr><td>LIBERO-Spatial</td><td>vision</td><td class="num">1.0 M</td><td class="num">11.5</td><td class="num">$27</td><td class="num">1.3 M</td><td class="num">32</td></tr>
+            <tr><td>Leduc variants</td><td>10 generations</td><td class="num">—</td><td class="num">16.0</td><td class="num">$31</td><td class="num">2.6 M</td><td class="num">40</td></tr>
+            <tr><td>OSWorld</td><td>pure code</td><td class="num">—</td><td class="num">23.5</td><td class="num">$29</td><td class="num">1.1 M</td><td class="num">24</td></tr>
+            <tr><td>OSWorld</td><td>model available</td><td class="num">—</td><td class="num">23.6</td><td class="num">$38</td><td class="num">0.9 M</td><td class="num">23</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <p class="pending">Most environment steps are spent by the improvers' own trial runs (64–90% for Atari), not by the
+    gates. An Atari run uses 15–100 M steps (60–400 M frames): the same order as the standard deep-RL budget of 200 M
+    frames, and far above sample-efficient settings such as Atari 100k (400 K frames). Sample efficiency is a weakness of
+    this loop. In money a run costs tens of dollars of agent time.</p>
+  </div>
 
   <h2 id="progress">Progress</h2>
   <p>Dated updates, newest first. Open an entry to read the full update.</p>
