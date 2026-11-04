@@ -191,16 +191,16 @@ layout: default
         <tbody>
           <tr class="best"><td>Ms. Pac-Man</td><td class="num">10,029</td><td class="num">44,257</td><td class="num"><strong>38,306</strong></td><td class="num">6,952</td><td>done: 3 promotions in 7 generations</td></tr>
           <tr class="best"><td>Breakout</td><td class="num">479</td><td class="num">766</td><td class="num"><strong>788</strong></td><td class="num">30.5</td><td>done: 3 promotions in 6 generations</td></tr>
-          <tr class="best"><td>Montezuma's Revenge</td><td class="num">3,441</td><td class="num"><strong>80,184</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>6 promotions in 7 generations; running</td></tr>
-          <tr class="best"><td>Space Invaders</td><td class="num">28,219</td><td class="num"><strong>43,351</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generation 1; running</td></tr>
-          <tr><td>Pong</td><td class="num">16.6</td><td class="num">—</td><td class="num">after the run</td><td class="num">14.6</td><td>generation 1 running</td></tr>
+          <tr class="best"><td>Montezuma's Revenge</td><td class="num">3,441</td><td class="num"><strong>113,659</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>7 promotions in 8 generations; running</td></tr>
+          <tr class="best"><td>Space Invaders</td><td class="num">28,219</td><td class="num"><strong>43,625</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generations 1 and 2; running</td></tr>
+          <tr class="best"><td>Pong</td><td class="num">16.6</td><td class="num"><strong>18.8</strong></td><td class="num">after the run</td><td class="num">14.6</td><td>promoted in generations 1 and 2; running</td></tr>
         </tbody>
       </table>
     </figure>
     <div class="finding">
       <p class="finding-label">Robustness can be improved too</p>
       <p>With sticky actions in the loop, the improvers made the same programs robust. Ms. Pac-Man went from 10,029 to
-      38,306 on sticky test seeds, two thirds of its no-sticky test score. Montezuma's Revenge went from 3,441 to 80,184
+      38,306 on sticky test seeds, two thirds of its no-sticky test score. Montezuma's Revenge went from 3,441 to 113,659
       on dev, above its no-sticky score, with real spread across seeds (28,200 to 65,300 for the generation 6 champion),
       so it is not one memorised game. Under sticky actions dev seeds also stopped tying: all 32 Ms. Pac-Man dev seeds
       score differently, which makes the paired gate a real test of generalization.</p>
@@ -263,10 +263,14 @@ layout: default
         <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
         <tbody>
           <tr class="best"><td>Leduc variants (NashConv / max raise ↓)</td><td class="num">1.381 (uniform)</td><td class="num"><strong>0.109</strong></td><td class="num"><strong>0.106</strong> (standard Leduc 0.087)</td><td>done: promoted in all 10 generations</td></tr>
+          <tr class="ref"><td>CFR on the same test variants (reference)</td><td class="num" colspan="3">30 iterations 0.141 · 100 iterations 0.045 · 1,000 iterations 0.005 (standard Leduc 0.156 · 0.048 · 0.006)</td><td>solver, not a readable policy</td></tr>
           <tr><td>HUNL (mbb/hand ↑)</td><td class="num">−1,240 (always call)</td><td class="num">39,512*</td><td class="num">pending</td><td>stopped after 3 generations without promotion</td></tr>
         </tbody>
       </table>
     </figure>
+    <p class="pending">For scale: the readable Leduc policy (test 0.106) sits between 30 and 100 iterations of vanilla CFR
+    run on each test variant, which reaches 0.005 after 1,000 iterations. It generalizes across variants without solving
+    any of them, but it is still far from an equilibrium.</p>
     <p class="pending">* HUNL dev is measured against rule bots (call station, maniac, equity bot) and earlier champions,
     which a program can exploit heavily, so it says little about strength. We are adding an external open-source
     HUNL agent as an opponent before running the test.</p>
@@ -278,8 +282,10 @@ layout: default
       separate, fresh process; every deal is seen once per process; and temp files, sockets, subprocesses and
       native code are rejected. The run was restarted from scratch.</p>
     </div>
-    <p class="pending">Cost: Breakout used 23.9 M environment steps over 4 generations, counting every evaluation by
-    every improver. Sample efficiency is not yet a strength of this loop.</p>
+    <p class="pending">Running next, all with sticky actions and from the generic seed program: the
+    <strong>Atari-5</strong> subset (Battle Zone, Double Dunk, Name This Game, Phoenix, Q*bert; Aitchison et al., 2023),
+    whose scores predict performance on the full suite, then the remaining games of <strong>Atari-57</strong>, six runs at
+    a time. Costs are in Table 8.</p>
   </div>
   <div data-panel="embodied" hidden>
     {% include curves-embodied.html %}
@@ -315,7 +321,9 @@ layout: default
     </div>
     <p class="pending">LIBERO-Spatial vision finished its 10 generations at 95.0% on dev. In the last generation two
     candidates reached 96.3%, but one extra win was not enough for the paired gate. On the 400 test episodes it scored
-    95.3%, in line with dev. ManiSkill3 is queued.</p>
+    95.3%, in line with dev. Running next: the vision setting on <strong>LIBERO-10, LIBERO-Object and LIBERO-Goal</strong>,
+    each starting from the LIBERO-Spatial vision champion, so that all four suites compare with OpenVLA-OFT. ManiSkill3 is
+    queued.</p>
   </div>
   <div data-panel="computer" hidden>
     <div class="empty">
@@ -336,8 +344,41 @@ layout: default
       Jev. The model never writes text or actions; it returns a probability per option and acts as a smart
       if-statement inside the program. In both settings the program may learn a memory from its own train
       episodes, frozen during dev and test.</p>
+      <p>Next: both settings on <strong>eight applications</strong> (Calc, Writer, Impress, OS, VS Code, GIMP, VLC,
+      Thunderbird; 222 tasks split by application into 70 / 76 / 76), so that a skill library keyed on instruction
+      wording cannot cover dev, and the comparison of pure code with code plus the model is a real ablation.</p>
     </div>
   </div>
+
+  <figure class="table-figure">
+    <figcaption><strong>Table 8.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
+    gates, the tests and the improvers' own trial runs (for Atari, one step is four frames). <em>Agent hours</em> is the
+    wall time of all improver sessions. Claude Code reports its cost in USD; Codex CLI reports tokens only. Runs still in
+    progress are not listed.</figcaption>
+    <table>
+      <thead><tr><th>Task</th><th>Setting</th><th class="num">Env steps</th><th class="num">Agent hours</th><th class="num">Claude Code</th><th class="num">Codex tokens</th><th class="num">Candidates</th></tr></thead>
+      <tbody>
+          <tr><td>Breakout</td><td>no sticky</td><td class="num">28.4 M</td><td class="num">6.0</td><td class="num">$7</td><td class="num">0.7 M</td><td class="num">15</td></tr>
+          <tr><td>Pong</td><td>no sticky</td><td class="num">14.7 M</td><td class="num">2.9</td><td class="num">$19</td><td class="num">0.3 M</td><td class="num">13</td></tr>
+          <tr><td>Ms. Pac-Man</td><td>no sticky</td><td class="num">65.8 M</td><td class="num">13.3</td><td class="num">$29</td><td class="num">2.4 M</td><td class="num">39</td></tr>
+          <tr><td>Montezuma's Revenge</td><td>no sticky</td><td class="num">53.6 M</td><td class="num">12.0</td><td class="num">$22</td><td class="num">3.0 M</td><td class="num">27</td></tr>
+          <tr><td>Space Invaders</td><td>no sticky</td><td class="num">54.0 M</td><td class="num">9.1</td><td class="num">$23</td><td class="num">1.0 M</td><td class="num">21</td></tr>
+          <tr><td>Breakout</td><td>sticky</td><td class="num">34.9 M</td><td class="num">8.2</td><td class="num">$13</td><td class="num">1.3 M</td><td class="num">21</td></tr>
+          <tr><td>Ms. Pac-Man</td><td>sticky</td><td class="num">97.1 M</td><td class="num">11.3</td><td class="num">$18</td><td class="num">2.3 M</td><td class="num">24</td></tr>
+          <tr><td>Montezuma's Revenge</td><td>sticky</td><td class="num">79.9 M</td><td class="num">13.0</td><td class="num">$32</td><td class="num">3.7 M</td><td class="num">30</td></tr>
+          <tr><td>LIBERO-Spatial</td><td>state</td><td class="num">0.3 M</td><td class="num">1.0</td><td class="num">$2</td><td class="num">0.1 M</td><td class="num">6</td></tr>
+          <tr><td>LIBERO-10</td><td>state</td><td class="num">1.7 M</td><td class="num">4.8</td><td class="num">$20</td><td class="num">0.5 M</td><td class="num">21</td></tr>
+          <tr><td>LIBERO-Spatial</td><td>vision</td><td class="num">1.0 M</td><td class="num">11.5</td><td class="num">$27</td><td class="num">1.3 M</td><td class="num">32</td></tr>
+          <tr><td>Leduc variants</td><td>10 generations</td><td class="num">—</td><td class="num">16.0</td><td class="num">$31</td><td class="num">2.6 M</td><td class="num">40</td></tr>
+          <tr><td>OSWorld</td><td>pure code</td><td class="num">—</td><td class="num">23.5</td><td class="num">$29</td><td class="num">1.1 M</td><td class="num">24</td></tr>
+          <tr><td>OSWorld</td><td>model available</td><td class="num">—</td><td class="num">23.6</td><td class="num">$38</td><td class="num">0.9 M</td><td class="num">23</td></tr>
+      </tbody>
+    </table>
+  </figure>
+  <p class="pending">Most environment steps are spent by the improvers' own trial runs (64–90% for Atari), not by the
+  gates. An Atari run uses 15–100 M steps (60–400 M frames): the same order as the standard deep-RL budget of 200 M
+  frames, and far above sample-efficient settings such as Atari 100k (400 K frames). Sample efficiency is a weakness of
+  this loop. In money a run costs tens of dollars of agent time.</p>
 
   <h2 id="progress">Progress</h2>
   <p>Dated updates, newest first. Open an entry to read the full update.</p>
