@@ -298,3 +298,6 @@ details.more[open] > summary::before { content: "− "; }
 
 .table-figure .table-note { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0 0 8px; }
 .table-figure th small { font-weight: 400; color: var(--muted); }
+.c-bar { fill: var(--accent); }
+.c-bar-seed { fill: var(--faint); }
+.c-err { stroke: var(--fg); stroke-width: 1.5; }
