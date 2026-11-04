@@ -127,6 +127,7 @@ layout: default
         <tr><td>Atari</td><td>Breakout</td><td>sticky actions, test</td><td class="num">473</td><td class="num"><strong>788</strong></td><td class="num">human 30.5</td></tr>
         <tr><td>Atari</td><td>Montezuma's Revenge</td><td>sticky actions, dev (running)</td><td class="num">3,441</td><td class="num"><strong>113,659</strong></td><td class="num">human 4,753</td></tr>
         <tr><td>Poker</td><td>Leduc variants, NashConv ↓</td><td>24 unseen variants, test</td><td class="num">1.381</td><td class="num"><strong>0.106</strong></td><td class="num">CFR, 100 iterations 0.045</td></tr>
+        <tr><td>Poker</td><td>HUNL vs DecisionHoldem, mbb/hand ↑</td><td>400 hands, 8 unseen seeds</td><td class="num">pending</td><td class="num"><strong>−4,634</strong> ± 1,873</td><td class="num">0 = break even</td></tr>
         <tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0%</td><td class="num"><strong>95.3%</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>
         <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0%</td><td class="num"><strong>99.0% / 99.0%</strong></td><td class="num">privileged state</td></tr>
         <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0%</td><td class="num"><strong>20.8%</strong></td><td class="num">—</td></tr>
@@ -283,22 +284,27 @@ layout: default
       standard Leduc game is a test variant. The program is queried at every information set and scored by
       NashConv divided by the largest raise (lower is better, 0 is a Nash equilibrium). Programs must be readable
       rules: no search or equilibrium computation at run time and at most 8 KB of data. <em>HUNL</em>: heads-up
-      no-limit hold'em, duplicate matches against rule bots and the three most recent champions, in mbb/hand.</figcaption>
+      no-limit hold'em in mbb/hand (thousandths of a big blind per hand), every deal played from both seats by separate
+      processes. The loop's dev and test opponents are three rule bots and the three most recent champions; the last
+      row plays the same programs against DecisionHoldem, a published CFR-based HUNL agent (blueprint strategy).</figcaption>
       <table>
         <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
         <tbody>
           <tr class="best"><td>Leduc variants (NashConv / max raise ↓)</td><td class="num">1.381 (uniform)</td><td class="num"><strong>0.109</strong></td><td class="num"><strong>0.106</strong> (standard Leduc 0.087)</td><td>done: promoted in all 10 generations</td></tr>
           <tr class="ref"><td>CFR on the same test variants (reference)</td><td class="num" colspan="3">30 iterations 0.141 · 100 iterations 0.045 · 1,000 iterations 0.005 (standard Leduc 0.156 · 0.048 · 0.006)</td><td>solver, not a readable policy</td></tr>
-          <tr><td>HUNL (mbb/hand ↑)</td><td class="num">−1,240 (always call)</td><td class="num">39,512*</td><td class="num">pending</td><td>stopped after 3 generations without promotion</td></tr>
+          <tr><td>HUNL vs rule bots and champions (mbb/hand ↑)</td><td class="num">−1,240 (always call)</td><td class="num">39,512</td><td class="num"><strong>29,090</strong> (always call −13,731)</td><td>done: 1 promotion, stopped after 3 more generations</td></tr>
+          <tr><td>HUNL vs DecisionHoldem (mbb/hand ↑)</td><td class="num">pending (always call)</td><td class="num">–</td><td class="num"><strong>−4,634</strong> ± 1,873</td><td>same champion, 400 hands on 8 unseen seeds</td></tr>
         </tbody>
       </table>
     </figure>
     <p class="pending">For scale: the readable Leduc policy (test 0.106) sits between 30 and 100 iterations of vanilla CFR
     run on each test variant, which reaches 0.005 after 1,000 iterations. It generalizes across variants without solving
     any of them, but it is still far from an equilibrium.</p>
-    <p class="pending">* HUNL dev is measured against rule bots (call station, maniac, equity bot) and earlier champions,
-    which a program can exploit heavily, so it says little about strength. We are adding an external open-source
-    HUNL agent as an opponent before running the test.</p>
+    <p class="pending">HUNL: the champion beats the rule bots (call station, maniac, equity bot) and earlier champions by
+    29,090 mbb/hand on 64 test seeds, but those opponents are easy to exploit. Against DecisionHoldem, a strong
+    published agent, the same program loses about 4.6 big blinds per hand (± 1.9, standard error over 8 seeds of 50
+    hands each), so beating weak opponents did not make it strong. DecisionHoldem's search makes every hand take
+    seconds, so this is a small sample; a loop that trains against DecisionHoldem directly is being set up.</p>
     <div class="finding">
       <p class="finding-label">A run we threw away</p>
       <p>The first HUNL run reported +62,790 mbb/hand, which was too good to be true. Its program had found a hole in
