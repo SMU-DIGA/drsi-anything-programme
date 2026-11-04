@@ -295,3 +295,6 @@ details.more > summary::-webkit-details-marker { display: none; }
 details.more > summary::before { content: "+ "; color: var(--accent); }
 details.more[open] > summary::before { content: "− "; }
 .tabs { flex-wrap: wrap; }
+
+.table-figure .table-note { font-size: 14px; color: var(--muted); line-height: 1.6; margin: 0 0 8px; }
+.table-figure th small { font-weight: 400; color: var(--muted); }

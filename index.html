@@ -279,25 +279,34 @@ layout: default
   <div data-panel="poker" hidden>
     {% include curves-poker.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 6.</strong> Poker (OpenSpiel <code>universal_poker</code>). <em>Leduc variants</em>: 72
-      Leduc-like limit games with different ranks, suits, raise sizes and raise caps, split 24 / 24 / 24; the
-      standard Leduc game is a test variant. The program is queried at every information set and scored by
-      NashConv divided by the largest raise (lower is better, 0 is a Nash equilibrium). Programs must be readable
-      rules: no search or equilibrium computation at run time and at most 8 KB of data. <em>HUNL</em>: heads-up
-      no-limit hold'em in mbb/hand (thousandths of a big blind per hand), every deal played from both seats by separate
-      processes. The loop's dev and test opponents are three rule bots and the three most recent champions; the last
-      row plays the same programs against DecisionHoldem, a published CFR-based HUNL agent (blueprint strategy).
-      The <em>Seed program</em> column is scored on the dev seeds for the rule-bot row (the loop's gate) and on the same
-      8 unseen seeds as the champion for the DecisionHoldem row, so the two baselines are not on the same split.</figcaption>
+      <figcaption><strong>Table 6a.</strong> Poker, Leduc variants (OpenSpiel <code>universal_poker</code>). Score: NashConv divided by the
+      largest raise, <strong>lower is better</strong> (0 is a Nash equilibrium).</figcaption>
       <table>
-        <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
+        <thead><tr><th></th><th class="num">Seed program<br><small>uniform policy</small></th><th class="num">Best, dev<br><small>24 variants</small></th><th class="num">Test<br><small>24 variants</small></th><th class="num">Test<br><small>standard Leduc</small></th></tr></thead>
         <tbody>
-          <tr class="best"><td>Leduc variants (NashConv / max raise ↓)</td><td class="num">1.381 (uniform)</td><td class="num"><strong>0.109</strong></td><td class="num"><strong>0.106</strong> (standard Leduc 0.087)</td><td>done: promoted in all 10 generations</td></tr>
-          <tr class="ref"><td>CFR on the same test variants (reference)</td><td class="num" colspan="3">30 iterations 0.141 · 100 iterations 0.045 · 1,000 iterations 0.005 (standard Leduc 0.156 · 0.048 · 0.006)</td><td>solver, not a readable policy</td></tr>
-          <tr><td>HUNL vs rule bots and champions (mbb/hand ↑)</td><td class="num">−1,252 (always call)</td><td class="num">39,512</td><td class="num"><strong>29,090</strong> (always call −13,731)</td><td>done: 1 promotion, stopped after 3 more generations</td></tr>
-          <tr><td>HUNL vs DecisionHoldem (mbb/hand ↑)</td><td class="num">−1,705 ± 1,378 (always call)</td><td class="num">–</td><td class="num"><strong>−4,634</strong> ± 1,873</td><td>same champion, 400 hands on 8 unseen seeds</td></tr>
+          <tr class="best"><td>Evolved readable policy</td><td class="num">1.381</td><td class="num"><strong>0.109</strong></td><td class="num"><strong>0.106</strong></td><td class="num">0.087</td></tr>
+          <tr class="ref"><td>CFR, 30 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.141</td><td class="num">0.156</td></tr>
+          <tr class="ref"><td>CFR, 100 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.045</td><td class="num">0.048</td></tr>
+          <tr class="ref"><td>CFR, 1,000 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.005</td><td class="num">0.006</td></tr>
         </tbody>
       </table>
+      <p class="table-note">72 Leduc-like limit games with different ranks, suits, raise sizes and raise caps, split 24 / 24 / 24; standard Leduc is a test
+      variant. Programs must be readable rules (no search or equilibrium computation at run time, at most 8 KB of data). All 10 generations promoted.
+      CFR rows are a solver run on each test variant, shown for scale, not a readable policy.</p>
+    </figure>
+    <figure class="table-figure">
+      <figcaption><strong>Table 6b.</strong> Poker, heads-up no-limit hold'em. Score: mbb/hand (thousandths of a big blind per hand),
+      <strong>higher is better</strong>, 0 is break even.</figcaption>
+      <table>
+        <thead><tr><th>Opponent</th><th class="num">Evaluated on</th><th class="num">Seed program<br><small>always call</small></th><th class="num">Champion<br><small>g001c0</small></th></tr></thead>
+        <tbody>
+          <tr class="best"><td>Rule bots + past champions</td><td class="num">64 test seeds</td><td class="num">−13,731</td><td class="num"><strong>+29,090</strong></td></tr>
+          <tr><td>DecisionHoldem</td><td class="num">8 unseen seeds, 400 hands</td><td class="num">−1,705 ± 1,378</td><td class="num"><strong>−4,634</strong> ± 1,873</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Every deal is played from both seats by separate processes. The loop's opponents are three rule bots (call station, maniac, equity bot)
+      and the three most recent champions; on its dev seeds the champion scores 39,512 against −1,252 for the seed program. It stopped after 1 promotion and
+      3 more generations without one. DecisionHoldem is a published CFR-based agent (blueprint strategy). ± is the standard error over seeds.</p>
     </figure>
     <p class="pending">For scale: the readable Leduc policy (test 0.106) sits between 30 and 100 iterations of vanilla CFR
     run on each test variant, which reaches 0.005 after 1,000 iterations. It generalizes across variants without solving
