@@ -286,7 +286,9 @@ layout: default
       rules: no search or equilibrium computation at run time and at most 8 KB of data. <em>HUNL</em>: heads-up
       no-limit hold'em in mbb/hand (thousandths of a big blind per hand), every deal played from both seats by separate
       processes. The loop's dev and test opponents are three rule bots and the three most recent champions; the last
-      row plays the same programs against DecisionHoldem, a published CFR-based HUNL agent (blueprint strategy).</figcaption>
+      row plays the same programs against DecisionHoldem, a published CFR-based HUNL agent (blueprint strategy).
+      The <em>Seed program</em> column is scored on the dev seeds for the rule-bot row (the loop's gate) and on the same
+      8 unseen seeds as the champion for the DecisionHoldem row, so the two baselines are not on the same split.</figcaption>
       <table>
         <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
         <tbody>
