@@ -119,18 +119,18 @@ layout: default
   stops. Status: 4 Nov 2026.</p>
   <figure class="table-figure">
     <figcaption><strong>Table 1.</strong> Headline results, one row per benchmark, on test seeds or tasks that no
-    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below.</figcaption>
+    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below. <strong>± is the sample standard deviation over seeds</strong> (n − 1), not the standard error: n = 64 for test, 32 for dev, 24 variants for Leduc, 400 episodes for LIBERO, 24 tasks for OSWorld. For a success rate it is the std of the 0 / 1 outcomes, in percentage points.</figcaption>
     <table>
       <thead><tr><th>Domain</th><th>Benchmark</th><th>Protocol</th><th class="num">Seed program</th><th class="num">Best program</th><th class="num">Reference</th></tr></thead>
       <tbody>
-        <tr><td>Atari</td><td>Ms. Pac-Man</td><td>sticky actions, test</td><td class="num">9,781</td><td class="num"><strong>38,306</strong></td><td class="num">human 6,952</td></tr>
-        <tr><td>Atari</td><td>Breakout</td><td>sticky actions, test</td><td class="num">473</td><td class="num"><strong>788</strong></td><td class="num">human 30.5</td></tr>
-        <tr><td>Atari</td><td>Montezuma's Revenge</td><td>sticky actions, dev (running)</td><td class="num">3,441</td><td class="num"><strong>113,659</strong></td><td class="num">human 4,753</td></tr>
-        <tr><td>Poker</td><td>Leduc variants, NashConv ↓</td><td>24 unseen variants, test</td><td class="num">1.381</td><td class="num"><strong>0.106</strong></td><td class="num">CFR, 100 iterations 0.045</td></tr>
+        <tr><td>Atari</td><td>Ms. Pac-Man</td><td>sticky actions, test</td><td class="num">9,781 ± 6,014</td><td class="num"><strong>38,306 ± 14,389</strong></td><td class="num">human 6,952</td></tr>
+        <tr><td>Atari</td><td>Breakout</td><td>sticky actions, test</td><td class="num">473 ± 149</td><td class="num"><strong>788 ± 119</strong></td><td class="num">human 30.5</td></tr>
+        <tr><td>Atari</td><td>Montezuma's Revenge</td><td>sticky actions, dev (running)</td><td class="num">3,441 ± 9,233</td><td class="num"><strong>113,659 ± 8,986</strong></td><td class="num">human 4,753</td></tr>
+        <tr><td>Poker</td><td>Leduc variants, NashConv ↓</td><td>24 unseen variants, test</td><td class="num">1.381 ± 0.499</td><td class="num"><strong>0.106 ± 0.030</strong></td><td class="num">CFR, 100 iterations 0.045</td></tr>
         <tr><td>Poker</td><td>HUNL vs DecisionHoldem, mbb/hand ↑</td><td>400 hands, 8 unseen seeds</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td><td class="num">0 = break even</td></tr>
-        <tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0%</td><td class="num"><strong>95.3%</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>
-        <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0%</td><td class="num"><strong>99.0% / 99.0%</strong></td><td class="num">privileged state</td></tr>
-        <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0%</td><td class="num"><strong>20.8%</strong></td><td class="num">—</td></tr>
+        <tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>
+        <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp / 99.0% ± 10.0 pp</strong></td><td class="num">privileged state</td></tr>
+        <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>
       </tbody>
     </table>
   </figure>
@@ -156,11 +156,11 @@ layout: default
       <table>
         <thead><tr><th>Game</th><th class="num">Start (dev)</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
         <tbody>
-          <tr class="best"><td>Ms. Pac-Man</td><td class="num">10,029</td><td class="num">44,257</td><td class="num"><strong>38,306</strong></td><td class="num">6,952</td><td>done: 3 promotions in 7 generations</td></tr>
-          <tr class="best"><td>Breakout</td><td class="num">479</td><td class="num">766</td><td class="num"><strong>788</strong></td><td class="num">30.5</td><td>done: 3 promotions in 6 generations</td></tr>
-          <tr class="best"><td>Montezuma's Revenge</td><td class="num">3,441</td><td class="num"><strong>113,659</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>7 promotions in 8 generations; running</td></tr>
-          <tr class="best"><td>Space Invaders</td><td class="num">28,219</td><td class="num"><strong>43,625</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generations 1 and 2; running</td></tr>
-          <tr class="best"><td>Pong</td><td class="num">16.6</td><td class="num"><strong>18.8</strong></td><td class="num">after the run</td><td class="num">14.6</td><td>promoted in generations 1 and 2; running</td></tr>
+          <tr class="best"><td>Ms. Pac-Man</td><td class="num">10,029 ± 5,699</td><td class="num">44,257 ± 10,812</td><td class="num"><strong>38,306 ± 14,389</strong></td><td class="num">6,952</td><td>done: 3 promotions in 7 generations</td></tr>
+          <tr class="best"><td>Breakout</td><td class="num">479 ± 138</td><td class="num">766 ± 151</td><td class="num"><strong>788 ± 119</strong></td><td class="num">30.5</td><td>done: 3 promotions in 6 generations</td></tr>
+          <tr class="best"><td>Montezuma's Revenge</td><td class="num">3,441 ± 9,233</td><td class="num"><strong>113,659 ± 8,986</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>7 promotions in 8 generations; running</td></tr>
+          <tr class="best"><td>Space Invaders</td><td class="num">28,219 ± 11,058</td><td class="num"><strong>43,625 ± 4,622</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generations 1 and 2; running</td></tr>
+          <tr class="best"><td>Pong</td><td class="num">16.6 ± 1.7</td><td class="num"><strong>18.8 ± 1.6</strong></td><td class="num">after the run</td><td class="num">14.6</td><td>promoted in generations 1 and 2; running</td></tr>
         </tbody>
       </table>
     </figure>
@@ -190,11 +190,11 @@ layout: default
         <table>
           <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
           <tbody>
-            <tr class="best"><td>Breakout</td><td class="num">2.5</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num">30.5</td><td>done after 4 generations</td></tr>
-            <tr class="best"><td>Pong</td><td class="num">−19.9</td><td class="num">21.0</td><td class="num"><strong>21.0</strong></td><td class="num">14.6</td><td>done: maximum in generation 1</td></tr>
-            <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9</td><td class="num">50,545</td><td class="num"><strong>57,606</strong></td><td class="num">6,952</td><td>done: 9 promotions in 10 generations</td></tr>
-            <tr class="best"><td>Montezuma's Revenge</td><td class="num">0</td><td class="num"><strong>65,506</strong></td><td class="num">—</td><td class="num">4,753</td><td>stopped at generation 7 for the sticky run</td></tr>
-            <tr class="best"><td>Space Invaders</td><td class="num">112.0</td><td class="num"><strong>45,376</strong></td><td class="num">—</td><td class="num">1,669</td><td>stopped at generation 5 for the sticky run</td></tr>
+            <tr class="best"><td>Breakout</td><td class="num">2.5 ± 0.7</td><td class="num">864.0 ± 0.0</td><td class="num"><strong>864.0 ± 0.0</strong></td><td class="num">30.5</td><td>done after 4 generations</td></tr>
+            <tr class="best"><td>Pong</td><td class="num">−19.9 ± 1.0</td><td class="num">21.0 ± 0.0</td><td class="num"><strong>21.0 ± 0.0</strong></td><td class="num">14.6</td><td>done: maximum in generation 1</td></tr>
+            <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9 ± 110.4</td><td class="num">50,545 ± 38,076</td><td class="num"><strong>57,606 ± 36,289</strong></td><td class="num">6,952</td><td>done: 9 promotions in 10 generations</td></tr>
+            <tr class="best"><td>Montezuma's Revenge</td><td class="num">0 ± 0</td><td class="num"><strong>65,506 ± 1,292</strong></td><td class="num">—</td><td class="num">4,753</td><td>stopped at generation 7 for the sticky run</td></tr>
+            <tr class="best"><td>Space Invaders</td><td class="num">112.0 ± 61.4</td><td class="num"><strong>45,376 ± 1,091</strong></td><td class="num">—</td><td class="num">1,669</td><td>stopped at generation 5 for the sticky run</td></tr>
             <tr><td>Seaquest</td><td colspan="5">planned, with sticky actions</td></tr>
             <tr class="ref"><td colspan="2"><em>Learning Beyond Gradients</em></td><td class="num" colspan="3">Breakout 864 (seed 0) · Pong 21 · Montezuma 400</td><td>different protocol</td></tr>
           </tbody>
@@ -204,7 +204,7 @@ layout: default
         <figcaption><strong>Table 4.</strong> The same champions under <strong>sticky actions</strong> (each step repeats the
         previous action with probability 0.25, the protocol of Machado et al., 2018). 64 fresh seeds that no loop ever
         used, each played with and without sticky actions. The programs were improved without sticky actions; this
-        measures how much of each score survives random perturbation.</figcaption>
+        measures how much of each score survives random perturbation. No ± here: the per-seed scores of this re-test were not saved, only the median and minimum shown.</figcaption>
         <table>
           <thead><tr><th>Game</th><th>Champion</th><th class="num">No sticky</th><th class="num">Sticky 0.25</th><th class="num">Kept</th><th class="num">Sticky median / min</th><th class="num">Human</th></tr></thead>
           <tbody>
@@ -233,11 +233,11 @@ layout: default
         <table>
           <thead><tr><th>Version</th><th>Improver</th><th class="num">Train</th><th class="num">Dev</th><th class="num">Test</th><th>Gate</th></tr></thead>
           <tbody>
-            <tr class="ref"><td>Seed program</td><td>—</td><td class="num">1.9</td><td class="num">2.5</td><td class="num">2.2</td><td>—</td></tr>
-            <tr class="best"><td>Gen 1</td><td>Claude Code</td><td class="num">694.1</td><td class="num">702.8</td><td class="num">737.8</td><td>promoted · won 32 / 32</td></tr>
-            <tr class="best"><td>Gen 2</td><td>Codex</td><td class="num">862.5</td><td class="num">849.9</td><td class="num">854.3</td><td>promoted · won 21, lost 11</td></tr>
-            <tr><td>Gen 3</td><td>Codex</td><td class="num">864.0</td><td class="num">714.1</td><td class="num">—</td><td>rejected · won 11, lost 11</td></tr>
-            <tr class="best"><td>Gen 4</td><td>Codex</td><td class="num">864.0</td><td class="num"><strong>864.0</strong></td><td class="num"><strong>864.0</strong></td><td>promoted · won 22, lost 0</td></tr>
+            <tr class="ref"><td>Seed program</td><td>—</td><td class="num">1.9 ± 0.8</td><td class="num">2.5 ± 0.7</td><td class="num">2.2 ± 0.8</td><td>—</td></tr>
+            <tr class="best"><td>Gen 1</td><td>Claude Code</td><td class="num">694.1 ± 220.4</td><td class="num">702.8 ± 202.1</td><td class="num">737.8 ± 187.8</td><td>promoted · won 32 / 32</td></tr>
+            <tr class="best"><td>Gen 2</td><td>Codex</td><td class="num">862.5 ± 2.1</td><td class="num">849.9 ± 16.9</td><td class="num">854.3 ± 15.3</td><td>promoted · won 21, lost 11</td></tr>
+            <tr><td>Gen 3</td><td>Codex</td><td class="num">864.0 ± 0.0</td><td class="num">714.1 ± 210.4</td><td class="num">—</td><td>rejected · won 11, lost 11</td></tr>
+            <tr class="best"><td>Gen 4</td><td>Codex</td><td class="num">864.0 ± 0.0</td><td class="num"><strong>864.0 ± 0.0</strong></td><td class="num"><strong>864.0 ± 0.0</strong></td><td>promoted · won 22, lost 0</td></tr>
           </tbody>
         </table>
       </figure>
@@ -285,7 +285,7 @@ layout: default
       <table>
         <thead><tr><th></th><th class="num">Seed program<br><small>uniform policy</small></th><th class="num">Best, dev<br><small>24 variants</small></th><th class="num">Test<br><small>24 variants</small></th><th class="num">Test<br><small>standard Leduc</small></th></tr></thead>
         <tbody>
-          <tr class="best"><td>Evolved readable policy</td><td class="num">1.381</td><td class="num"><strong>0.109</strong></td><td class="num"><strong>0.106</strong></td><td class="num">0.087</td></tr>
+          <tr class="best"><td>Evolved readable policy</td><td class="num">1.381 ± 0.499</td><td class="num"><strong>0.109 ± 0.029</strong></td><td class="num"><strong>0.106 ± 0.030</strong></td><td class="num">0.087</td></tr>
           <tr class="ref"><td>CFR, 30 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.141</td><td class="num">0.156</td></tr>
           <tr class="ref"><td>CFR, 100 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.045</td><td class="num">0.048</td></tr>
           <tr class="ref"><td>CFR, 1,000 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.005</td><td class="num">0.006</td></tr>
@@ -336,9 +336,9 @@ layout: default
       <table>
         <thead><tr><th>Setting</th><th class="num">Seed</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
         <tbody>
-          <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">0%</td><td class="num">100%</td><td class="num"><strong>99.0%</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
-          <tr class="best"><td>LIBERO-10 (long-horizon) · state</td><td class="num">0%</td><td class="num">100%</td><td class="num"><strong>99.0%</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
-          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0%</td><td class="num">95.0%</td><td class="num"><strong>95.3%</strong> (381 / 400)</td><td>done after 10 generations</td></tr>
+          <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
+          <tr class="best"><td>LIBERO-10 (long-horizon) · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
+          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0% ± 0 pp</td><td class="num">95.0% ± 21.9 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong> (381 / 400)</td><td>done after 10 generations</td></tr>
           <tr class="ref"><td>OpenVLA, fine-tuned (RGB; Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">84.7% / 53.7%</td><td>—</td></tr>
           <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">97.6% / 94.5%</td><td>—</td></tr>
         </tbody>
@@ -374,8 +374,8 @@ layout: default
       <table>
         <thead><tr><th>Setting</th><th class="num">Seed program</th><th class="num">Train</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
         <tbody>
-          <tr class="best"><td>Pure code</td><td class="num">0%</td><td class="num">65.2%</td><td class="num"><strong>8.3%</strong> (2 / 24)</td><td class="num">after the run</td><td>promoted in generation 1 only; generation 9 running</td></tr>
-          <tr class="best"><td>Model available</td><td class="num">0%</td><td class="num">78.3%</td><td class="num"><strong>20.8%</strong> (5 / 24)</td><td class="num">after the run</td><td>promoted in generations 3 and 6; generation 9 running</td></tr>
+          <tr class="best"><td>Pure code</td><td class="num">0% ± 0 pp</td><td class="num">65.2% ± 48.7 pp</td><td class="num"><strong>8.3% ± 28.2 pp</strong> (2 / 24)</td><td class="num">after the run</td><td>promoted in generation 1 only; generation 9 running</td></tr>
+          <tr class="best"><td>Model available</td><td class="num">0% ± 0 pp</td><td class="num">78.3% ± 42.2 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong> (5 / 24)</td><td class="num">after the run</td><td>promoted in generations 3 and 6; generation 9 running</td></tr>
         </tbody>
       </table>
     </figure>
