@@ -1,5 +1,5 @@
 <svg class="teaser-svg" viewBox="0 0 1000 360" role="img" aria-labelledby="teaser-title teaser-desc" xmlns="http://www.w3.org/2000/svg">
-  <title id="teaser-title">The NS-RSI-Anything loop</title>
+  <title id="teaser-title">The DRSI-Anything loop</title>
   <desc id="teaser-desc">The incumbent program is copied to parallel improvers (Codex CLI, Claude Code, DeepSeek API). Each candidate is re-evaluated independently on train seeds, compared with the incumbent on hidden dev seeds by a paired bootstrap gate, optionally simplified, and becomes the incumbent for the next generation.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
