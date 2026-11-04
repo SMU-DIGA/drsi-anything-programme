@@ -17,6 +17,7 @@
   --good: #1a7f37;
   --good-soft: #e3f6e8;
   --warn: #9a6700;
+  --bad: #c62828;
   --warn-soft: #fff4cc;
   --best: #f4f0ff;
   --display: "Manrope", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
@@ -38,6 +39,7 @@
     --good: #5ad07a;
     --good-soft: #15301d;
     --warn: #e3b341;
+    --bad: #ff6b6b;
     --warn-soft: #362a0b;
     --best: #211b33;
   }
@@ -301,3 +303,5 @@ details.more[open] > summary::before { content: "− "; }
 .c-bar { fill: var(--accent); }
 .c-bar-seed { fill: var(--faint); }
 .c-err { stroke: var(--fg); stroke-width: 1.5; }
+.c-bar-bad { fill: var(--bad); }
+.c-val.bad, td .bad, .bad { fill: var(--bad); color: var(--bad); font-weight: 700; }

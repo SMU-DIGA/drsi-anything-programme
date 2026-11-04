@@ -127,7 +127,7 @@ layout: default
         <tr><td>Atari</td><td>Breakout</td><td>sticky actions, test</td><td class="num">473</td><td class="num"><strong>788</strong></td><td class="num">human 30.5</td></tr>
         <tr><td>Atari</td><td>Montezuma's Revenge</td><td>sticky actions, dev (running)</td><td class="num">3,441</td><td class="num"><strong>113,659</strong></td><td class="num">human 4,753</td></tr>
         <tr><td>Poker</td><td>Leduc variants, NashConv ↓</td><td>24 unseen variants, test</td><td class="num">1.381</td><td class="num"><strong>0.106</strong></td><td class="num">CFR, 100 iterations 0.045</td></tr>
-        <tr><td>Poker</td><td>HUNL vs DecisionHoldem, mbb/hand ↑</td><td>400 hands, 8 unseen seeds</td><td class="num">−1,705 ± 1,378</td><td class="num"><strong>−4,634</strong> ± 1,873</td><td class="num">0 = break even</td></tr>
+        <tr><td>Poker</td><td>HUNL vs DecisionHoldem, mbb/hand ↑</td><td>400 hands, 8 unseen seeds</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td><td class="num">0 = break even</td></tr>
         <tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0%</td><td class="num"><strong>95.3%</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>
         <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0%</td><td class="num"><strong>99.0% / 99.0%</strong></td><td class="num">privileged state</td></tr>
         <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0%</td><td class="num"><strong>20.8%</strong></td><td class="num">—</td></tr>
@@ -299,23 +299,23 @@ layout: default
       <figcaption><strong>Table 6b.</strong> Poker, heads-up no-limit hold'em. Score: mbb/hand (thousandths of a big blind per hand),
       <strong>higher is better</strong>, 0 is break even.</figcaption>
       <table>
-        <thead><tr><th>Opponent</th><th class="num">Evaluated on</th><th class="num">Seed program<br><small>always call</small></th><th class="num">Champion<br><small>g001c0</small></th></tr></thead>
+        <thead><tr><th>Opponent</th><th class="num">Evaluated on<br><small>mean ± std over seeds</small></th><th class="num">Seed program<br><small>always call</small></th><th class="num">Champion<br><small>g001c0</small></th></tr></thead>
         <tbody>
-          <tr class="best"><td>Rule bots + past champions</td><td class="num">64 test seeds</td><td class="num">−13,731</td><td class="num"><strong>+29,090</strong></td></tr>
-          <tr><td>DecisionHoldem</td><td class="num">8 unseen seeds, 400 hands</td><td class="num">−1,705 ± 1,378</td><td class="num"><strong>−4,634</strong> ± 1,873</td></tr>
+          <tr class="best"><td>Rule bots + past champions</td><td class="num">64 test seeds</td><td class="num">−13,731 ± 1,301</td><td class="num"><strong>+29,090 ± 2,116</strong></td></tr>
+          <tr><td>DecisionHoldem</td><td class="num">8 unseen seeds, 400 hands</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td></tr>
         </tbody>
       </table>
       <p class="table-note">Every deal is played from both seats by separate processes. The loop's opponents are three rule bots (call station, maniac, equity bot)
-      and the three most recent champions; on its dev seeds the champion scores 39,512 against −1,252 for the seed program. It stopped after 1 promotion and
-      3 more generations without one. DecisionHoldem is a published CFR-based agent (blueprint strategy). ± is the standard error over seeds.</p>
+      and the three most recent champions; on its 32 dev seeds the champion scores 39,512 ± 1,857 against −1,252 ± 614 for the seed program. It stopped after 1 promotion and
+      3 more generations without one. DecisionHoldem is a published CFR-based agent (blueprint strategy). ± is the sample standard deviation over seeds (n = 64 test, 32 dev, 8 for DecisionHoldem), not the standard error. A figure in red is below the seed program.</p>
     </figure>
     <p class="pending">For scale: the readable Leduc policy (test 0.106) sits between 30 and 100 iterations of vanilla CFR
     run on each test variant, which reaches 0.005 after 1,000 iterations. It generalizes across variants without solving
     any of them, but it is still far from an equilibrium.</p>
     <p class="pending">HUNL: the champion beats the rule bots (call station, maniac, equity bot) and earlier champions by
     29,090 mbb/hand on 64 test seeds, but those opponents are easy to exploit. Against DecisionHoldem, a strong
-    published agent, the same program loses about 4.6 big blinds per hand (± 1.9, standard error over 8 seeds of 50
-    hands each), so beating weak opponents did not make it strong. The starting program (always call) scores −1.7 big blinds per hand (± 1.4) on the same 8 seeds, so the champion is, if anything, not better than its starting point against DecisionHoldem; with 8 seeds the gap is within noise. DecisionHoldem's search makes every hand take
+    published agent, the same program loses about 4.6 big blinds per hand (± 5.7, standard deviation over 8 seeds of 50
+    hands each), so beating weak opponents did not make it strong. The starting program (always call) scores −1.7 big blinds per hand (± 4.2) on the same 8 seeds, so against DecisionHoldem the champion is lower than its starting point (shown in red); with 8 seeds and a standard deviation this large the gap is within noise. DecisionHoldem's search makes every hand take
     seconds, so this is a small sample; a loop that trains against DecisionHoldem directly is being set up.</p>
     <div class="finding">
       <p class="finding-label">A run we threw away</p>
