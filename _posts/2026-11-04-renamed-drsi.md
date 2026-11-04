@@ -16,4 +16,4 @@ give the program a local vision-language model. But it is one form of delegation
 leaves room for the others.
 
 Nothing else changes: the experiments, seeds and results reported earlier stay as they are, and the site keeps
-its address.
+its content; its address moved to smu-diga.github.io/drsi-anything-programme with the rename.

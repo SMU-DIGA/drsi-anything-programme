@@ -1,9 +1,9 @@
 title: DRSI-Anything
 timezone: Asia/Singapore
 description: Delegative recursive self-improvement across general domains, from games to embodied robotics and computer use.
-baseurl: /ns-rsi-anything-programme
+baseurl: /drsi-anything-programme
 url: https://smu-diga.github.io
-repository: SMU-DIGA/ns-rsi-anything-programme
+repository: SMU-DIGA/drsi-anything-programme
 markdown: kramdown
 permalink: /progress/:title/
 defaults:

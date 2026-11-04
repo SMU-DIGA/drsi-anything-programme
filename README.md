@@ -2,7 +2,7 @@
 
 **Delegative Recursive Self-Improvement across General Domains**: LLMs do not act themselves; they delegate the acting to programs they write and repeatedly improve, for games, embodied robotics and computer use. Neuro-symbolic programs (code, optionally calling smaller models) are our main form of delegation. The programme was earlier called NS-RSI-Anything.
 
-**[Project page & progress log](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](https://smu-diga.github.io/ns-rsi-anything-programme/#design) · [Environments](https://smu-diga.github.io/ns-rsi-anything-programme/#environments) · [Roadmap](https://smu-diga.github.io/ns-rsi-anything-programme/#roadmap)
+**[Project page & progress log](https://smu-diga.github.io/drsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](https://smu-diga.github.io/drsi-anything-programme/#design) · [Environments](https://smu-diga.github.io/drsi-anything-programme/#environments) · [Roadmap](https://smu-diga.github.io/drsi-anything-programme/#roadmap)
 
 An LLM writes a program that solves a task (a game bot, a robot controller, a desktop agent). Then LLMs
 improve that program over many generations, using only interaction feedback from the environment. The
@@ -30,7 +30,7 @@ The project combines two lines of work:
 ## Status
 
 Work in progress. The core loop and the EnvPool task families work end to end. See the
-[roadmap](https://smu-diga.github.io/ns-rsi-anything-programme/#roadmap) for what remains. This repository hosts the programme's documents and results;
+[roadmap](https://smu-diga.github.io/drsi-anything-programme/#roadmap) for what remains. This repository hosts the programme's documents and results;
 the implementation is not public.
 
 | Component | Status |
@@ -57,7 +57,7 @@ Headline results (programs written and refined by LLM improvers; no gradient tra
 
 ## Progress log
 
-The [project page](https://smu-diga.github.io/ns-rsi-anything-programme/) is built by GitHub Pages from the
+The [project page](https://smu-diga.github.io/drsi-anything-programme/) is built by GitHub Pages from the
 repository root. To add an update, create `_posts/YYYY-MM-DD-short-title.md`:
 
 ```markdown
