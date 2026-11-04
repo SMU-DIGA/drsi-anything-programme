@@ -242,7 +242,7 @@ td.delta { color: var(--good); font-weight: 650; }
 @media (max-width: 860px) { .topbar nav { display: flex; flex-wrap: wrap; } .nav-sep { display: none; } }
 
 /* RSI curves: small multiples, one per setting */
-.curves { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 18px 0 6px; }
+.curves { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin: 18px 0 6px; }
 .curve { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 6px 4px 0; }
 .curve svg { display: block; width: 100%; height: auto; overflow: visible; }
 .c-title { font: 700 15px var(--sans); fill: var(--fg); }

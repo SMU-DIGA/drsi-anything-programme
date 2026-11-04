@@ -285,7 +285,7 @@ layout: default
     <p class="pending">Running next, all with sticky actions and from the generic seed program: the
     <strong>Atari-5</strong> subset (Battle Zone, Double Dunk, Name This Game, Phoenix, Q*bert; Aitchison et al., 2023),
     whose scores predict performance on the full suite, then the remaining games of <strong>Atari-57</strong>, six runs at
-    a time. Costs are in Table 8.</p>
+    a time. Costs are in Table 9.</p>
   </div>
   <div data-panel="embodied" hidden>
     {% include curves-embodied.html %}
@@ -326,32 +326,43 @@ layout: default
     queued.</p>
   </div>
   <div data-panel="computer" hidden>
-    <div class="empty">
-      <p class="empty-title">Running: generation 7–8</p>
-      <p>Generation 1: the pure-code setting promoted a Claude Code program at <strong>2 / 24 dev tasks (8.3%)</strong>,
-      from 0; it scored 65% on the train tasks. It is a skill library: regular-expression parsers map an instruction
-      to a generic skill (fill blanks, sort, freeze panes, rename a sheet, export to CSV or PDF), which scripts
-      LibreOffice through its UNO interface. Dev tasks mostly need skills that no train task exercised, hence the gap.
-      The run that may ask the small decision model reached <strong>5 / 24 dev tasks (20.8%)</strong> in generation 6,
-      with 78% on train, but its champion <strong>never calls the model</strong>: it is a larger skill library (28
-      spreadsheet handlers and about 20 desktop ones, with a probe of the desktop first). Only DeepSeek candidates
-      used the model, and none was promoted. So this run does not yet show that the model helps; it shows a better
-      pure-code program found in a second run. The pure-code run has not been promoted since generation 1.</p>
-      <p>OSWorld, LibreOffice Calc and OS tasks (71 tasks, split 23 / 24 / 24 into train, dev and test), scored by
-      OSWorld's own checkers. The program decides every action in code, including running code inside the desktop
-      and reading its output. Two settings are compared: <strong>pure code</strong>, and code that may also ask one
-      fixed <strong>small model</strong> (Qwen3.5-2B) typed multiple-choice questions, in the style of TypeSafe's
-      Jev. The model never writes text or actions; it returns a probability per option and acts as a smart
-      if-statement inside the program. In both settings the program may learn a memory from its own train
-      episodes, frozen during dev and test.</p>
-      <p>Next: both settings on <strong>eight applications</strong> (Calc, Writer, Impress, OS, VS Code, GIMP, VLC,
-      Thunderbird; 222 tasks split by application into 70 / 76 / 76), so that a skill library keyed on instruction
-      wording cannot cover dev, and the comparison of pure code with code plus the model is a real ablation.</p>
+    {% include curves-computer.html %}
+    <figure class="table-figure">
+      <figcaption><strong>Table 8.</strong> OSWorld, LibreOffice Calc and OS tasks: 71 tasks split 23 / 24 / 24 into
+      train, hidden dev and test, scored by OSWorld's own checkers (success rate). Both runs start from a program that
+      answers DONE at once. <em>Model available</em>: the program may also ask a fixed small model (Qwen3.5-2B) typed
+      multiple-choice questions.</figcaption>
+      <table>
+        <thead><tr><th>Setting</th><th class="num">Seed program</th><th class="num">Train</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>Pure code</td><td class="num">0%</td><td class="num">65.2%</td><td class="num"><strong>8.3%</strong> (2 / 24)</td><td class="num">after the run</td><td>promoted in generation 1 only; generation 9 running</td></tr>
+          <tr class="best"><td>Model available</td><td class="num">0%</td><td class="num">78.3%</td><td class="num"><strong>20.8%</strong> (5 / 24)</td><td class="num">after the run</td><td>promoted in generations 3 and 6; generation 9 running</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <div class="finding">
+      <p class="finding-label">A large train–dev gap</p>
+      <p>Both champions solve most train tasks (65% and 78%) but few dev tasks. They are skill libraries: regular
+      expressions map an instruction to a handler that scripts LibreOffice through its UNO interface or runs shell and
+      settings commands. A handler written for a train task rarely covers a dev task, which usually needs a different
+      skill. The better run (5 / 24) probes the desktop first and has 28 spreadsheet and about 20 desktop handlers.</p>
     </div>
+    <div class="finding">
+      <p class="finding-label">The model was available but not used</p>
+      <p>The 5 / 24 champion never calls the small model; only unpromoted candidates did. So the difference between the
+      two runs is two independent searches over pure-code programs, not evidence that the model helps. The next runs
+      cover eight applications (Calc, Writer, Impress, OS, VS Code, GIMP, VLC, Thunderbird; 222 tasks split by
+      application into 70 / 76 / 76) and tell the improvers where the model can help, so the comparison becomes a real
+      ablation.</p>
+    </div>
+    <p class="pending">The program decides every action in code, including running code inside the desktop and reading
+    its output. The model never writes text or actions; it returns a probability per option and acts as a smart
+    if-statement inside the program (in the style of TypeSafe's Jev). In both settings the program may learn a memory
+    from its own train episodes, frozen during dev and test.</p>
   </div>
 
   <figure class="table-figure">
-    <figcaption><strong>Table 8.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
+    <figcaption><strong>Table 9.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
     gates, the tests and the improvers' own trial runs (for Atari, one step is four frames). <em>Agent hours</em> is the
     wall time of all improver sessions. Claude Code reports its cost in USD; Codex CLI reports tokens only. Runs still in
     progress are not listed.</figcaption>
