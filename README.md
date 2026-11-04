@@ -1,6 +1,6 @@
-# NS-RSI-Anything
+# DRSI-Anything
 
-**Neuro-Symbolic Recursive Self-Improvement across General Domains**: LLMs (neural) write and repeatedly improve programs (symbolic) for games, embodied robotics and computer use.
+**Delegative Recursive Self-Improvement across General Domains**: LLMs do not act themselves; they delegate the acting to programs they write and repeatedly improve, for games, embodied robotics and computer use. Neuro-symbolic programs (code, optionally calling smaller models) are our main form of delegation. The programme was earlier called NS-RSI-Anything.
 
 **[Project page & progress log](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](https://smu-diga.github.io/ns-rsi-anything-programme/#design) · [Environments](https://smu-diga.github.io/ns-rsi-anything-programme/#environments) · [Roadmap](https://smu-diga.github.io/ns-rsi-anything-programme/#roadmap)
 

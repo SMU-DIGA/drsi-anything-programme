@@ -1,6 +1,6 @@
-# NS-RSI-Anything
+# DRSI-Anything
 
-**Neuro-Symbolic Recursive Self-Improvement across General Domains（跨通用领域的神经-符号递归自我改进）**：LLM（神经）编写程序（符号）来完成任务，再递归地改进这个程序，覆盖游戏、具身机器人和计算机操作。
+**Delegative Recursive Self-Improvement across General Domains（跨通用领域的委托式递归自我改进）**：LLM 不直接与环境交互，而是把"行动"委托给自己编写并不断递归改进的程序，覆盖游戏、具身机器人和计算机操作。神经-符号程序（代码，可调用小模型）是我们主要的委托形式，但只是委托的一种实现方式。项目原名 NS-RSI-Anything。
 
 **[项目主页与进度日志](https://smu-diga.github.io/ns-rsi-anything-programme/)** · [English](README.md) · [方案设计](https://smu-diga.github.io/ns-rsi-anything-programme/#design) · [环境选型](https://smu-diga.github.io/ns-rsi-anything-programme/#environments) · [路线图](https://smu-diga.github.io/ns-rsi-anything-programme/#roadmap)
 
