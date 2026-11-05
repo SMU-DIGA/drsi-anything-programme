@@ -190,20 +190,6 @@ layout: default
       (ours 71 M to 203 M frames, theirs 200 M), so this gap is not explained by experience. The RL numbers are maxima or last-episode averages of
       trained networks, ours is one readable program chosen on dev.</p>
     </figure>
-    <figure class="table-figure">
-      <figcaption><strong>Table 2c.</strong> Not comparable: results <em>without</em> sticky actions. Both rows below
-      are for the easier deterministic setting, so they are shown for reference and are not the bar for our programs.</figcaption>
-      <table>
-        <thead><tr><th>Game</th><th class="num">Rainbow (full)<br><small>200 M frames</small></th><th class="num">Agent57<br><small>billions of frames</small></th></tr></thead>
-        <tbody>
-{% include table-atari5-nosticky.html %}
-        </tbody>
-      </table>
-      <p class="table-note">Rainbow (full) is the original Rainbow of Hessel et al. 2018 as reported in Table A2 of Clark et al. 2024. Agent57
-      (Badia et al. 2020, arXiv 2003.13350, appendix table, mean ± std over seeds) uses no sticky actions, 30 random no-ops, grayscale input and 30-minute
-      episodes, and 5 B frames (51 games above human) to 78 B frames (Skiing); it is the first agent above the human benchmark on all 57 games.
-      Sticky actions make a game harder (Table 4 shows how much of a score survives them), so these scores are not directly comparable to ours.</p>
-    </figure>
     <div class="finding">
       <p class="finding-label">Robustness can be improved too</p>
       <p>With sticky actions in the loop, the improvers made the same programs robust. Ms. Pac-Man went from 10,029 to

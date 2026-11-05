@@ -105,4 +105,3 @@ for run, name, rnd, human, rdop, rfull, btr in GAMES:
 
 (HERE / "_includes/curves-atari5.html").write_text('<div class="curves">\n' + "\n".join(cards) + "\n</div>\n")
 (HERE / "_includes/table-atari5.html").write_text("\n".join(rows) + "\n")
-(HERE / "_includes/table-atari5-nosticky.html").write_text("\n".join(nos) + "\n")
