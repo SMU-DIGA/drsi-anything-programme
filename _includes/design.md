@@ -8,10 +8,21 @@ A **program** consists of three parts:
 - optionally, **a learning step** (`learn`) and the **memory** it produces (see *Memory* below).
 
 Following *Learning Beyond Gradients*, the program is the whole "heuristic system": the policy, its state
-representation, and its accumulated knowledge. Weights are never trained. The default constraints are:
+representation, and its accumulated knowledge. No gradient step is taken: in the results below the weights of any model a program calls are frozen, and a planned extension lets the improver write them directly (next section). The default constraints are:
 no neural networks, no reading the environment's source code, no network access. Each experiment can
 change them. In computer use, for example, a program may call one fixed small model, but only as a typed
 decision function (see *Results → Computer use*).
+
+### Delegating to an LLM, and editing its weights
+
+A program can delegate part of a decision to an LLM. Today this is a typed decision function: the program asks a
+multiple-choice question and gets a probability for every option, the model never writes text or actions, and its
+weights are frozen (computer use, see *Results → Computer use*). DRSI also allows the next step, after
+[Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/): instead of training the delegate LLM, the improver, itself an LLM,
+reads and writes the delegate's weights directly, with no optimizer, for example a low-rank update, a steering
+direction or a few layers. The edit is one more file of the program, so it goes through the same isolation, hidden-dev
+gate and paired bootstrap as any code edit, and is promoted only if it wins on seeds it never saw. The post reports
+early results of this kind on small networks and a 0.8B language model. **We have not run it yet.**
 
 ### The loop
 
@@ -86,7 +97,7 @@ attempts, so the population shares one memory.
 | L1.75 | the program's own learning step, which turns train experience into frozen memory | <span class="badge running">Running</span> |
 | L2 | a cross-task skill library (e.g. *grasp an object*, *open an application*), distilled from train tasks | <span class="badge planned">Planned</span> |
 | L3 | the improver itself: prompts, feedback format, search strategy, chosen by meta-evaluation | <span class="badge planned">Planned</span> |
-| L4 | the LLM's weights, fine-tuned on its own successful edits (open models only, optional) | <span class="badge planned">Planned</span> |
+| L4 | the weights of the LLM a program delegates to, written directly by the improver (weight-space programming; open models only) | <span class="badge planned">Planned</span> |
 
 ### Where world models fit
 

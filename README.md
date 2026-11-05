@@ -6,8 +6,11 @@
 
 An LLM writes a program that solves a task (a game bot, a robot controller, a desktop agent). Then LLMs
 improve that program over many generations, using only interaction feedback from the environment. The
-object being improved is **software**, not neural-network weights: a policy, its state detectors and
-skills, and a notes file that serves as the program's memory.
+object being improved is a **delegate**. Today it is mostly software (a policy, its state detectors and skills, and a
+notes file that serves as the program's memory), and a program may hand part of a decision to an LLM through a typed
+decision function. Following [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/), where an LLM reads and writes a network's weights
+directly without an optimizer, the weights of that delegate LLM can also be edited directly by an improver. The results
+reported so far use code only (plus a frozen small model in computer use); direct weight editing is planned and has not been run.
 
 ```
 incumbent program ──► K improvers edit it in parallel (Codex CLI · Claude Code · chat APIs such as DeepSeek)

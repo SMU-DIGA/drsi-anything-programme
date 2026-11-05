@@ -41,7 +41,7 @@ layout: default
   <figcaption><strong>Figure 1.</strong> The self-improvement loop. Several coding agents and LLMs edit the current
   program in parallel. Every candidate is re-scored in isolation, and only a version that beats the incumbent
   on <em>hidden</em> dev seeds is promoted. The object being improved is software (policy, skills and a notes
-  file that serves as memory), not network weights.</figcaption>
+  file that serves as memory), Today that is the object being improved; the weights of an LLM the program delegates to can also be edited directly, which is planned (see Design).</figcaption>
 </figure>
 
 <section class="abstract">
@@ -53,7 +53,7 @@ layout: default
   models that reason and edit (LLMs) do not act in the environment themselves; they delegate the acting to an
   artifact they write and keep improving, and what is learned is stored in that delegate. Our main delegate is a
   neuro-symbolic one, readable, testable code and notes that persist across generations, optionally calling
-  smaller models as tools; neuro-symbolic programs are one way to delegate, not the only one. A program, consisting of a policy, its
+  smaller models as tools, whose weights an improver may also write directly (weight-space programming, planned); neuro-symbolic programs are one way to delegate, not the only one. A program, consisting of a policy, its
   skills and its notes, is improved generation after generation by a heterogeneous population of LLM improvers.
   Each candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We
   study when such loops keep improving, what transfers across tasks, and how they compare with RL under the same
@@ -65,7 +65,7 @@ layout: default
   <article class="article-body" data-numbered>
 
   <h2 id="design">Design</h2>
-  <p class="lead">Improve the program, not the weights.</p>
+  <p class="lead">Improve the delegate: the program, and the weights of the LLM it calls.</p>
   <p>A <strong>program</strong> is the whole "heuristic system": the policy, its state detectors and skills, and
   notes holding environment facts, failed ideas and a dated changelog. Each generation runs four steps.</p>
   <div class="step-grid">

@@ -42,7 +42,7 @@
 - <span class="check" aria-label="open">○</span> L3: self-improving improver (prompts, feedback format, search strategy), selected by meta-evaluation
 - <span class="check" aria-label="open">○</span> Learned pre-filter ("world model over program edits") for expensive domains
 - <span class="check" aria-label="open">○</span> Container isolation for coding agents
-- <span class="check" aria-label="open">○</span> Optional L4: fine-tune an open model on its own successful edits
+- <span class="check" aria-label="open">○</span> L4: let the improver write the weights of an open delegate LLM directly (weight-space programming), gated like any other edit
 
 ### Open questions
 
