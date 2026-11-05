@@ -119,5 +119,5 @@ for run, name, rnd, human, rdop, rfull, btr in GAMES:
                 f'<td class="num">{steps/1e6:.0f} M</td></tr>')
     print(name, cg, cell(t0), cell(t1), f"{steps/1e6:.1f}M steps")
 
-(HERE / "_includes/curves-atari5.html").write_text('<div class="curves">\n' + "\n".join(cards) + "\n</div>\n")
+(HERE / "_includes/curves-atari5.html").write_text('<div class="curves curves-5">\n' + "\n".join(cards) + "\n</div>\n")
 (HERE / "_includes/table-atari5.html").write_text("\n".join(rows) + "\n")

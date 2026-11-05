@@ -306,3 +306,10 @@ details.more[open] > summary::before { content: "− "; }
 .c-bar-bad { fill: var(--bad); }
 .c-val.bad, td .bad, .bad { fill: var(--bad); color: var(--bad); font-weight: 700; }
 .c-test { fill: var(--panel); stroke: var(--accent); stroke-width: 2.5; }
+
+/* five cards in one row (Atari-5); the SVGs shrink, so their text is made larger to stay readable */
+@media (min-width: 1000px) {
+  .curves-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .curves-5 .c-tick, .curves-5 .c-ref-label, .curves-5 .c-val { font-size: 13.5px; }
+  .curves-5 .c-title { font-size: 17px; }
+}
