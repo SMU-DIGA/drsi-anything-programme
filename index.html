@@ -172,22 +172,36 @@ layout: default
     <figure class="table-figure">
       <figcaption><strong>Table 2b.</strong> Atari-5 from pixels with sticky actions, test seeds, against reinforcement
       learning. Ours: mean ± sample standard deviation over 64 test seeds that no loop used (a figure in red would be
-      below the seed program). <em>Rainbow</em>, <em>Rainbow (full)</em> and <em>BTR</em> are published deep-RL results
-      after 200 M frames, taken from Table A2 of Clark et al. 2024 (arXiv 2411.03820): the maximum score reached during
-      training, averaged over 100 episodes and 3 seeds, so they favour RL. Rainbow (Dopamine) uses sticky actions; the
-      other two are the reference implementations. Human is the usual human baseline. <em>Env steps</em> is ours
-      (frame skip 4, so 200 M frames is 50 M steps).</figcaption>
+      below the seed program). <em>Rainbow</em>, <em>Rainbow (full)</em> and <em>BTR</em> are deep-RL results after 200 M
+      frames, from Table A2 of Clark et al. 2024 (arXiv 2411.03820). <em>Agent57</em> is the state of the art among the
+      published agents here (Badia et al. 2020, arXiv 2003.13350, appendix table, mean ± std over seeds). Human is the usual
+      human baseline. <em>Env steps</em> is ours (frame skip 4, so 200 M frames is 50 M steps). The protocols differ in
+      ways that matter; Table 2c lists them.</figcaption>
       <table>
-        <thead><tr><th>Game</th><th class="num">Seed program<br><small>test</small></th><th class="num">Best program<br><small>test</small></th><th class="num">Human</th><th class="num">Rainbow<br><small>Dopamine</small></th><th class="num">Rainbow<br><small>full</small></th><th class="num">BTR</th><th class="num">Env steps<br><small>ours</small></th></tr></thead>
+        <thead><tr><th>Game</th><th class="num">Seed program<br><small>test</small></th><th class="num">Best program<br><small>test</small></th><th class="num">Human</th><th class="num">Rainbow<br><small>Dopamine</small></th><th class="num">Rainbow<br><small>full</small></th><th class="num">BTR</th><th class="num">Agent57</th><th class="num">Env steps<br><small>ours</small></th></tr></thead>
         <tbody>
 {% include table-atari5.html %}
         </tbody>
       </table>
       <p class="table-note">Our best program is above the human score on three of the four games (Battle Zone is just below it) and above Rainbow
-      (Dopamine) on Name This Game, Phoenix and Q*bert. Against BTR, the best of the 200 M-frame results in that table (not the overall state of the art: Agent57 and MuZero use far more frames and score much higher), it is below on Battle Zone, Name This Game and Phoenix and
-      above on Q*bert (52,418 against 42,927). It is below Rainbow (full) on Battle Zone and Phoenix. The RL numbers are maxima over training, ours is the one program
-      chosen on dev, so the comparison favours RL.</p>
+      (Dopamine) on Name This Game, Phoenix and Q*bert. Against BTR, the best 200 M-frame entry in that table, it is below on Battle Zone,
+      Name This Game and Phoenix and above on Q*bert (52,418 against 42,927). It is below Rainbow (full) on Battle Zone and Phoenix.
+      <strong>Against Agent57 it is far below on all four</strong>, by a factor of 2.7 (Name This Game) to 25 (Battle Zone) and about 14 on Phoenix and 11 on Q*bert.</p>
     </figure>
+    <figure class="table-figure">
+      <figcaption><strong>Table 2c.</strong> What the numbers in Table 2b measure. They are not the same experiment, so read
+      the gaps as orders of magnitude, not as a ranking.</figcaption>
+      <table>
+        <thead><tr><th></th><th>What is learned</th><th>Experience</th><th>Sticky actions</th><th>Score reported</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>Ours</td><td>A readable program written by LLM improvers; no gradients</td><td>18 M to 51 M steps (71 M to 203 M frames), including every evaluation</td><td>Yes, p = 0.25</td><td>The one program chosen on hidden dev, mean over 64 unseen test seeds</td></tr>
+          <tr><td>Rainbow, BTR</td><td>A neural network trained by RL</td><td>200 M frames</td><td>Yes (Rainbow full: reference implementation)</td><td>Maximum during training, 100-episode average, mean of 3 seeds</td></tr>
+          <tr><td>Agent57</td><td>A neural network trained by distributed RL with a learned exploration policy</td><td>Billions of frames: 51 games above human within 5 B, up to 78 B (Skiing)</td><td>No; 30 random no-ops, grayscale input, 30-minute episodes</td><td>Mean ± std over seeds of the final agent</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Agent57 is the first agent above the human benchmark on all 57 Atari games; it uses roughly 25 times our experience for the games it learns first (5 B frames against 0.2 B) and over 1,000 times
+      for the slowest. Sticky actions make a game harder (Table 4 shows how much of a score survives them), so a no-sticky score such as Agent57's is not directly
+      comparable to ours. A like-for-like comparison would train a strong RL agent with sticky actions on these exact five games and our test seeds, which we have not done.</p></figure>
     <div class="finding">
       <p class="finding-label">Robustness can be improved too</p>
       <p>With sticky actions in the loop, the improvers made the same programs robust. Ms. Pac-Man went from 10,029 to

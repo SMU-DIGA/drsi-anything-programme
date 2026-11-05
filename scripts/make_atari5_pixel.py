@@ -10,6 +10,9 @@ from pathlib import Path
 RUNS = Path(sys.argv[1] if len(sys.argv) > 1 else "../DRSI-Anything/runs")
 HERE = Path(__file__).resolve().parent.parent
 # game: (run, display, random, human, Rainbow Dopamine (sticky), Rainbow full, BTR)
+# Agent57: Badia et al. 2020 (arXiv 2003.13350), appendix per-game table, mean +- std over seeds.
+# No sticky actions, 30 no-ops, grayscale, 30 min episodes; up to 78 B frames (51 games above human within 5 B).
+AGENT57 = {"Battle Zone": (934135, 38916), "Name This Game": (54387, 6149), "Phoenix": (908264, 28979), "Q*bert": (580328, 151252)}
 GAMES = [
     ("battle_zone_image_sticky", "Battle Zone", 2360, 37188, 40895, 62010, 168340),
     ("name_this_game_image_sticky", "Name This Game", 2292, 8049, 9229, 13136, 27917),
@@ -82,6 +85,7 @@ for run, name, rnd, human, rdop, rfull, btr in GAMES:
     bad = ' class="bad"' if t1[0] < t0[0] else ""
     rows.append(f'<tr><td>{name}</td><td class="num">{cell(t0)}</td><td class="num"><strong><span{bad}>{cell(t1)}</span></strong></td>'
                 f'<td class="num">{fmt(human)}</td><td class="num">{fmt(rdop)}</td><td class="num">{fmt(rfull)}</td><td class="num">{fmt(btr)}</td>'
+                f'<td class="num">{fmt(AGENT57[name][0])} ± {fmt(AGENT57[name][1])}</td>'
                 f'<td class="num">{steps/1e6:.0f} M</td></tr>')
     print(name, cg, cell(t0), cell(t1), f"{steps/1e6:.1f}M steps")
 
