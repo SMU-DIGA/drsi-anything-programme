@@ -41,37 +41,34 @@ def short(v): return f"{v/1000:g}k" if abs(v) >= 1000 else f"{v:g}"
 
 
 def curve(run, name, human, rainbow, muesli, test):
+    """Dev score by generation on a log axis, with the sticky-action references and the final test score."""
     dev = {0: ev(run, "g000", "dev")[0]}
-    last = None
     for line in open(RUNS / f"{run}.log"):
         m = re.match(r"\[g(\d+)\] incumbent (\S+) train \S+ dev (\S+)", line)
-        if m: dev[int(m.group(1))] = float(m.group(3)); last = m.group(2)
+        if m: dev[int(m.group(1))] = float(m.group(3))
     gens = sorted(dev)
-    hi = max(max(dev.values()), human, rainbow, test) * 1.30
-    step = 10 ** math.floor(math.log10(hi)); step *= 5 if hi / step > 7 else (2 if hi / step > 3.5 else 1)
-    ticks = [i * step for i in range(int(hi // step) + 1)]; hi = max(hi, ticks[-1])
-    y = lambda v: Y1 - v / hi * (Y1 - Y0)
-    out = [f'<text class="c-title" x="12" y="22">{name}</text>']
-    for t in ticks:
-        out.append(f'<line class="c-grid" x1="{X0}" x2="{X1}" y1="{y(t):.1f}" y2="{y(t):.1f}"/>'
-                   f'<text class="c-tick" x="{X0-6}" y="{y(t)+4:.1f}" text-anchor="end">{short(t)}</text>')
+    vals = list(dev.values()) + [human, rainbow, muesli, test]
+    lo, hi = math.floor(math.log10(min(vals))), math.ceil(math.log10(max(vals)))
+    y = lambda v: Y1 - (math.log10(max(v, 1)) - lo) / (hi - lo) * (Y1 - Y0)
+    name_ = {2: "100", 3: "1k", 4: "10k", 5: "100k", 6: "1M"}
+    out = [f'<text class="c-title" x="12" y="22">{name}</text>',
+           f'<text class="c-tick" x="{X1}" y="22" text-anchor="end">● dev  ○ test · log</text>']
+    for e in range(lo, hi + 1):
+        out.append(f'<line class="c-grid" x1="{X0}" x2="{X1}" y1="{y(10**e):.1f}" y2="{y(10**e):.1f}"/>'
+                   f'<text class="c-tick" x="{X0-6}" y="{y(10**e)+4:.1f}" text-anchor="end">{name_.get(e, "10^%d" % e)}</text>')
     n = len(gens) - 1
     xs = {g: X0 + (X1 - X0) * i / n for i, g in enumerate(gens)}
     for i, g in enumerate(gens):
         if i % max(1, n // 5) == 0 or g == gens[-1]:
             out.append(f'<text class="c-tick" x="{xs[g]:.1f}" y="200" text-anchor="middle">{"seed" if g == 0 else "g%d" % g}</text>')
-    # reference lines: the higher one is labelled above its line, the lower one below, so close lines stay readable
-    refs = sorted([(human, "human"), (rainbow, "Rainbow")], reverse=True)
-    for k, (v, lab) in enumerate(refs):
-        dy = -4 if k == 0 else 12
+    # reference lines; a label goes above its line unless that would touch the previous (lower-pixel) label
+    last = -99
+    for v, lab in sorted([(human, "human"), (rainbow, "Rainbow"), (muesli, "Muesli")], key=lambda t: y(t[0])):
+        ly = y(v) - 4
+        if ly - last < 13: ly = y(v) + 12
+        last = ly
         out.append(f'<line class="c-ref" x1="{X0}" x2="{X1}" y1="{y(v):.1f}" y2="{y(v):.1f}"/>'
-                   f'<text class="c-ref-label" x="{X0+4}" y="{y(v)+dy:.1f}">{lab} {fmt(v)}</text>')
-    if muesli > hi:  # off the scale: say so instead of stretching the axis
-        out.append(f'<text class="c-ref-label" x="{X0+4}" y="36">Muesli {fmt(muesli)} ↑ off scale</text>')
-    else:
-        out.append(f'<line class="c-ref" x1="{X0}" x2="{X1}" y1="{y(muesli):.1f}" y2="{y(muesli):.1f}"/>'
-                   f'<text class="c-ref-label" x="{X0+4}" y="{y(muesli)-4:.1f}">Muesli {fmt(muesli)}</text>')
-    out.append(f'<text class="c-tick" x="{X1}" y="22" text-anchor="end">● dev  ○ test</text>')
+                   f'<text class="c-ref-label" x="{X0+4}" y="{ly:.1f}">{lab} {fmt(v)}</text>')
     out.append('<polyline class="c-line" points="' + " ".join(f"{xs[g]:.1f},{y(dev[g]):.1f}" for g in gens) + '"/>')
     for g in gens:
         tip = ("seed program" if g == 0 else f"generation {g}") + f": {fmt(dev[g])} on hidden dev"
@@ -79,8 +76,8 @@ def curve(run, name, human, rainbow, muesli, test):
                    f'<circle class="c-dot" cx="{xs[g]:.1f}" cy="{y(dev[g]):.1f}" r="4.5"/><title>{tip}</title></g>')
     out.append(f'<g class="c-pt"><circle class="c-hit" cx="{X1}" cy="{y(test):.1f}" r="12"/><circle class="c-test" cx="{X1}" cy="{y(test):.1f}" r="6"/>'
                f'<title>final program: {fmt(test)} on 64 test seeds</title></g>')
-    out.append(f'<text class="c-val" x="{X1-10}" y="{y(max(dev[gens[-1]], test))-12:.1f}" text-anchor="end">test {fmt(test)}</text>')
-    return f'<div class="curve"><svg viewBox="0 0 300 210" role="img" aria-label="{name}: dev score by generation">{"".join(out)}</svg></div>', last
+    out.append(f'<text class="c-val" x="{X1-10}" y="{y(test)+16:.1f}" text-anchor="end">test {fmt(test)}</text>')
+    return f'<div class="curve"><svg viewBox="0 0 300 210" role="img" aria-label="{name}: dev score by generation, log scale">{"".join(out)}</svg></div>', None
 
 
 def champion(run):
