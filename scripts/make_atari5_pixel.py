@@ -12,6 +12,10 @@ HERE = Path(__file__).resolve().parent.parent
 # game: (run, display, random, human, Rainbow Dopamine (sticky), Rainbow full, BTR)
 # Agent57: Badia et al. 2020 (arXiv 2003.13350), appendix per-game table, mean +- std over seeds.
 # No sticky actions, 30 no-ops, grayscale, 30 min episodes; up to 78 B frames (51 games above human within 5 B).
+# Muesli paper (Hessel et al. 2021, arXiv 2104.06159), Table 11: sticky actions p=0.25, 0 no-ops, 200M frames,
+# mean of the last 200 episodes, +- standard error over 2 seeds. (MuZero, Muesli)
+MUESLI = {"Battle Zone": ((320641, 141924), (414107, 13422)), "Name This Game": ((108133, 6935), (105043, 732)),
+          "Phoenix": ((748424, 67304), (805305, 26719)), "Q*bert": ((85926, 8980), (157353, 6593))}
 AGENT57 = {"Battle Zone": (934135, 38916), "Name This Game": (54387, 6149), "Phoenix": (908264, 28979), "Q*bert": (580328, 151252)}
 GAMES = [
     ("battle_zone_image_sticky", "Battle Zone", 2360, 37188, 40895, 62010, 168340),
@@ -76,18 +80,21 @@ def champion(run):
     return best
 
 
-cards, rows = [], []
+cards, rows, nos = [], [], []
 for run, name, rnd, human, rdop, rfull, btr in GAMES:
     svg, _ = curve(run, name, human, rdop); cards.append(svg)
     cg, steps = champion(run)
     t0, t1 = ev(run, "g000", "test"), ev(run, cg, "test")
     cell = lambda t: f'{fmt(t[0])} ± {fmt(t[1])}'
     bad = ' class="bad"' if t1[0] < t0[0] else ""
+    mz, mu = MUESLI[name]
     rows.append(f'<tr><td>{name}</td><td class="num">{cell(t0)}</td><td class="num"><strong><span{bad}>{cell(t1)}</span></strong></td>'
-                f'<td class="num">{fmt(human)}</td><td class="num">{fmt(rdop)}</td><td class="num">{fmt(rfull)}</td><td class="num">{fmt(btr)}</td>'
-                f'<td class="num">{fmt(AGENT57[name][0])} ± {fmt(AGENT57[name][1])}</td>'
+                f'<td class="num">{fmt(human)}</td><td class="num">{fmt(rdop)}</td><td class="num">{fmt(btr)}</td>'
+                f'<td class="num">{fmt(mz[0])} ± {fmt(mz[1])}</td><td class="num">{fmt(mu[0])} ± {fmt(mu[1])}</td>'
                 f'<td class="num">{steps/1e6:.0f} M</td></tr>')
+    nos.append(f'<tr><td>{name}</td><td class="num">{fmt(rfull)}</td><td class="num">{fmt(AGENT57[name][0])} ± {fmt(AGENT57[name][1])}</td></tr>')
     print(name, cg, cell(t0), cell(t1), f"{steps/1e6:.1f}M steps")
 
 (HERE / "_includes/curves-atari5.html").write_text('<div class="curves">\n' + "\n".join(cards) + "\n</div>\n")
 (HERE / "_includes/table-atari5.html").write_text("\n".join(rows) + "\n")
+(HERE / "_includes/table-atari5-nosticky.html").write_text("\n".join(nos) + "\n")
