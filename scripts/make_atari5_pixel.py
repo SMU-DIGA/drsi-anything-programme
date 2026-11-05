@@ -40,14 +40,14 @@ def fmt(v): return f"{v:,.0f}".replace("-", "−")
 def short(v): return f"{v/1000:g}k" if abs(v) >= 1000 else f"{v:g}"
 
 
-def curve(run, name, human, rainbow):
+def curve(run, name, human, rainbow, muesli, test):
     dev = {0: ev(run, "g000", "dev")[0]}
     last = None
     for line in open(RUNS / f"{run}.log"):
         m = re.match(r"\[g(\d+)\] incumbent (\S+) train \S+ dev (\S+)", line)
         if m: dev[int(m.group(1))] = float(m.group(3)); last = m.group(2)
     gens = sorted(dev)
-    hi = max(max(dev.values()), human, rainbow) * 1.12
+    hi = max(max(dev.values()), human, rainbow, test) * 1.30
     step = 10 ** math.floor(math.log10(hi)); step *= 5 if hi / step > 7 else (2 if hi / step > 3.5 else 1)
     ticks = [i * step for i in range(int(hi // step) + 1)]; hi = max(hi, ticks[-1])
     y = lambda v: Y1 - v / hi * (Y1 - Y0)
@@ -60,15 +60,26 @@ def curve(run, name, human, rainbow):
     for i, g in enumerate(gens):
         if i % max(1, n // 5) == 0 or g == gens[-1]:
             out.append(f'<text class="c-tick" x="{xs[g]:.1f}" y="200" text-anchor="middle">{"seed" if g == 0 else "g%d" % g}</text>')
-    for v, lab in ((human, "human"), (rainbow, "Rainbow")):
+    # reference lines: the higher one is labelled above its line, the lower one below, so close lines stay readable
+    refs = sorted([(human, "human"), (rainbow, "Rainbow")], reverse=True)
+    for k, (v, lab) in enumerate(refs):
+        dy = -4 if k == 0 else 12
         out.append(f'<line class="c-ref" x1="{X0}" x2="{X1}" y1="{y(v):.1f}" y2="{y(v):.1f}"/>'
-                   f'<text class="c-ref-label" x="{X0+4}" y="{y(v)-4:.1f}">{lab} {fmt(v)}</text>')
+                   f'<text class="c-ref-label" x="{X0+4}" y="{y(v)+dy:.1f}">{lab} {fmt(v)}</text>')
+    if muesli > hi:  # off the scale: say so instead of stretching the axis
+        out.append(f'<text class="c-ref-label" x="{X0+4}" y="36">Muesli {fmt(muesli)} ↑ off scale</text>')
+    else:
+        out.append(f'<line class="c-ref" x1="{X0}" x2="{X1}" y1="{y(muesli):.1f}" y2="{y(muesli):.1f}"/>'
+                   f'<text class="c-ref-label" x="{X0+4}" y="{y(muesli)-4:.1f}">Muesli {fmt(muesli)}</text>')
+    out.append(f'<text class="c-tick" x="{X1}" y="22" text-anchor="end">● dev  ○ test</text>')
     out.append('<polyline class="c-line" points="' + " ".join(f"{xs[g]:.1f},{y(dev[g]):.1f}" for g in gens) + '"/>')
     for g in gens:
         tip = ("seed program" if g == 0 else f"generation {g}") + f": {fmt(dev[g])} on hidden dev"
         out.append(f'<g class="c-pt"><circle class="c-hit" cx="{xs[g]:.1f}" cy="{y(dev[g]):.1f}" r="12"/>'
                    f'<circle class="c-dot" cx="{xs[g]:.1f}" cy="{y(dev[g]):.1f}" r="4.5"/><title>{tip}</title></g>')
-    out.append(f'<text class="c-val" x="{X1-6}" y="{y(dev[gens[-1]])-9:.1f}" text-anchor="end">{fmt(dev[gens[-1]])}</text>')
+    out.append(f'<g class="c-pt"><circle class="c-hit" cx="{X1}" cy="{y(test):.1f}" r="12"/><circle class="c-test" cx="{X1}" cy="{y(test):.1f}" r="6"/>'
+               f'<title>final program: {fmt(test)} on 64 test seeds</title></g>')
+    out.append(f'<text class="c-val" x="{X1-10}" y="{y(max(dev[gens[-1]], test))-12:.1f}" text-anchor="end">test {fmt(test)}</text>')
     return f'<div class="curve"><svg viewBox="0 0 300 210" role="img" aria-label="{name}: dev score by generation">{"".join(out)}</svg></div>', last
 
 
@@ -82,9 +93,9 @@ def champion(run):
 
 cards, rows, nos = [], [], []
 for run, name, rnd, human, rdop, rfull, btr in GAMES:
-    svg, _ = curve(run, name, human, rdop); cards.append(svg)
     cg, steps = champion(run)
     t0, t1 = ev(run, "g000", "test"), ev(run, cg, "test")
+    svg, _ = curve(run, name, human, rdop, MUESLI[name][1][0], t1[0]); cards.append(svg)
     cell = lambda t: f'{fmt(t[0])} ± {fmt(t[1])}'
     bad = ' class="bad"' if t1[0] < t0[0] else ""
     mz, mu = MUESLI[name]

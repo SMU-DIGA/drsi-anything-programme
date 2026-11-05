@@ -305,3 +305,4 @@ details.more[open] > summary::before { content: "− "; }
 .c-err { stroke: var(--fg); stroke-width: 1.5; }
 .c-bar-bad { fill: var(--bad); }
 .c-val.bad, td .bad, .bad { fill: var(--bad); color: var(--bad); font-weight: 700; }
+.c-test { fill: var(--panel); stroke: var(--accent); stroke-width: 2.5; }
