@@ -166,8 +166,8 @@ layout: default
     </figure>
     <h3 id="atari5">Atari-5, pixels only</h3>
     <p>The five games of Atari-5 (Aitchison et al., 2022), played from <strong>RGB frames only</strong> (no RAM) with
-    sticky actions (p = 0.25), from the generic seed program. Four of the five runs are finished and shown here;
-    Double Dunk is still running. Dashed lines are the human score and Rainbow (Dopamine) on the same game.</p>
+    sticky actions (p = 0.25), from the generic seed program. All five runs are shown. Dashed lines are the human score, Rainbow (Dopamine)
+    and Muesli on the same game; Double Dunk has negative scores, so its axis is linear and the others are logarithmic.</p>
     {% include curves-atari5.html %}
     <figure class="table-figure">
       <figcaption><strong>Table 2b.</strong> Atari-5 from pixels with sticky actions (p = 0.25), test seeds, against
@@ -183,11 +183,13 @@ layout: default
 {% include table-atari5.html %}
         </tbody>
       </table>
-      <p class="table-note">Our best program is above the human score on three of the four games (Battle Zone is just below it) and above Rainbow
-      (Dopamine) on Name This Game, Phoenix and Q*bert. Against BTR it is below on Battle Zone, Name This Game and Phoenix and above on Q*bert
-      (52,418 against 42,927). <strong>Against the strongest sticky-action agents, MuZero and Muesli, it is lower on all four</strong>:
-      Muesli is ahead by a factor of 11 on Battle Zone, 5 on Name This Game, 12 on Phoenix and 3 on Q*bert. The frame budgets are similar
-      (ours 71 M to 203 M frames, theirs 200 M), so this gap is not explained by experience. The RL numbers are maxima or last-episode averages of
+      <p class="table-note">Our best program is above the human score on four of the five games (Battle Zone is just below it). It is above Rainbow
+      (Dopamine) on Name This Game, Phoenix and Q*bert and below it on Battle Zone and Double Dunk, and above BTR only on Q*bert
+      (52,418 against 42,927). <strong>Against MuZero it is lower on all five.</strong> Against Muesli it is lower on four: by a factor of 11 on Battle Zone,
+      5 on Name This Game, 12 on Phoenix and 3 on Q*bert. On Double Dunk it is higher (0.81 against −3 ± 2, where Muesli's ± is a standard error over only
+      2 seeds), but Double Dunk is a score difference capped at +24 and MuZero, BTR and Rainbow are at 22 to 24 there. Ours uses 71 M to 303 M frames
+      (Double Dunk the most) against 200 M for the RL agents, so the gaps are not explained by experience. Double Dunk was stopped by hand during generation 9
+      for time, not by the no-promotion rule; its program is the one selected at generation 6. The RL numbers are maxima or last-episode averages of
       trained networks, ours is one readable program chosen on dev.</p>
     </figure>
     <div class="finding">
