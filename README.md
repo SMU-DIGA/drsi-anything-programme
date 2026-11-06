@@ -43,10 +43,6 @@ the implementation is not public.
 | Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
 | Games: Atari-5 from pixels, sticky actions (above human on 4 of 5; Q*bert 52,418 test) | Running |
 | Games: VizDoom | Done |
-| Games: poker (Leduc variants by NashConv; heads-up no-limit hold'em, duplicate) | Running |
-| Embodied robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
-| Embodied robotics: LIBERO (Spatial state 99.0% test; LIBERO-10 state 99.0% test; Spatial vision 95.0% dev) | Running |
-| Embodied robotics: SimplerEnv, RoboTwin 2.0 | Planned |
 | Computer use: OSWorld (pure code vs code + typed 2B decision function) | Running |
 
 Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).
@@ -54,7 +50,6 @@ Status: Done (integrated and tested) · Running (experiment in progress) · In p
 Headline results (programs written and refined by LLM improvers; no gradient training, no demonstrations):
 
 - **Atari-5 (pixels only, sticky actions):** above the human score on 4 of 5 games on 64 unseen test seeds; Q*bert 183 → 52,418.
-- **LIBERO (state):** 99.0% on 400 test episodes for both LIBERO-Spatial and LIBERO-10, each after 1 generation.
 - **ScienceWorld:** one program for all 30 task types, 2.5 → 85.0 on all 1,819 official test variations after four rounds and one merged specialist (86.8 on SwiftSage's first 10 variations per type, above SwiftSage with GPT-4: 84.68).
 
 

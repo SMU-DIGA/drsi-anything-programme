@@ -5,9 +5,9 @@ Following *Learning Beyond Gradients*, all games run through [EnvPool](https://g
 | Family | Tasks | Observation | Score | Status |
 |---|---|---|---|---|
 | Atari (ALE) | Breakout, Pong, Ms. Pac-Man, Montezuma's Revenge, Space Invaders, Seaquest, … Atari57 | RAM (128 bytes), RGB image, or both | episode return (unclipped, no sticky actions, full game) | <span class="badge running">Running</span> |
-| Poker (OpenSpiel `universal_poker`) | Leduc-like variants; heads-up no-limit hold'em | own cards, public cards, betting history | Leduc: exact NashConv; HUNL: duplicate mbb/hand vs rule bots and past champions | <span class="badge running">Running</span> |
 | VizDoom | D1 Basic, D3 Battle | stacked screen + game variables | episode return | <span class="badge done">Done</span> |
 
+{% comment %}Embodied hidden
 ### Embodied robotics
 
 All embodied work currently runs in simulation.
@@ -35,6 +35,7 @@ accumulate such skills by itself (L2) is one of the research questions. Recent c
 as CaP-X report that removing hand-designed abstractions hurts frontier models, and that iterative
 feedback and skill synthesis recover much of the gap.
 
+{% endcomment %}
 ### Computer use
 
 | Benchmark | Plan | Status |
