@@ -17,7 +17,11 @@ from pathlib import Path
 RUNS = Path(sys.argv[1] if len(sys.argv) > 1 else "../DRSI-Anything/runs")
 RUN = RUNS / "scienceworld"
 # later rounds, each continuing from the previous round's champion with its own dev seeds (dev curves drawn apart)
-ROUNDS = [(2, RUNS / "scienceworld_r2", 150), (3, RUNS / "scienceworld_r3", 300)]
+ROUNDS = [(2, RUNS / "scienceworld_r2", 150), (3, RUNS / "scienceworld_r3", 300), (4, RUNS / "scienceworld_r4", 300)]
+# a program merged into a round after its log ends: (round, tag, run dir, version, dev on that round's seeds, label)
+MERGED = [(4, "e4", RUNS / "scienceworld_spec_elec", "g001c0", 96.18,
+           "round 4 + electricity specialist (passed the round-4 dev gate)")]
+LABELS = {}
 HERE = Path(__file__).resolve().parent.parent
 
 # ScienceWorld task ids, in the order of the benchmark paper
@@ -96,6 +100,11 @@ for rnd, run_dir, ndev in ROUNDS:
         if m := re.match(r"\[g(\d+)\] incumbent (\S+) train \S+ dev (\S+)", line):
             k = int(m.group(1)); last = max(last, k)
             incumbent[offset + k] = f"r{rnd}:" + m.group(2); d[offset + k] = 100 * float(m.group(3))
+    for mr, tag, mdir, mver, mdev, mlabel in MERGED:
+        if mr == rnd:
+            last += 1
+            RUN_OF[tag] = mdir; incumbent[offset + last] = f"{tag}:{mver}"; d[offset + last] = mdev
+            LABELS[offset + last] = mlabel
     devs[rnd] = (d, ndev)
     offset += last
 gens = sorted(incumbent)
@@ -115,6 +124,7 @@ def round_of(g):
 
 
 def label(g):
+    if g in LABELS: return LABELS[g]
     if g == 0: return "seed program"
     r = round_of(g)
     return f"round {r}, generation {g - starts[r]}" if r > 1 else f"generation {g}"

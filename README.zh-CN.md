@@ -40,7 +40,7 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 
 - **Atari-5（纯像素、sticky actions）：** 在 64 个从未用过的 test seed 上，5 个游戏中 4 个超过人类分数；Q*bert 183 → 52,418。
 - **LIBERO（state）：** LIBERO-Spatial 和 LIBERO-10 都只用 1 代，400 局 test 成功率均为 99.0%。
-- **ScienceWorld：** 一个程序覆盖全部 30 类任务，三轮之后（第四轮在进行）在全部 1,819 个官方 test 变体上 2.5 → 80.8（按 SwiftSage 协议、每类前 10 个变体为 82.1；SwiftSage 用 GPT-4 为 84.68）。
+- **ScienceWorld：** 一个程序覆盖全部 30 类任务，四轮加一个合并进来的专家程序之后，在全部 1,819 个官方 test 变体上 2.5 → 85.0（按 SwiftSage 协议、每类前 10 个变体为 86.8，超过 SwiftSage 用 GPT-4 的 84.68）。
 
 本仓库只公开方案文档与实验结果，不包含实现代码。
 

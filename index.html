@@ -37,7 +37,7 @@ layout: default
     {% comment %}Atari RAM hidden
 <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
 {% endcomment %}
-    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 80.8</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
+    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 85.0</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
     <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari · poker · LIBERO robotics · OSWorld · ScienceWorld</p></div>
   </div>
 </section>
@@ -487,14 +487,28 @@ layout: default
     life stages 2 (25.0 vs 68.5). Generation 7 promoted nothing: train was at 99% and every one of these types scored 1.0
     on train, so the improvers saw no failure to fix (power component has only 10 official train variations). We stopped
     round 3 during generation 8.</p>
-    <p><strong>Round 4</strong> (running) starts from g006c0 and splits ScienceWorld's official dev variations into two
+    <p><strong>Round 4</strong> starts from g006c0 and splits ScienceWorld's official dev variations into two
     disjoint halves: one joins train (300 of each generation's 750 train seeds), the other stays the hidden promotion
     gate; test is unchanged. On the half moved to train the incumbent scores 0.07 on power component, so the failures
-    are now visible to the improvers without looking at test.</p>
+    are now visible to the improvers without looking at test. Generation 1 promoted g001c1 (dev 92.1 → 94.4; freeze
+    58.4 → 94.9 on test): <strong>82.7</strong> on all test variations, 84.25 on SwiftSage's protocol.</p>
+    <p><strong>Composition.</strong> Next to round 4 we ran three specialists from g001c1, each a short DRSI run
+    restricted to a few task types (electricity; heat; life stages, chemistry, genetics and lifespans), with two
+    Sonnet improvers asked to build every fix as a self-contained, general skill so that it can be merged back. The
+    electricity specialist found the cause of the power-component failures in its first generation: the circuit
+    skill only handled tasks that light a bulb, so "turn on the electric motor" (and any other target) fell through;
+    it now reads the target from the task text and searches the world for it (specialist dev 87.3 → 100). Its program
+    is g001c1 with only the circuit skill changed, so we gated it like any candidate, on all 30 types of round 4's
+    hidden dev: 94.4 → <strong>96.2</strong> (7 wins, 1 loss, P(gain) 0.999). On test: power component 8.2 → 46.4,
+    renewable energy 6.0 → 34.0, no type lower by more than 2 points; <strong>85.0</strong> on all 1,819 test
+    variations and <strong>86.8 on SwiftSage's protocol, above SwiftSage's 84.68</strong> (GPT-4 at run time; ours
+    uses no model at run time). In round 4 we ran the full test after every promotion and stopped all runs once the
+    SwiftSage-protocol score passed 84.68; test was only this stopping rule, never shown to an improver or used to
+    pick a candidate. The heat and life-science specialists were stopped before they were merged.</p>
     {% include curves-scienceworld.html %}
     <p class="pending">Left: the incumbent on 90 hidden dev seeds (●) and on 300 test seeds, 10 per type (○), one point
     per generation; round 1 promoted in 7 of 10 generations (not 1, 2 or 8), round 2 (after the R2 divider, other dev
-    seeds, so its dev curve is drawn separately) in all 6, round 3 (after R3) in 5 of 7. Right: the mean over task types on <strong>all 1,819
+    seeds, so its dev curve is drawn separately) in all 6, round 3 (after R3) in 5 of 7, round 4 (after R4) in 1 of 2, then the merged electricity specialist. Right: the mean over task types on <strong>all 1,819
     official test variations</strong>, each played once, for the incumbent of every generation. On test, round 2
     gained most by its generation 4 (64.1, 65.9, 65.6, 67.5, 67.2, 67.5) and was flat after it, although dev kept rising.
     Dashed lines: published agents (SwiftSage protocol, see Table 6).</p>
