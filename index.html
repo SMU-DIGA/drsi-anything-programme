@@ -37,7 +37,7 @@ layout: default
     {% comment %}Atari RAM hidden
 <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
 {% endcomment %}
-    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 59.3</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
+    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 67.5</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
     <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari · poker · LIBERO robotics · OSWorld · ScienceWorld</p></div>
   </div>
 </section>
@@ -464,10 +464,18 @@ layout: default
     while reading a thermometer) rather than replaying a script. Seeds: 60 train (2 per type), 90 hidden dev (3 per
     type), test as below; ScienceWorld's <em>easy</em> simplification, at most 100 commands per episode. The program
     calls no model, cannot import ScienceWorld, and never sees the gold action sequence.</p>
+    <p><strong>Round 2</strong> starts from the round-1 champion (generation 10) with more seeds (300 train, 150 other
+    hidden dev) and a new instruction: first classify the causes of failure in the transcripts of failing episodes,
+    then fix the largest cause with one closed-loop mechanism (act, check the effect, recover). Improvers: Claude Code
+    and DeepSeek (Codex only in its first generation). It was promoted in all 6 generations and stopped by hand during
+    generation 7, when train had saturated (99.3%). On all 1,819 test variations it raised the mean from 59.3 to
+    <strong>67.5</strong>, and on SwiftSage's first 10 variations per type from 62.5 to 71.3 (SwiftSage 84.68).</p>
     {% include curves-scienceworld.html %}
     <p class="pending">Left: the incumbent on 90 hidden dev seeds (●) and on 300 test seeds, 10 per type (○), one point
-    per generation; promoted in 7 of 10 generations (not 1, 2 or 8). Right: the mean over task types on <strong>all 1,819
-    official test variations</strong>, each played once, for the incumbent of every generation.
+    per generation; round 1 promoted in 7 of 10 generations (not 1, 2 or 8), round 2 (after the divider, other dev
+    seeds, so its dev curve is drawn separately) in all 6. Right: the mean over task types on <strong>all 1,819
+    official test variations</strong>, each played once, for the incumbent of every generation; round-2 points appear
+    as their full tests finish.
     Dashed lines: published agents (SwiftSage protocol, see Table 6).</p>
     <h4>Every task type, one program</h4>
     <p>Full-test score (0–100) of the incumbent of every generation, per task type; <span class="bad">red</span> marks a
@@ -492,7 +500,9 @@ layout: default
       </table>
       <p class="table-note">The program generalizes where an experiment decides the answer (conductivity, melting
       point of an unknown substance, inclined planes, finding things), and fails where test variations need what train
-      never showed (metals for 1-1 to 1-4, the long grow-fruit procedure). For lifespans and known Mendelian traits it
+      never showed (metals for 1-1 to 1-4). Round 2 fixed the long grow-fruit procedure (4.9 → 96.8), chemistry mixing
+      (33.0 → 68.8) and conductivity of unknown substances (67.7 → 90.4); its only clear loss is genetics of an unknown
+      plant (50.0 → 37.5). For lifespans and known Mendelian traits it
       answers from general knowledge written into the code rather than by experiment, as LLM agents do.</p>
     </figure>
   </div>
