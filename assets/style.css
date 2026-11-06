@@ -2,6 +2,7 @@
 @font-face { font-family: "Manrope"; font-style: normal; font-weight: 500 800; font-display: swap; src: url("fonts/manrope-latin.woff2") format("woff2"); }
 @font-face { font-family: "DM Sans"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("fonts/dm-sans-latin.woff2") format("woff2"); }
 @font-face { font-family: "DM Sans"; font-style: italic; font-weight: 400 700; font-display: swap; src: url("fonts/dm-sans-latin-italic.woff2") format("woff2"); }
+@font-face { font-family: "DRSI Mark"; font-style: italic; font-weight: 900; font-display: block; src: url("fonts/fraunces-black-italic-D.woff2") format("woff2"); } /* Fraunces Black Italic, the "D" only */
 @font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("fonts/jetbrains-mono-latin.woff2") format("woff2"); }
 :root {
   --fg: #1d1d1f;
@@ -59,7 +60,7 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .topbar-inner { max-width: 1200px; margin: 0 auto; padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .brand { font-family: var(--display); font-weight: 800; color: var(--fg); letter-spacing: -0.01em; }
 .brand:hover { text-decoration: none; }
-.brand-mark { color: var(--accent); }
+.brand-mark { color: var(--accent); font-family: "DRSI Mark", Georgia, "Times New Roman", serif; font-style: italic; font-weight: 900; font-size: 1.16em; letter-spacing: 0; padding-right: 0.05em; line-height: 1; }
 .topbar nav a { color: var(--muted); font-size: 15px; margin-left: 18px; }
 .topbar nav a:hover, .topbar nav a.active { color: var(--fg); text-decoration: none; }
 .topbar nav a.active { font-weight: 600; }
