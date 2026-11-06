@@ -113,9 +113,14 @@ for run, name, rnd, human, rdop, rfull, btr in GAMES:
     cell = lambda t: f'{fmt(t[0], dd)} ± {fmt(t[1], dd)}'
     bad = ' class="bad"' if t1[0] < t0[0] else ""
     mz, mu = MUESLI[name]
-    rows.append(f'<tr><td>{name}</td><td class="num">{cell(t0)}</td><td class="num"><strong><span{bad}>{cell(t1)}</span></strong></td>'
-                f'<td class="num">{fmt(human, 1 if abs(human) < 100 else 0)}</td><td class="num">{fmt(rdop)}</td><td class="num">{fmt(btr)}</td>'
-                f'<td class="num">{fmt(mz[0])} ± {fmt(mz[1])}</td><td class="num">{fmt(mu[0])} ± {fmt(mu[1])}</td>'
+    # per row, among the agents (human is a reference, not ranked): best in bold, second best underlined
+    agents = {"seed": t0[0], "ours": t1[0], "rainbow": rdop, "btr": btr, "muzero": mz[0], "muesli": mu[0]}
+    top = sorted(set(agents.values()), reverse=True)
+    mark = lambda k, txt: (f"<strong>{txt}</strong>" if agents[k] == top[0] else
+                           f'<span class="second">{txt}</span>' if len(top) > 1 and agents[k] == top[1] else txt)
+    rows.append(f'<tr><td>{name}</td><td class="num">{mark("seed", cell(t0))}</td><td class="num">{mark("ours", f"<span{bad}>{cell(t1)}</span>")}</td>'
+                f'<td class="num">{fmt(human, 1 if abs(human) < 100 else 0)}</td><td class="num">{mark("rainbow", fmt(rdop))}</td><td class="num">{mark("btr", fmt(btr))}</td>'
+                f'<td class="num">{mark("muzero", f"{fmt(mz[0])} ± {fmt(mz[1])}")}</td><td class="num">{mark("muesli", f"{fmt(mu[0])} ± {fmt(mu[1])}")}</td>'
                 f'<td class="num">{steps/1e6:.0f} M</td></tr>')
     print(name, cg, cell(t0), cell(t1), f"{steps/1e6:.1f}M steps")
 
