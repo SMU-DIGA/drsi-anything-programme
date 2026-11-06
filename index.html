@@ -392,6 +392,7 @@ layout: default
           <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
           <tr class="best"><td>LIBERO-10 (long-horizon) · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
           <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0% ± 0 pp</td><td class="num">95.0% ± 21.9 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong> (381 / 400)</td><td>done after 10 generations</td></tr>
+          <tr><td>LIBERO-10 (long-horizon) · vision</td><td class="num">0% ± 0 pp</td><td class="num">91.2% ± 28.5 pp*</td><td class="num"><strong>87.0% ± 33.6 pp</strong> (348 / 400)</td><td>stopped after 8 generations</td></tr>
           <tr class="ref"><td>OpenVLA, fine-tuned (RGB; Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">84.7% / 53.7%</td><td>—</td></tr>
           <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">97.6% / 94.5%</td><td>—</td></tr>
         </tbody>
@@ -403,6 +404,11 @@ layout: default
       setting and is not comparable to it. Vision mode is the closest match, but it uses depth and camera calibration,
       which the VLA models do not. Programs contain routines per task family and generalize across unseen initial
       scenes, which is what LIBERO's protocol tests.</p>
+      <p>* LIBERO-10 vision ran before the seed guard existed. One improver (generation 5) evaluated its candidate on 40
+      dev scenes through a hand-edited task file, and the generation-6 improver whose program became the champion read
+      that candidate's notes and code, so the dev number is optimistic. Test scenes were never touched; 87.0% is a
+      clean test estimate (per task 65–100%; the microwave task is the weakest). The guard now refuses any seed outside
+      train.</p>
     </div>
     <div class="finding">
       <p class="finding-label">What the programs found by probing</p>
@@ -504,7 +510,12 @@ layout: default
     variations and <strong>86.8 on SwiftSage's protocol, above SwiftSage's 84.68</strong> (GPT-4 at run time; ours
     uses no model at run time). In round 4 we ran the full test after every promotion and stopped all runs once the
     SwiftSage-protocol score passed 84.68; test was only this stopping rule, never shown to an improver or used to
-    pick a candidate. The heat and life-science specialists were stopped before they were merged.</p>
+    pick a candidate. We then merged the heat and life-science specialists too, by a plain three-way text merge (all
+    three started from g001c1 and changed different skills; no conflict). The merged program scores 96.5 on round 4's
+    dev (2 wins, 2 losses: not a significant gain, so our gate would not promote it) but <strong>86.4</strong> on all
+    test variations and <strong>88.5</strong> on SwiftSage's protocol (melting point of a known substance 27.8 → 65.4,
+    genetics of an unknown plant 76.1 → 82.5): that skill is already at 100 on dev, so dev cannot see the gain. Because
+    it did not pass the gate, our headline stays 86.8; we report 88.5 here as the merge we did not select.</p>
     {% include curves-scienceworld.html %}
     <p class="pending">Left: the incumbent on 90 hidden dev seeds (●) and on 300 test seeds, 10 per type (○), one point
     per generation; round 1 promoted in 7 of 10 generations (not 1, 2 or 8), round 2 (after the R2 divider, other dev
