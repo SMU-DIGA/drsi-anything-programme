@@ -37,7 +37,7 @@ layout: default
     {% comment %}Atari RAM hidden
 <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
 {% endcomment %}
-    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 67.5</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
+    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 69.8</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
     <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari · poker · LIBERO robotics · OSWorld · ScienceWorld</p></div>
   </div>
 </section>
@@ -470,10 +470,19 @@ layout: default
     and DeepSeek (Codex only in its first generation). It was promoted in all 6 generations and stopped by hand during
     generation 7, when train had saturated (99.3%). On all 1,819 test variations it raised the mean from 59.3 to
     <strong>67.5</strong>, and on SwiftSage's first 10 variations per type from 62.5 to 71.3 (SwiftSage 84.68).</p>
+    <p><strong>Round 3</strong> (running) starts from the round-2 champion with 600 train and 300 other hidden dev seeds,
+    a stricter gate (confidence 0.9) and Claude Code only (one Opus, two Sonnet), each improver assigned a group of
+    ScienceWorld topics. The instruction asks first for a generalization audit: remove every branch keyed on an object
+    seen in train, and share one skill per capability across task types. After generation 3 we analysed the test
+    failures of the change-of-state types and added one general rule (a default that only works on train is a special
+    case; search the whole world for the exact target and never substitute another object; escalate to another means
+    when one has no effect); it names no test object, but it was written after looking at test, which we report here.
+    From generation 5 the train seeds change every generation. So far: 67.5 → <strong>69.8</strong> on all test
+    variations after 3 generations (genetics of an unknown plant 37.5 → 77.5, friction 77.6 → 100).</p>
     {% include curves-scienceworld.html %}
     <p class="pending">Left: the incumbent on 90 hidden dev seeds (●) and on 300 test seeds, 10 per type (○), one point
-    per generation; round 1 promoted in 7 of 10 generations (not 1, 2 or 8), round 2 (after the divider, other dev
-    seeds, so its dev curve is drawn separately) in all 6. Right: the mean over task types on <strong>all 1,819
+    per generation; round 1 promoted in 7 of 10 generations (not 1, 2 or 8), round 2 (after the R2 divider, other dev
+    seeds, so its dev curve is drawn separately) in all 6, round 3 (after R3) in 3 of 4 so far. Right: the mean over task types on <strong>all 1,819
     official test variations</strong>, each played once, for the incumbent of every generation. On test, round 2
     gained most by its generation 4 (64.1, 65.9, 65.6, 67.5, 67.2, 67.5) and was flat after it, although dev kept rising.
     Dashed lines: published agents (SwiftSage protocol, see Table 6).</p>

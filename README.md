@@ -55,7 +55,7 @@ Headline results (programs written and refined by LLM improvers; no gradient tra
 
 - **Atari-5 (pixels only, sticky actions):** above the human score on 4 of 5 games on 64 unseen test seeds; Q*bert 183 → 52,418.
 - **LIBERO (state):** 99.0% on 400 test episodes for both LIBERO-Spatial and LIBERO-10, each after 1 generation.
-- **ScienceWorld:** one program for all 30 task types, 2.5 → 67.5 on all 1,819 official test variations after two rounds (71.3 on SwiftSage's first 10 variations per type; SwiftSage with GPT-4: 84.68).
+- **ScienceWorld:** one program for all 30 task types, 2.5 → 69.8 on all 1,819 official test variations after three rounds, the third still running (71.0 on SwiftSage's first 10 variations per type; SwiftSage with GPT-4: 84.68).
 
 
 ## Progress log

@@ -16,7 +16,8 @@ from pathlib import Path
 
 RUNS = Path(sys.argv[1] if len(sys.argv) > 1 else "../DRSI-Anything/runs")
 RUN = RUNS / "scienceworld"
-RUN2 = RUNS / "scienceworld_r2"  # round 2: continues from the round-1 champion, other dev seeds, closed-loop instruction
+# later rounds, each continuing from the previous round's champion with its own dev seeds (dev curves drawn apart)
+ROUNDS = [(2, RUNS / "scienceworld_r2", 150), (3, RUNS / "scienceworld_r3", 300)]
 HERE = Path(__file__).resolve().parent.parent
 
 # ScienceWorld task ids, in the order of the benchmark paper
@@ -74,32 +75,49 @@ def fmt(v, d=1): return f"{v:,.{d}f}".replace("-", "−")
 
 
 # ------------------------------------------------------------------ data
-# a version is "g010s" (round 1) or "r2:g006c1" (round 2); round-2 generation k is plotted as generation R1 + k
-incumbent, dev, dev2 = {0: "g000"}, {}, {}
+# a version is "g010s" (round 1) or "r2:g006c1" (round N); later rounds are plotted after round 1's generations
+incumbent, dev = {0: "g000"}, {}
 for line in open(RUNS / "scienceworld.log"):
     if m := re.match(r"\[seed\] train \S+ dev (\S+)", line):
         dev[0] = 100 * float(m.group(1))
     if m := re.match(r"\[g(\d+)\] incumbent (\S+) train \S+ dev (\S+)", line):
         incumbent[int(m.group(1))] = m.group(2); dev[int(m.group(1))] = 100 * float(m.group(3))
 R1 = max(dev)
-if (RUNS / "scienceworld_r2.log").exists():
-    for line in open(RUNS / "scienceworld_r2.log"):
+starts, devs, RUN_OF = {}, {}, {}  # round -> first plotted generation - 1; round -> dev curve; "rN" -> run dir
+offset = R1
+for rnd, run_dir, ndev in ROUNDS:
+    log = run_dir.parent / f"{run_dir.name}.log"
+    if not log.exists():
+        continue
+    starts[rnd], RUN_OF[f"r{rnd}"], d, last = offset, run_dir, {}, 0
+    for line in open(log):
         if m := re.match(r"\[seed\] train \S+ dev (\S+)", line):
-            dev2[R1] = 100 * float(m.group(1))  # round-1 champion on round-2 dev seeds
+            d[offset] = 100 * float(m.group(1))  # previous champion on this round's dev seeds
         if m := re.match(r"\[g(\d+)\] incumbent (\S+) train \S+ dev (\S+)", line):
-            g = R1 + int(m.group(1)); incumbent[g] = "r2:" + m.group(2); dev2[g] = 100 * float(m.group(3))
+            k = int(m.group(1)); last = max(last, k)
+            incumbent[offset + k] = f"r{rnd}:" + m.group(2); d[offset + k] = 100 * float(m.group(3))
+    devs[rnd] = (d, ndev)
+    offset += last
 gens = sorted(incumbent)
 versions = sorted(set(incumbent.values()), key=lambda v: min(g for g in gens if incumbent[g] == v))
 
 
 def where(v):
     """(run directory, version name in that run)."""
-    return (RUN2, v[3:]) if v.startswith("r2:") else (RUN, v)
+    if ":" in v:
+        r, name = v.split(":")
+        return RUN_OF[r], name
+    return RUN, v
+
+
+def round_of(g):
+    return max([r for r, st in starts.items() if g > st], default=1)
 
 
 def label(g):
     if g == 0: return "seed program"
-    return f"round 2, generation {g - R1}" if g > R1 else f"generation {g}"
+    r = round_of(g)
+    return f"round {r}, generation {g - starts[r]}" if r > 1 else f"generation {g}"
 
 
 def test300(v):
@@ -147,17 +165,19 @@ xs = {g: X0 + (X1 - X0) * i / (len(gens) - 1) for i, g in enumerate(gens)}
 def tick_x(out):
     for i, g in enumerate(gens):
         if i % 2 == 0 or g == gens[-1]:
-            out.append(f'<text class="c-tick" x="{xs[g]:.1f}" y="200" text-anchor="middle">{"seed" if g == 0 else "g%d" % (g - R1 if g > R1 else g)}</text>')
+            out.append(f'<text class="c-tick" x="{xs[g]:.1f}" y="200" text-anchor="middle">{"seed" if g == 0 else "g%d" % (g - starts.get(round_of(g), 0))}</text>')
 
 
 def grid(out, small=False):
     for t in (0, 25, 50, 75, 100):
         out.append(f'<line class="c-grid" x1="{X0}" x2="{X1}" y1="{y(t):.1f}" y2="{y(t):.1f}"/>'
                    f'<text class="c-tick" x="{X0-6}" y="{y(t)+4:.1f}" text-anchor="end">{t}</text>')
-    if gens[-1] > R1:  # where round 2 starts
-        x = (xs[R1] + xs[R1 + 1]) / 2 if R1 + 1 in xs else xs[R1]
+    for r, st in starts.items():  # where each later round starts
+        if st + 1 not in xs:
+            continue
+        x = (xs[st] + xs[st + 1]) / 2
         out.append(f'<line class="c-ref" x1="{x:.1f}" x2="{x:.1f}" y1="{Y0}" y2="{Y1}"/>'
-                   f'<text class="c-tick" transform="translate({x-3:.1f},{Y1-10}) rotate(-90)">round 2</text>')
+                   f'<text class="c-tick" transform="translate({x-3:.1f},{Y1-10}) rotate(-90)">R{r}</text>')
 
 
 def point(out, x, v, cls, tip, r=4.5):
@@ -196,7 +216,7 @@ dev_s = dict(dev)
 t300 = {g: (test300(incumbent[g]) or (None,))[0] for g in gens}
 fullm = {g: macro(incumbent[g]) for g in gens}
 cards = [overall_card("All 30 task types", [("c-dot", dev_s, "on 90 hidden dev seeds"),
-                                            ("c-dot", dev2, "on round 2's 150 hidden dev seeds"),
+                                            *[("c-dot", d, f"on round {r}'s {n} hidden dev seeds") for r, (d, n) in devs.items()],
                                             ("c-test", t300, "on 300 test seeds")], "● dev  ○ test (300 seeds)"),
          overall_card("Full official test", [("c-test", fullm, "macro mean over all 1,819 test variations")],
                       "○ macro mean, 1,819 episodes")]
@@ -284,7 +304,7 @@ row1 = (f'<tr><td>Science (text)</td><td>ScienceWorld, 30 task types, one progra
 (HERE / "_includes/curves-scienceworld.html").write_text('<div class="curves">\n' + "\n".join(cards) + "\n</div>\n")
 (HERE / "_includes/curves-scienceworld-tasks.html").write_text('<div class="curves curves-5">\n' + "\n".join(task_cards) + "\n</div>\n")
 (HERE / "_includes/table-scienceworld.html").write_text("\n".join(rows) + "\n")
-summary = {"best": best_v, "dev": {g: round(v, 1) for g, v in {**dev, **dev2}.items()}, "test300": {g: t300[g] and round(t300[g], 1) for g in gens},
+summary = {"best": best_v, "dev": {g: round(v, 1) for g, v in dev.items()}, "test300": {g: t300[g] and round(t300[g], 1) for g in gens},
            "full_macro": {v: macro(v) and round(macro(v), 2) for v in versions},
            "first10_best": macro(best_v, first10), "complete": sorted(complete), "seed_test300": test300(seed_v),
            "best_test300": test300(best_v)}
