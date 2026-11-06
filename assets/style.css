@@ -130,11 +130,12 @@ pre code { background: none; padding: 0; font-size: inherit; }
 .steps li { margin: 10px 0; }
 
 /* tables */
-table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 15px; display: block; overflow-x: auto; }
+table { width: fit-content; max-width: 100%; border-collapse: collapse; margin: 18px auto; font-size: 15px; display: block; overflow-x: auto; }
+.prog table { width: 100%; margin: 18px 0; }  /* source listings stay full width */
 thead th { text-align: left; font-weight: 600; color: var(--muted); border-bottom: 2px solid var(--fg); padding: 8px 12px; white-space: nowrap; }
 tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
 tbody tr:last-child td { border-bottom: 2px solid var(--fg); }
-td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 tr.best td { background: var(--best); }
 .table-figure { margin: 22px 0; }
 .table-figure figcaption { margin: 0 0 4px; }
