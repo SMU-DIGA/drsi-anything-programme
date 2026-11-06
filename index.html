@@ -47,7 +47,7 @@ layout: default
   <figcaption><strong>Figure 1.</strong> The self-improvement loop. Several coding agents and LLMs edit the current
   program in parallel. Every candidate is re-scored in isolation, and only a version that beats the incumbent
   on <em>hidden</em> dev seeds is promoted. The object being improved is software (policy, skills and a notes
-  file that serves as memory), Today that is the object being improved; the weights of an LLM the program delegates to can also be edited directly, which is planned (see Design).</figcaption>
+  file that serves as memory); editing the weights of an LLM the program calls is planned.</figcaption>
 </figure>
 
 <section class="abstract">
@@ -70,14 +70,12 @@ layout: default
   <article class="article-body" data-numbered>
 
   <h2 id="design">Design</h2>
-  <p class="lead">Improve the delegate: the program, and the weights of the LLM it calls.</p>
-  <p>A <strong>program</strong> is the whole "heuristic system": the policy, its state detectors and skills, and
-  notes holding environment facts, failed ideas and a dated changelog. Each generation runs four steps.</p>
+  <p class="lead">LLMs improve a program; a version is kept only if it wins on seeds no one saw.</p>
   <div class="step-grid">
-    <div class="step"><p class="step-num">1</p><h4>Propose</h4><p>The incumbent is copied into one isolated workspace per improver, with a task brief, per-seed feedback, the full history of earlier attempts, and an evaluator restricted to the <em>train</em> seeds.</p></div>
-    <div class="step"><p class="step-num">2</p><h4>Re-evaluate</h4><p>Candidates are re-scored independently. The environment runs in one process and the policy in another, so a policy never sees the reward, the seed or the environment object.</p></div>
-    <div class="step"><p class="step-num">3</p><h4>Promote</h4><p>The best candidates face the incumbent on <em>hidden dev seeds</em> under a paired bootstrap gate. Test seeds are used once, at the end.</p></div>
-    <div class="step"><p class="step-num">4</p><h4>Simplify</h4><p>The winner is simplified and kept only if its dev score does not drop. This counters the build-up of patches.</p></div>
+    <div class="step"><p class="step-num">1</p><h4>Propose</h4><p>Each improver edits its own copy of the current program, with feedback and an evaluator on <em>train</em> seeds only.</p></div>
+    <div class="step"><p class="step-num">2</p><h4>Re-evaluate</h4><p>Every candidate is re-scored in isolation; scores the improver reports are ignored.</p></div>
+    <div class="step"><p class="step-num">3</p><h4>Promote</h4><p>The best candidate replaces the incumbent only if a paired bootstrap test on <em>hidden dev seeds</em> says it is better.</p></div>
+    <div class="step"><p class="step-num">4</p><h4>Simplify</h4><p>Optionally, the winner is shortened, and the shorter version is kept only if its dev score does not drop.</p></div>
   </div>
   {% capture design_md %}{% include design.md %}{% endcapture %}
   {{ design_md | markdownify }}
