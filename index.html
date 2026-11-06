@@ -191,7 +191,7 @@ layout: default
     and Muesli on the same game; Double Dunk has negative scores, so its axis is linear and the others are logarithmic.</p>
     {% include curves-atari5.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 2b.</strong> Atari-5 from pixels with sticky actions (p = 0.25), test seeds, against
+      <figcaption><strong>Table 2.</strong> Atari-5 from pixels with sticky actions (p = 0.25), test seeds, against
       reinforcement learning <strong>under the same sticky-action protocol</strong>. Ours: mean ± sample standard deviation over
       64 test seeds that no loop used (a figure in red would be below the seed program). <em>Rainbow</em> (Dopamine) and
       <em>BTR</em> are from Table A2 of Clark et al. 2024 (arXiv 2411.03820), 200 M frames, 3 seeds, maximum score during
@@ -226,7 +226,7 @@ layout: default
     <p class="pending">Running now, all with sticky actions and from the generic seed program: the
     <strong>Atari-5</strong> subset (Battle Zone, Double Dunk, Name This Game, Phoenix, Q*bert; Aitchison et al., 2023),
     whose scores predict performance on the full suite, then the remaining games of <strong>Atari-57</strong>, four runs at
-    a time. Costs are in Table 10, under <em>Improvers and cost</em>.</p>
+    a time. Costs are in Table 8, under <em>Improvers and cost</em>.</p>
     {% comment %}Atari RAM hidden
 <details class="more">
       <summary>Earlier runs without sticky actions</summary>
@@ -333,7 +333,7 @@ layout: default
     {% include curves-poker.html %}
     {% include curves-hunl.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 6a.</strong> Poker, Leduc variants (OpenSpiel <code>universal_poker</code>). Score: NashConv divided by the
+      <figcaption><strong>Table 3a.</strong> Poker, Leduc variants (OpenSpiel <code>universal_poker</code>). Score: NashConv divided by the
       largest raise, <strong>lower is better</strong> (0 is a Nash equilibrium).</figcaption>
       <table>
         <thead><tr><th></th><th class="num">Seed program<br><small>uniform policy</small></th><th class="num">Best, dev<br><small>24 variants</small></th><th class="num">Test<br><small>24 variants</small></th><th class="num">Test<br><small>standard Leduc</small></th></tr></thead>
@@ -349,7 +349,7 @@ layout: default
       CFR rows are a solver run on each test variant, shown for scale, not a readable policy.</p>
     </figure>
     <figure class="table-figure">
-      <figcaption><strong>Table 6b.</strong> Poker, heads-up no-limit hold'em. Score: mbb/hand (thousandths of a big blind per hand),
+      <figcaption><strong>Table 3b.</strong> Poker, heads-up no-limit hold'em. Score: mbb/hand (thousandths of a big blind per hand),
       <strong>higher is better</strong>, 0 is break even.</figcaption>
       <table>
         <thead><tr><th>Opponent</th><th class="num">Evaluated on<br><small>mean ± std over seeds</small></th><th class="num">Seed program<br><small>always call</small></th><th class="num">Champion<br><small>g001c0</small></th></tr></thead>
@@ -382,7 +382,7 @@ layout: default
   <div data-panel="embodied" hidden>
     {% include curves-embodied.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 7.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
+      <figcaption><strong>Table 4.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
       each: scenes 0–1 are train, 2–9 hidden dev (80 episodes), 10–49 test (400 episodes, used once). <em>State</em>
       gives object poses (privileged). <em>Vision</em> gives only RGB-D from the agent-view and wrist cameras, camera
       parameters and proprioception.</figcaption>
@@ -420,7 +420,7 @@ layout: default
   <div data-panel="computer" hidden>
     {% include curves-computer.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 8.</strong> OSWorld, LibreOffice Calc and OS tasks: 71 tasks split 23 / 24 / 24 into
+      <figcaption><strong>Table 5.</strong> OSWorld, LibreOffice Calc and OS tasks: 71 tasks split 23 / 24 / 24 into
       train, hidden dev and test, scored by OSWorld's own checkers (success rate). Both runs start from a program that
       answers DONE at once. <em>Model available</em>: the program may also ask a fixed small model (Qwen3.5-2B) typed
       multiple-choice questions.</figcaption>
@@ -468,7 +468,7 @@ layout: default
     <p class="pending">Left: the incumbent on 90 hidden dev seeds (●) and on 300 test seeds, 10 per type (○), one point
     per generation; promoted in 7 of 10 generations (not 1, 2 or 8). Right: the mean over task types on <strong>all 1,819
     official test variations</strong>, each played once, for the incumbent of every generation.
-    Dashed lines: published agents (SwiftSage protocol, see Table 8b).</p>
+    Dashed lines: published agents (SwiftSage protocol, see Table 6).</p>
     <h4>Every task type, one program</h4>
     <p>Full-test score (0–100) of the incumbent of every generation, per task type; <span class="bad">red</span> marks a
     point below the seed program; the dashed line is SwiftSage (GPT-4) on that type; n is the number of official test
@@ -477,7 +477,7 @@ layout: default
     cream, and the program never learned to reach their temperatures.</p>
     {% include curves-scienceworld-tasks.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 8b.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
+      <figcaption><strong>Table 6.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
       seed program and champion on every official test variation (n), mean ± sample std over variations; a failed
       episode counts 0. <em>First 10</em>: the champion on the first 10 test variations of each type, the episodes
       SwiftSage used. References from SwiftSage (Lin et al., NeurIPS 2023), Table 1: first 10 test variations, a failed
@@ -498,7 +498,7 @@ layout: default
   </div>
   <div data-panel="process" hidden>
     <figure class="table-figure">
-      <figcaption><strong>Table 9.</strong> Who produced the promoted versions. Each generation runs one candidate per
+      <figcaption><strong>Table 7.</strong> Who produced the promoted versions. Each generation runs one candidate per
       improver, in parallel, from the same incumbent.</figcaption>
       <table>
         <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
@@ -510,7 +510,7 @@ layout: default
       </table>
     </figure>
     <figure class="table-figure">
-      <figcaption><strong>Table 10.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
+      <figcaption><strong>Table 8.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
       gates, the tests and the improvers' own trial runs (for Atari, one step is four frames). <em>Agent hours</em> is the
       wall time of all improver sessions. Claude Code reports its cost in USD; Codex CLI reports tokens only. Runs still in
       progress are not listed.</figcaption>
