@@ -23,10 +23,10 @@ layout: default
 <section class="tldr-block" id="tldr">
   <div class="tldr">
     <p class="tldr-label">TL;DR</p>
-    <p>An LLM writes a program that solves a task, such as an Atari bot or a science-experiment agent.
+    <p>An LLM writes a program that solves a task, such as an Atari bot, a science-experiment agent or a desktop agent.
     A <em>population</em> of LLM improvers (Codex CLI, Claude Code, DeepSeek) then improves that program over many
     generations, using only feedback from interaction with the environment. Promotion is gated on hidden seeds, and
-    we evaluate on game and text science-experiment benchmarks the community reports on most often.</p>
+    we evaluate on game, text science-experiment and computer-use benchmarks the community reports on most often.</p>
   </div>
   <div class="stats">
     {% comment %}Atari RAM hidden
@@ -38,7 +38,7 @@ layout: default
 <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
 {% endcomment %}
     <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 85.0</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
-    <div class="stat"><p class="stat-num">2</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · ScienceWorld</p></div>
+    <div class="stat"><p class="stat-num">3</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · ScienceWorld · OSWorld</p></div>
   </div>
 </section>
 
@@ -63,7 +63,7 @@ layout: default
   skills and its notes, is improved generation after generation by a heterogeneous population of LLM improvers.
   Each candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We
   study when such loops keep improving, what transfers across tasks, and how they compare with RL under the same
-  environment-step budget, on games (Atari) and text science experiments (ScienceWorld).</p>
+  environment-step budget, on games (Atari), text science experiments (ScienceWorld) and computer use (OSWorld).</p>
 </section>
 
 <div class="article-layout">
@@ -107,7 +107,6 @@ layout: default
       <p class="domain-note">State mode (object poses) and vision mode (RGB-D and camera parameters only).</p>
     </div>
     {% endcomment %}
-    {% comment %}
     <div class="domain">
       <h4>Computer use</h4>
       <ul>
@@ -115,7 +114,6 @@ layout: default
       </ul>
       <p class="domain-note">A desktop agent with an app-level skill library, split by application.</p>
     </div>
-    {% endcomment %}
     <div class="domain">
       <h4>Science agents (text)</h4>
       <ul>
@@ -135,7 +133,7 @@ layout: default
   stops. Status: 6 Nov 2026.</p>
   <figure class="table-figure">
     <figcaption><strong>Table 1.</strong> Headline results, one row per benchmark, on test seeds or tasks that no
-    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below. <strong>± is the sample standard deviation over seeds</strong> (n − 1), not the standard error: n = 64 for Atari test, 1,819 variations for ScienceWorld. For a success rate it is the std of the 0 / 1 outcomes, in percentage points. For ScienceWorld (score 0–100) it is the std over the 30 task-type means. *SwiftSage calls GPT-4 at run time, uses the first 10 test variations per type (270 episodes) and counts a failed episode at its last non-negative score; our program calls no model, and a failed episode counts 0.</figcaption>
+    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below. <strong>± is the sample standard deviation over seeds</strong> (n − 1), not the standard error: n = 64 for Atari test, 1,819 variations for ScienceWorld, 24 tasks for OSWorld. For a success rate it is the std of the 0 / 1 outcomes, in percentage points. For ScienceWorld (score 0–100) it is the std over the 30 task-type means. *SwiftSage calls GPT-4 at run time, uses the first 10 test variations per type (270 episodes) and counts a failed episode at its last non-negative score; our program calls no model, and a failed episode counts 0.</figcaption>
     <table>
       <thead><tr><th>Domain</th><th>Benchmark</th><th>Protocol</th><th class="num">Seed program</th><th class="num">Best program</th><th class="num">Reference</th></tr></thead>
       <tbody>
@@ -151,18 +149,18 @@ layout: default
         {% comment %}<tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>{% endcomment %}
         {% comment %}<tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp / 99.0% ± 10.0 pp</strong></td><td class="num">privileged state</td></tr>{% endcomment %}
         {% include row-scienceworld.html %}
-        {% comment %}<tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>{% endcomment %}
+        <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>
       </tbody>
     </table>
   </figure>
   <p class="pending">In every table, shaded rows are promoted versions and grey rows are references. Curves follow
   the incumbent on hidden dev, one point per generation; dashed lines are references; hover a point for its value.</p>
-  <p class="prog-link"><a class="pill" href="{{ '/programs/' | relative_url }}">Read the learned programs: the merged Atari-5 program and the ScienceWorld program, with full source →</a></p>
+  <p class="prog-link"><a class="pill" href="{{ '/programs/' | relative_url }}">Read the learned programs: the merged Atari-5 program, the ScienceWorld program and the OSWorld programs, with full source →</a></p>
   <div class="tabs" role="tablist">
     <button class="on" data-tab="atari" role="tab">Atari</button>
     {% comment %}<button data-tab="poker" role="tab">Poker</button>
     <button data-tab="embodied" role="tab">Embodied robotics</button>{% endcomment %}
-    {% comment %}<button data-tab="computer" role="tab">Computer use</button>{% endcomment %}
+    <button data-tab="computer" role="tab">Computer use</button>
     <button data-tab="science" role="tab">ScienceWorld</button>
     <button data-tab="process" role="tab">Improvers and cost</button>
   </div>
@@ -254,7 +252,7 @@ layout: default
     <p class="pending">Running now, all with sticky actions and from the generic seed program: the
     <strong>Atari-5</strong> subset (Battle Zone, Double Dunk, Name This Game, Phoenix, Q*bert; Aitchison et al., 2023),
     whose scores predict performance on the full suite, then the remaining games of <strong>Atari-57</strong>, four runs at
-    a time. Costs are in Table 5, under <em>Improvers and cost</em>.</p>
+    a time. Costs are in Table 6, under <em>Improvers and cost</em>.</p>
     {% comment %}Atari RAM hidden
 <details class="more">
       <summary>Earlier runs without sticky actions</summary>
@@ -453,7 +451,6 @@ layout: default
     queued.</p>
   </div>
   {% endcomment %}
-  {% comment %}OSWorld hidden for now
   <div data-panel="computer" hidden>
     {% include curves-computer.html %}
     <figure class="table-figure">
@@ -489,7 +486,6 @@ layout: default
     if-statement inside the program (in the style of TypeSafe's Jev). In both settings the program may learn a memory
     from its own train episodes, frozen during dev and test.</p>
   </div>
-  {% endcomment %}
   <div data-panel="science" hidden>
     <h3 id="scienceworld">ScienceWorld: one program for 30 science experiments</h3>
     <p>ScienceWorld (Wang et al., 2022) is a text world of a house with a kitchen, greenhouse, workshop and so on:
@@ -554,7 +550,7 @@ layout: default
     seeds, so its dev curve is drawn separately) in all 6, round 3 (after R3) in 5 of 7, round 4 (after R4) in 1 of 2, then the merged electricity specialist. Right: the mean over task types on <strong>all 1,819
     official test variations</strong>, each played once, for the incumbent of every generation. On test, round 2
     gained most by its generation 4 (64.1, 65.9, 65.6, 67.5, 67.2, 67.5) and was flat after it, although dev kept rising.
-    Dashed lines: published agents (SwiftSage protocol, see Table 3).</p>
+    Dashed lines: published agents (SwiftSage protocol, see Table 4).</p>
     <h4>Every task type, one program</h4>
     <p>Full-test score (0–100) of the incumbent of every generation, per task type; <span class="bad">red</span> marks a
     point below the seed program; the dashed line is SwiftSage (GPT-4) on that type; n is the number of official test
@@ -563,7 +559,7 @@ layout: default
     cream, and the program never learned to reach their temperatures.</p>
     {% include curves-scienceworld-tasks.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 3.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
+      <figcaption><strong>Table 4.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
       seed program and champion on every official test variation (n), mean ± sample std over variations; a failed
       episode counts 0. <em>First 10</em>: the champion on the first 10 test variations of each type, the episodes
       SwiftSage used. References from SwiftSage (Lin et al., NeurIPS 2023), Table 1: first 10 test variations, a failed
@@ -586,19 +582,19 @@ layout: default
   </div>
   <div data-panel="process" hidden>
     <figure class="table-figure">
-      <figcaption><strong>Table 4.</strong> Who produced the promoted versions. Each generation runs one candidate per
+      <figcaption><strong>Table 5.</strong> Who produced the promoted versions. Each generation runs one candidate per
       improver, in parallel, from the same incumbent.</figcaption>
       <table>
         <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
         <tbody>
-          <tr><td>Claude Code (agent with tools)</td><td class="num">19</td><td>ScienceWorld 19 (rounds 1–4 and the electricity specialist)</td></tr>
-          <tr><td>Codex CLI (agent with tools)</td><td class="num">14</td><td>Atari-5 pixels 14</td></tr>
+          <tr><td>Claude Code (agent with tools)</td><td class="num">22</td><td>ScienceWorld 19 (rounds 1–4 and the electricity specialist) · OSWorld 3</td></tr>
+          <tr><td>Codex CLI (agent with tools)</td><td class="num">15</td><td>Atari-5 pixels 14 · OSWorld 1</td></tr>
           <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">4</td><td>Atari-5 pixels 3 · ScienceWorld 1</td></tr>
         </tbody>
       </table>
     </figure>
     <figure class="table-figure">
-      <figcaption><strong>Table 5.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
+      <figcaption><strong>Table 6.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
       gates, the tests and the improvers' own trial runs (for Atari, one step is four frames). <em>Agent hours</em> is the
       wall time of all improver sessions. Claude Code reports its cost in USD; Codex CLI reports tokens only. Runs still in
       progress are not listed.</figcaption>
@@ -619,8 +615,8 @@ layout: default
             {% comment %}<tr><td>LIBERO-10</td><td>state</td><td class="num">1.7 M</td><td class="num">4.8</td><td class="num">$20</td><td class="num">0.5 M</td><td class="num">21</td></tr>{% endcomment %}
             {% comment %}<tr><td>LIBERO-Spatial</td><td>vision</td><td class="num">1.0 M</td><td class="num">11.5</td><td class="num">$27</td><td class="num">1.3 M</td><td class="num">32</td></tr>{% endcomment %}
             {% comment %}<tr><td>Leduc variants</td><td>10 generations</td><td class="num">—</td><td class="num">16.0</td><td class="num">$31</td><td class="num">2.6 M</td><td class="num">40</td></tr>{% endcomment %}
-            {% comment %}<tr><td>OSWorld</td><td>pure code</td><td class="num">—</td><td class="num">23.5</td><td class="num">$29</td><td class="num">1.1 M</td><td class="num">24</td></tr>{% endcomment %}
-            {% comment %}<tr><td>OSWorld</td><td>model available</td><td class="num">—</td><td class="num">23.6</td><td class="num">$38</td><td class="num">0.9 M</td><td class="num">23</td></tr>{% endcomment %}
+            <tr><td>OSWorld</td><td>pure code</td><td class="num">—</td><td class="num">23.5</td><td class="num">$29</td><td class="num">1.1 M</td><td class="num">24</td></tr>
+            <tr><td>OSWorld</td><td>model available</td><td class="num">—</td><td class="num">23.6</td><td class="num">$38</td><td class="num">0.9 M</td><td class="num">23</td></tr>
         </tbody>
       </table>
     </figure>
