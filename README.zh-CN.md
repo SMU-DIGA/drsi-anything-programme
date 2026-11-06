@@ -28,6 +28,7 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 | Improver：Codex CLI、Claude Code、OpenAI 兼容 API（DeepSeek） | Done |
 | 游戏：Atari-5 纯像素输入、sticky actions（5 个游戏中 4 个超过人类；Q*bert test 52,418） | Running |
 | 游戏：VizDoom | Done |
+| ARC-AGI-1、2、3：一个程序同时处理静态谜题和交互游戏 | Running |
 | OSWorld（纯代码 vs 代码 + 2B 小模型的类型化决策函数） | Running |
 
 状态：Done（已接入并测试）· Running（实验进行中）· In progress（开发中）· Planned（尚未开始）。

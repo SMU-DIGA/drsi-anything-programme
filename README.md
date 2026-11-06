@@ -43,6 +43,7 @@ the implementation is not public.
 | Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
 | Games: Atari-5 from pixels, sticky actions (above human on 4 of 5; Q*bert 52,418 test) | Running |
 | Games: VizDoom | Done |
+| ARC-AGI-1, 2 and 3: one program for static puzzles and interactive games | Running |
 | OSWorld (pure code vs code + typed 2B decision function) | Running |
 
 Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).

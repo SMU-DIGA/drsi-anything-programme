@@ -26,7 +26,7 @@ layout: default
     <p>An LLM writes a program that solves a task, such as an Atari bot, a science-experiment agent or a desktop agent.
     A <em>population</em> of LLM improvers (Codex CLI, Claude Code, DeepSeek) then improves that program over many
     generations, using only feedback from interaction with the environment. Promotion is gated on hidden seeds, and
-    we evaluate on game, text science-experiment and OSWorld benchmarks the community reports on most often.</p>
+    we evaluate on game, text science-experiment, ARC-AGI and OSWorld benchmarks the community reports on most often.</p>
   </div>
   <div class="stats">
     {% comment %}Atari RAM hidden
@@ -38,7 +38,7 @@ layout: default
 <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
 {% endcomment %}
     <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 85.0</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
-    <div class="stat"><p class="stat-num">3</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · ScienceWorld · OSWorld</p></div>
+    <div class="stat"><p class="stat-num">4</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · ScienceWorld · ARC-AGI · OSWorld</p></div>
   </div>
 </section>
 
@@ -63,7 +63,7 @@ layout: default
   skills and its notes, is improved generation after generation by a heterogeneous population of LLM improvers.
   Each candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We
   study when such loops keep improving, what transfers across tasks, and how they compare with RL under the same
-  environment-step budget, on games (Atari), text science experiments (ScienceWorld) and OSWorld.</p>
+  environment-step budget, on games (Atari), text science experiments (ScienceWorld), abstract reasoning (ARC-AGI-1, 2 and 3) and OSWorld.</p>
 </section>
 
 <div class="article-layout">
@@ -121,6 +121,13 @@ layout: default
       </ul>
       <p class="domain-note">30 text-based science experiments; dev and test use ScienceWorld's own unseen variations.</p>
     </div>
+    <div class="domain">
+      <h4>Abstract reasoning</h4>
+      <ul>
+        <li>ARC-AGI-1, 2 and 3 <span class="badge running">Running</span></li>
+      </ul>
+      <p class="domain-note">Static grid puzzles and interactive games, one program for all three versions.</p>
+    </div>
   </div>
   <p class="status-legend"><span class="badge done">Done</span> integrated and tested <span class="badge running">Running</span> experiment in progress <span class="badge wip">In progress</span> being built <span class="badge planned">Planned</span> not started</p>
   {% capture environments_md %}{% include environments.md %}{% endcapture %}
@@ -130,7 +137,7 @@ layout: default
   <p>Every number is the score of a <strong>program written and refined by LLM improvers</strong>: no gradient
   training, no demonstrations. A candidate is promoted only if it beats the incumbent in a paired bootstrap test on
   <strong>hidden dev seeds</strong> that no improver has seen. <strong>Test seeds</strong> are used once, after a run
-  stops. Status: 6 Nov 2026.</p>
+  stops. Status: 7 Nov 2026.</p>
   <figure class="table-figure">
     <figcaption><strong>Table 1.</strong> Headline results, one row per benchmark, on test seeds or tasks that no
     improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below. <strong>± is the sample standard deviation over seeds</strong> (n − 1), not the standard error: n = 64 for Atari test, 1,819 variations for ScienceWorld, 24 tasks for OSWorld. For a success rate it is the std of the 0 / 1 outcomes, in percentage points. For ScienceWorld (score 0–100) it is the std over the 30 task-type means. *SwiftSage calls GPT-4 at run time, uses the first 10 test variations per type (270 episodes) and counts a failed episode at its last non-negative score; our program calls no model, and a failed episode counts 0.</figcaption>
@@ -162,6 +169,7 @@ layout: default
     <button data-tab="embodied" role="tab">Embodied robotics</button>{% endcomment %}
     <button data-tab="computer" role="tab">OSWorld</button>
     <button data-tab="science" role="tab">ScienceWorld</button>
+    <button data-tab="arc" role="tab">ARC-AGI</button>
     <button data-tab="process" role="tab">Improvers and cost</button>
   </div>
   <div data-panel="atari">
@@ -252,7 +260,7 @@ layout: default
     <p class="pending">Running now, all with sticky actions and from the generic seed program: the
     <strong>Atari-5</strong> subset (Battle Zone, Double Dunk, Name This Game, Phoenix, Q*bert; Aitchison et al., 2023),
     whose scores predict performance on the full suite, then the remaining games of <strong>Atari-57</strong>, four runs at
-    a time. Costs are in Table 6, under <em>Improvers and cost</em>.</p>
+    a time. Costs are in Table 7, under <em>Improvers and cost</em>.</p>
     {% comment %}Atari RAM hidden
 <details class="more">
       <summary>Earlier runs without sticky actions</summary>
@@ -580,9 +588,47 @@ layout: default
       do.</p>
     </figure>
   </div>
+  <div data-panel="arc" hidden>
+    <h3 id="arc">ARC-AGI-1, 2 and 3: one program</h3>
+    <p>The Abstraction and Reasoning Corpus asks for a rule inferred from a few examples. We put all three versions
+    into one task family solved by <strong>one program</strong>: ARC-AGI-1 and ARC-AGI-2 are static puzzles (a few
+    input–output grid pairs, then a test input; two attempts, exact match, as in ARC's pass@2), and ARC-AGI-3 is a set
+    of interactive turn-based games with several levels and no instructions (64 × 64 frames, keyboard-like actions and
+    clicks, played offline with the official engine, score weighted by level as in ARC-AGI-3). The program reads
+    <code>obs["kind"]</code> and must handle both; it is never told the puzzle's or game's name, nor whether an answer
+    was right.</p>
+    <figure class="table-figure">
+      <figcaption><strong>Table 5.</strong> ARC splits. Test is the official public evaluation sets and 8 of the 25
+      public ARC-AGI-3 games, used once after the run. Dev (the promotion gate) uses only puzzles new in ARC-AGI-2 and
+      games never shown in train. Every task whose name appears in either evaluation set, or in ARC-AGI-1 dev, is kept
+      out of train and dev, including the revised copies of ARC-AGI-1 evaluation tasks inside ARC-AGI-2 training.</figcaption>
+      <table>
+        <thead><tr><th>Split</th><th class="num">ARC-AGI-1</th><th class="num">ARC-AGI-2</th><th class="num">ARC-AGI-3</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Train</td><td class="num">300</td><td class="num">445</td><td class="num">9 games</td><td>public training sets; 100 + 100 + 9 rotated in per generation</td></tr>
+          <tr><td>Dev (hidden)</td><td class="num">100</td><td class="num">80</td><td class="num">8 games</td><td>held-out training puzzles; ARC-AGI-2 dev only puzzles new in version 2</td></tr>
+          <tr><td>Test (once)</td><td class="num">400</td><td class="num">120</td><td class="num">8 games</td><td>official public evaluation sets</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <div class="finding">
+      <p class="finding-label">Generation 1, train only (running)</p>
+      <p>From a seed program that scores 0 (it copies the input and moves at random), the two Claude Sonnet candidates
+      of generation 1 reach <strong>24–26% of ARC-AGI-1</strong> and <strong>16% of the ARC-AGI-2</strong> train puzzles
+      (209 train seeds). Both wrote a solver of about 1,250 lines that searches a library of grid transformations
+      (symmetries and colour maps, scaling and tiling, symmetry completion, boolean operations on split parts, object
+      cropping, gravity, local rule tables) and answers only with one that reproduces every demonstration exactly. The
+      ARC-AGI-2 train puzzles include revised ARC-AGI-1 puzzles, so dev, which uses only puzzles new in ARC-AGI-2, will
+      be harder. ARC-AGI-3 is barely started: across 9 train games, at most the first level of three games
+      (0.7–1.2% of the level-weighted score) within 2,000 actions. The Claude Opus candidate, which adds a game
+      explorer, is still working; dev results follow when the generation ends.</p>
+    </div>
+    <p class="pending">Three Claude improvers (Opus and two Sonnet), up to 10 generations, patience 3; the improvers
+    cannot read the data, the split manifest or the game engine, and the guard rejects a program that does.</p>
+  </div>
   <div data-panel="process" hidden>
     <figure class="table-figure">
-      <figcaption><strong>Table 5.</strong> Who produced the promoted versions. Each generation runs one candidate per
+      <figcaption><strong>Table 6.</strong> Who produced the promoted versions. Each generation runs one candidate per
       improver, in parallel, from the same incumbent.</figcaption>
       <table>
         <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
@@ -594,7 +640,7 @@ layout: default
       </table>
     </figure>
     <figure class="table-figure">
-      <figcaption><strong>Table 6.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
+      <figcaption><strong>Table 7.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
       gates, the tests and the improvers' own trial runs (for Atari, one step is four frames). <em>Agent hours</em> is the
       wall time of all improver sessions. Claude Code reports its cost in USD; Codex CLI reports tokens only. Runs still in
       progress are not listed.</figcaption>

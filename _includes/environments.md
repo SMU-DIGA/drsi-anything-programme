@@ -36,6 +36,12 @@ as CaP-X report that removing hand-designed abstractions hurts frontier models, 
 feedback and skill synthesis recover much of the gap.
 
 {% endcomment %}
+### Abstract reasoning
+
+| Benchmark | Plan | Status |
+|---|---|---|
+| **ARC-AGI-1, 2 and 3** | One program for all three: static puzzles (pass@2, exact match) and interactive ARC-AGI-3 games (official engine offline, level-weighted score). Dev uses only puzzles new in ARC-AGI-2 and unseen games; test is the official public evaluation sets and 8 held-out public games. | <span class="badge running">Running</span> |
+
 ### OSWorld
 
 | Benchmark | Plan | Status |
