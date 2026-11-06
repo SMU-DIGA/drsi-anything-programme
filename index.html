@@ -214,6 +214,31 @@ layout: default
       for time, not by the no-promotion rule; its program is the one selected at generation 6. The RL numbers are maxima or last-episode averages of
       trained networks, ours is one readable program chosen on dev.</p>
     </figure>
+    <h4 id="atari5-merged">One program for all five games, from the screen alone</h4>
+    <p>Programs compose. We merged the five champions into a single program that is <strong>not told which game it
+    plays</strong>: the environment hides the game id and all <code>info</code> (lives included), and every game uses
+    the full 18-action set, so the action count says nothing either. At the first non-blank frame the program matches
+    the screen, downsampled to 21 × 16 colour cells, to the nearest of five reference screens (the mean first frame of
+    train seeds 0–15 of each game; on 40 held-out seeds the nearest wrong game is more than 10 times farther than the
+    right one), then runs that game's program unchanged and maps its actions to the full set. One episode of Q*bert
+    starts on a black frame; the program waits on such frames with NOOP. On the same 64 test seeds per game:</p>
+    <figure class="table-figure">
+      <table>
+        <thead><tr><th>Game</th><th class="num">Per-game champion</th><th class="num">One merged program<br><small>screen only</small></th><th class="num">Episodes identical</th></tr></thead>
+        <tbody>
+          <tr><td>Battle Zone</td><td class="num">36,859</td><td class="num">36,859</td><td class="num">64 / 64</td></tr>
+          <tr><td>Double Dunk</td><td class="num">0.8</td><td class="num">0.8</td><td class="num">64 / 64</td></tr>
+          <tr><td>Name This Game</td><td class="num">20,171</td><td class="num">20,171</td><td class="num">64 / 64</td></tr>
+          <tr><td>Phoenix</td><td class="num">65,076</td><td class="num">65,076</td><td class="num">64 / 64</td></tr>
+          <tr><td>Q*bert</td><td class="num">52,418</td><td class="num">52,136</td><td class="num">3 / 64</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">The game is recognised in all 320 episodes. Four games replay their champion's episodes
+      exactly. Q*bert's program used the lives counter to reset its state after a death; without <code>info</code> it
+      no longer does, so its episodes diverge, at a cost of 0.5% of the mean. The merged program is still the five
+      programs side by side; distilling their shared skills (reading objects from the screen, tracking, timing) into one
+      library is the next step.</p>
+    </figure>
     {% comment %}Atari RAM hidden
 <div class="finding">
       <p class="finding-label">Robustness can be improved too</p>
