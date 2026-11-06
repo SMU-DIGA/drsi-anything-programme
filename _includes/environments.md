@@ -36,8 +36,10 @@ as CaP-X report that removing hand-designed abstractions hurts frontier models, 
 feedback and skill synthesis recover much of the gap.
 
 {% endcomment %}
+{% comment %}Computer use hidden
 ### Computer use
 
 | Benchmark | Plan | Status |
 |---|---|---|
 | **OSWorld** | The program decides every action in code: it parses the screenshot, the accessibility tree and the output of code it runs inside the desktop. Two settings: pure code, or code that may also ask one fixed small model (Qwen3.5-2B) typed multiple-choice questions, never free text. Scored by OSWorld's own task checkers. First apps: LibreOffice Calc and OS, with tasks split into train, dev and test. | <span class="badge running">Running</span> |
+{% endcomment %}
