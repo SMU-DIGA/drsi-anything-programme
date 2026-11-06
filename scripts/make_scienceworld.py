@@ -205,6 +205,20 @@ for tid, name in TASKS:
                       f'full-test score by generation">{"".join(out)}</svg></div>')
 
 # ------------------------------------------------------------------ per-task table
+def ranked(vals):
+    """Per row, over the columns on the SwiftSage protocol (our first 10, SwiftSage, Reflexion, ReAct, DRRN):
+    best in bold, second best underlined; ties (at the shown precision) share the mark."""
+    shown = {k: (None if v is None else round(v, 1)) for k, v in vals.items()}
+    top = sorted({v for v in shown.values() if v is not None}, reverse=True)
+    def mark(k, txt):
+        v = shown[k]
+        if v is None: return txt
+        if v == top[0]: return f"<strong>{txt}</strong>"
+        if len(top) > 1 and v == top[1]: return f'<span class="second">{txt}</span>'
+        return txt
+    return mark
+
+
 rows = []
 for tid, name in TASKS:
     n = len(VAR[name]["official"])
@@ -214,10 +228,11 @@ for tid, name in TASKS:
     bad = ' class="bad"' if s0 and s1 and s1[0] < s0[0] else ""
     cell = lambda s: f"{fmt(s[0])} ± {fmt(s[1])}" if s else "running"
     sw, rf, ra, sc, dr = REF[tid]
+    mk = ranked({"ours": None if f10 is None else round(f10, 1), "sw": sw, "rf": rf, "ra": ra, "dr": dr})
     rows.append(f'<tr><td>{tid}</td><td>{SHORT.get(name, name)}</td><td class="num">{n}</td><td class="num">{cell(s0)}</td>'
-                f'<td class="num"><strong><span{bad}>{cell(s1)}</span></strong></td>'
-                f'<td class="num">{fmt(f10) if f10 is not None else "running"}</td><td class="num">{fmt(sw)}</td>'
-                f'<td class="num">{fmt(rf)}</td><td class="num">{fmt(ra)}</td><td class="num">{fmt(dr)}</td></tr>')
+                f'<td class="num"><span{bad}>{cell(s1)}</span></td>'
+                f'<td class="num">{mk("ours", fmt(f10)) if f10 is not None else "running"}</td><td class="num">{mk("sw", fmt(sw))}</td>'
+                f'<td class="num">{mk("rf", fmt(rf))}</td><td class="num">{mk("ra", fmt(ra))}</td><td class="num">{mk("dr", fmt(dr))}</td></tr>')
 
 
 def macro_cell(v, f=None):
@@ -228,10 +243,13 @@ def macro_cell(v, f=None):
     return f"{fmt(m)} ± {fmt(sd)}"
 
 
+f10m = macro(best_v, first10) if best_v in complete else None
+mk = ranked({"ours": None if f10m is None else round(f10m, 1), "sw": OVERALL["SwiftSage"], "rf": OVERALL["Reflexion"],
+             "ra": OVERALL["ReAct"], "dr": OVERALL["DRRN"]})
 rows.append(f'<tr class="best"><td></td><td><strong>Mean of 30 task types</strong></td><td class="num">1,819</td>'
-            f'<td class="num">{macro_cell(seed_v)}</td><td class="num"><strong>{macro_cell(best_v)}</strong></td>'
-            f'<td class="num"><strong>{macro_cell(best_v, first10)}</strong></td><td class="num">{OVERALL["SwiftSage"]}</td>'
-            f'<td class="num">{OVERALL["Reflexion"]}</td><td class="num">{OVERALL["ReAct"]}</td><td class="num">{OVERALL["DRRN"]}</td></tr>')
+            f'<td class="num">{macro_cell(seed_v)}</td><td class="num">{macro_cell(best_v)}</td>'
+            f'<td class="num">{mk("ours", macro_cell(best_v, first10))}</td><td class="num">{mk("sw", OVERALL["SwiftSage"])}</td>'
+            f'<td class="num">{mk("rf", OVERALL["Reflexion"])}</td><td class="num">{mk("ra", OVERALL["ReAct"])}</td><td class="num">{mk("dr", OVERALL["DRRN"])}</td></tr>')
 
 row1 = (f'<tr><td>Science (text)</td><td>ScienceWorld, 30 task types, one program</td><td>all 1,819 official test variations</td>'
         f'<td class="num">{macro_cell(seed_v)}</td><td class="num"><strong>{macro_cell(best_v)}</strong></td>'
