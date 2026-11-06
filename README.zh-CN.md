@@ -1,6 +1,6 @@
 # DRSI-Anything
 
-**Delegative Recursive Self-Improvement across General Domains（跨通用领域的委托式递归自我改进）**：LLM 不直接与环境交互，而是把"行动"委托给自己编写并不断递归改进的程序，覆盖游戏、具身机器人和计算机操作。神经-符号程序（代码，可调用小模型）是我们主要的委托形式，但只是委托的一种实现方式。项目原名 NS-RSI-Anything。
+**Delegative Recursive Self-Improvement across General Domains（跨通用领域的委托式递归自我改进）**：LLM 不直接与环境交互，而是把"行动"委托给自己编写并不断递归改进的程序，覆盖游戏、具身机器人和 OSWorld。神经-符号程序（代码，可调用小模型）是我们主要的委托形式，但只是委托的一种实现方式。项目原名 NS-RSI-Anything。
 
 **[项目主页与进度日志](https://smu-diga.github.io/drsi-anything-programme/)** · [English](README.md) · [方案设计](https://smu-diga.github.io/drsi-anything-programme/#design) · [环境选型](https://smu-diga.github.io/drsi-anything-programme/#environments) · [路线图](https://smu-diga.github.io/drsi-anything-programme/#roadmap)
 
@@ -28,7 +28,7 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 | Improver：Codex CLI、Claude Code、OpenAI 兼容 API（DeepSeek） | Done |
 | 游戏：Atari-5 纯像素输入、sticky actions（5 个游戏中 4 个超过人类；Q*bert test 52,418） | Running |
 | 游戏：VizDoom | Done |
-| 计算机操作：OSWorld（纯代码 vs 代码 + 2B 小模型的类型化决策函数） | Running |
+| OSWorld（纯代码 vs 代码 + 2B 小模型的类型化决策函数） | Running |
 
 状态：Done（已接入并测试）· Running（实验进行中）· In progress（开发中）· Planned（尚未开始）。
 

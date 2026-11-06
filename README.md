@@ -1,6 +1,6 @@
 # DRSI-Anything
 
-**Delegative Recursive Self-Improvement across General Domains**: LLMs do not act themselves; they delegate the acting to programs they write and repeatedly improve, for games, embodied robotics and computer use. Neuro-symbolic programs (code, optionally calling smaller models) are our main form of delegation. The programme was earlier called NS-RSI-Anything.
+**Delegative Recursive Self-Improvement across General Domains**: LLMs do not act themselves; they delegate the acting to programs they write and repeatedly improve, for games, embodied robotics and OSWorld. Neuro-symbolic programs (code, optionally calling smaller models) are our main form of delegation. The programme was earlier called NS-RSI-Anything.
 
 **[Project page & progress log](https://smu-diga.github.io/drsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](https://smu-diga.github.io/drsi-anything-programme/#design) · [Environments](https://smu-diga.github.io/drsi-anything-programme/#environments) · [Roadmap](https://smu-diga.github.io/drsi-anything-programme/#roadmap)
 
@@ -10,7 +10,7 @@ object being improved is a **delegate**. Today it is mostly software (a policy, 
 notes file that serves as the program's memory), and a program may hand part of a decision to an LLM through a typed
 decision function. Following [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/), where an LLM reads and writes a network's weights
 directly without an optimizer, the weights of that delegate LLM can also be edited directly by an improver. The results
-reported so far use code only (plus a frozen small model in computer use); direct weight editing is planned and has not been run.
+reported so far use code only (plus a frozen small model in OSWorld); direct weight editing is planned and has not been run.
 
 ```
 incumbent program ──► K improvers edit it in parallel (Codex CLI · Claude Code · chat APIs such as DeepSeek)
@@ -43,7 +43,7 @@ the implementation is not public.
 | Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
 | Games: Atari-5 from pixels, sticky actions (above human on 4 of 5; Q*bert 52,418 test) | Running |
 | Games: VizDoom | Done |
-| Computer use: OSWorld (pure code vs code + typed 2B decision function) | Running |
+| OSWorld (pure code vs code + typed 2B decision function) | Running |
 
 Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).
 

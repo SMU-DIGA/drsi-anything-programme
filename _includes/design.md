@@ -10,14 +10,14 @@ A **program** consists of three parts:
 Following *Learning Beyond Gradients*, the program is the whole "heuristic system": the policy, its state
 representation, and its accumulated knowledge. No gradient step is taken: in the results below the weights of any model a program calls are frozen, and a planned extension lets the improver write them directly (next section). The default constraints are:
 no neural networks, no reading the environment's source code, no network access. Each experiment can
-change them. In computer use, for example, a program may call one fixed small model, but only as a typed
-decision function (see *Results → Computer use*).
+change them. In OSWorld, for example, a program may call one fixed small model, but only as a typed
+decision function (see *Results → OSWorld*).
 
 ### Delegating to an LLM, and editing its weights
 
 A program can delegate part of a decision to an LLM. Today this is a typed decision function: the program asks a
 multiple-choice question and gets a probability for every option, the model never writes text or actions, and its
-weights are frozen (computer use, see *Results → Computer use*). DRSI also allows the next step, after
+weights are frozen (OSWorld, see *Results → OSWorld*). DRSI also allows the next step, after
 [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/): instead of training the delegate LLM, the improver, itself an LLM,
 reads and writes the delegate's weights directly, with no optimizer, for example a low-rank update, a steering
 direction or a few layers. The edit is one more file of the program, so it goes through the same isolation, hidden-dev

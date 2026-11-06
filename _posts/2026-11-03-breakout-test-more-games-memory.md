@@ -2,7 +2,7 @@
 title: "Breakout 864 on all test seeds; Montezuma, Ms. Pac-Man and Pong; programs that learn their own memory"
 summary: Breakout's final program scores the maximum, 864, on all 64 unseen test seeds. LIBERO-10 (state) reaches 99.0% on test. Three new Atari games pass human level on hidden dev in their first generation. Programs can now learn a frozen memory from their own train episodes, and OSWorld runs with a typed small-model decision function.
 date: 2026-11-03 18:10:00 +0800
-tags: [Framework, Games, Embodied robotics, Computer use]
+tags: [Framework, Games, Embodied robotics, OSWorld]
 ---
 
 ## Test results
@@ -51,7 +51,7 @@ learns, not only how it acts. It is enabled for the new games, LIBERO-Spatial vi
 - **Stop rule.** A run stops after three generations without a promotion, then runs its test
   evaluation. LIBERO-10 had spent five generations with nothing left to gain.
 
-## Computer use
+## OSWorld
 
 OSWorld runs with LibreOffice Calc and OS tasks, comparing two settings. In both, the program decides
 every action in code; it can also run code inside the desktop and read the output.

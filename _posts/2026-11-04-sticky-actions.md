@@ -2,7 +2,7 @@
 title: "Sticky actions: what broke, and what the loop fixed"
 summary: "Under sticky actions the no-sticky Atari champions lost between 25% and 95% of their scores. Restarted with sticky actions in the loop, the improvers made them robust: Ms. Pac-Man scored 38,306 and Breakout 788 on sticky test seeds, and Montezuma's Revenge climbed from 3,441 to 80,184 on dev. Leduc finished ten generations, all promoted. A correction on OSWorld."
 date: 2026-11-04 07:31:00 +0800
-tags: [Games, Computer use]
+tags: [Games, OSWorld]
 ---
 
 ## The no-sticky scores were partly memorised

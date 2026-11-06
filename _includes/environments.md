@@ -36,7 +36,7 @@ as CaP-X report that removing hand-designed abstractions hurts frontier models, 
 feedback and skill synthesis recover much of the gap.
 
 {% endcomment %}
-### Computer use
+### OSWorld
 
 | Benchmark | Plan | Status |
 |---|---|---|

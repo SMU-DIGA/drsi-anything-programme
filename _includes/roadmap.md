@@ -28,7 +28,7 @@
 - <span class="check" aria-label="open">○</span> RoboTwin 2.0 (bimanual)
 - <span class="check" aria-label="open">○</span> L2: a cross-task skill library distilled from train tasks and reused on held-out tasks
 
-### Phase 3: Computer use
+### Phase 3: OSWorld
 
 <span class="badge planned">Planned</span>
 

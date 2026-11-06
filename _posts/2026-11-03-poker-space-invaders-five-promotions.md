@@ -2,7 +2,7 @@
 title: "Poker joins; Ms. Pac-Man promoted five generations in a row; a run we threw away"
 summary: Ms. Pac-Man rose from 277 to 29,688 on hidden dev over five consecutive promotions. Space Invaders reached 35,493 and Pong scored 21 on all 64 test seeds. Poker joined, with Leduc variants scored by NashConv and heads-up no-limit hold'em in duplicate matches. The first HUNL run was discarded after its program exploited a hole in our harness.
 date: 2026-11-03 20:54:00 +0800
-tags: [Games, Computer use]
+tags: [Games, OSWorld]
 ---
 
 ## Recursive improvement you can see
@@ -51,7 +51,7 @@ is played by a separate, fresh process that shares nothing, each deal is seen on
 files, sockets, subprocesses and native code are rejected. A probe program that remembers every board
 confirms no repeats. The run was restarted from scratch and its numbers will be reported once it has some.
 
-## Computer use
+## OSWorld
 
 In the pure-code OSWorld setting, generation 1 promoted a program that solves 2 of 24 dev tasks, up from
 0. It scored 56.5% on train. It is a skill library: instruction parsers dispatch to generic LibreOffice

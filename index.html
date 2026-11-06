@@ -26,7 +26,7 @@ layout: default
     <p>An LLM writes a program that solves a task, such as an Atari bot, a science-experiment agent or a desktop agent.
     A <em>population</em> of LLM improvers (Codex CLI, Claude Code, DeepSeek) then improves that program over many
     generations, using only feedback from interaction with the environment. Promotion is gated on hidden seeds, and
-    we evaluate on game, text science-experiment and computer-use benchmarks the community reports on most often.</p>
+    we evaluate on game, text science-experiment and OSWorld benchmarks the community reports on most often.</p>
   </div>
   <div class="stats">
     {% comment %}Atari RAM hidden
@@ -63,7 +63,7 @@ layout: default
   skills and its notes, is improved generation after generation by a heterogeneous population of LLM improvers.
   Each candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We
   study when such loops keep improving, what transfers across tasks, and how they compare with RL under the same
-  environment-step budget, on games (Atari), text science experiments (ScienceWorld) and computer use (OSWorld).</p>
+  environment-step budget, on games (Atari), text science experiments (ScienceWorld) and OSWorld.</p>
 </section>
 
 <div class="article-layout">
@@ -108,7 +108,7 @@ layout: default
     </div>
     {% endcomment %}
     <div class="domain">
-      <h4>Computer use</h4>
+      <h4>OSWorld</h4>
       <ul>
         <li>OSWorld <span class="badge running">Running</span></li>
       </ul>
@@ -149,7 +149,7 @@ layout: default
         {% comment %}<tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>{% endcomment %}
         {% comment %}<tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp / 99.0% ± 10.0 pp</strong></td><td class="num">privileged state</td></tr>{% endcomment %}
         {% include row-scienceworld.html %}
-        <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>
+        <tr><td>OSWorld</td><td>Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>
       </tbody>
     </table>
   </figure>
@@ -160,7 +160,7 @@ layout: default
     <button class="on" data-tab="atari" role="tab">Atari</button>
     {% comment %}<button data-tab="poker" role="tab">Poker</button>
     <button data-tab="embodied" role="tab">Embodied robotics</button>{% endcomment %}
-    <button data-tab="computer" role="tab">Computer use</button>
+    <button data-tab="computer" role="tab">OSWorld</button>
     <button data-tab="science" role="tab">ScienceWorld</button>
     <button data-tab="process" role="tab">Improvers and cost</button>
   </div>
