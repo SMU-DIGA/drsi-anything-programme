@@ -32,7 +32,7 @@ layout: default
     <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input · 788 test with sticky actions</p></div>
     <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>
     <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
-    <div class="stat"><p class="stat-num">4</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari · poker · LIBERO robotics · OSWorld</p></div>
+    <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains running</p><p class="stat-sub">Atari · poker · LIBERO robotics · OSWorld · ScienceWorld</p></div>
   </div>
 </section>
 
@@ -107,6 +107,13 @@ layout: default
       </ul>
       <p class="domain-note">A desktop agent with an app-level skill library, split by application.</p>
     </div>
+    <div class="domain">
+      <h4>Science agents (text)</h4>
+      <ul>
+        <li>ScienceWorld <span class="badge done">Done</span></li>
+      </ul>
+      <p class="domain-note">30 text-based science experiments; dev and test use ScienceWorld's own unseen variations.</p>
+    </div>
   </div>
   <p class="status-legend"><span class="badge done">Done</span> integrated and tested <span class="badge running">Running</span> experiment in progress <span class="badge wip">In progress</span> being built <span class="badge planned">Planned</span> not started</p>
   {% capture environments_md %}{% include environments.md %}{% endcapture %}
@@ -116,10 +123,10 @@ layout: default
   <p>Every number is the score of a <strong>program written and refined by LLM improvers</strong>: no gradient
   training, no demonstrations. A candidate is promoted only if it beats the incumbent in a paired bootstrap test on
   <strong>hidden dev seeds</strong> that no improver has seen. <strong>Test seeds</strong> are used once, after a run
-  stops. Status: 4 Nov 2026.</p>
+  stops. Status: 6 Nov 2026.</p>
   <figure class="table-figure">
     <figcaption><strong>Table 1.</strong> Headline results, one row per benchmark, on test seeds or tasks that no
-    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below. <strong>± is the sample standard deviation over seeds</strong> (n − 1), not the standard error: n = 64 for test, 32 for dev, 24 variants for Leduc, 400 episodes for LIBERO, 24 tasks for OSWorld. For a success rate it is the std of the 0 / 1 outcomes, in percentage points.</figcaption>
+    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below. <strong>± is the sample standard deviation over seeds</strong> (n − 1), not the standard error: n = 64 for test, 32 for dev, 24 variants for Leduc, 400 episodes for LIBERO, 24 tasks for OSWorld. For a success rate it is the std of the 0 / 1 outcomes, in percentage points. For ScienceWorld (score 0–100) it is the std over the 30 task-type means. *SwiftSage calls GPT-4 at run time, uses the first 10 test variations per type (270 episodes) and counts a failed episode at its last non-negative score; our program calls no model, and a failed episode counts 0.</figcaption>
     <table>
       <thead><tr><th>Domain</th><th>Benchmark</th><th>Protocol</th><th class="num">Seed program</th><th class="num">Best program</th><th class="num">Reference</th></tr></thead>
       <tbody>
@@ -130,6 +137,7 @@ layout: default
         <tr><td>Poker</td><td>HUNL vs DecisionHoldem, mbb/hand ↑</td><td>400 hands, 8 unseen seeds</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td><td class="num">0 = break even</td></tr>
         <tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>
         <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp / 99.0% ± 10.0 pp</strong></td><td class="num">privileged state</td></tr>
+        {% include row-scienceworld.html %}
         <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>
       </tbody>
     </table>
@@ -142,6 +150,7 @@ layout: default
     <button data-tab="poker" role="tab">Poker</button>
     <button data-tab="embodied" role="tab">Embodied robotics</button>
     <button data-tab="computer" role="tab">Computer use</button>
+    <button data-tab="science" role="tab">ScienceWorld</button>
     <button data-tab="process" role="tab">Improvers and cost</button>
   </div>
   <div data-panel="atari">
@@ -426,6 +435,50 @@ layout: default
     its output. The model never writes text or actions; it returns a probability per option and acts as a smart
     if-statement inside the program (in the style of TypeSafe's Jev). In both settings the program may learn a memory
     from its own train episodes, frozen during dev and test.</p>
+  </div>
+  <div data-panel="science" hidden>
+    <h3 id="scienceworld">ScienceWorld: one program for 30 science experiments</h3>
+    <p>ScienceWorld (Wang et al., 2022) is a text world of a house with a kitchen, greenhouse, workshop and so on:
+    the agent boils and melts substances, wires circuits, tests conductivity, grows plants, reads life stages, times
+    blocks on inclined planes and crosses plants for Mendelian traits. Each of its 30 task types has variations
+    (other substances, objects, plants, animals, rooms) that ScienceWorld itself splits into train, dev and test. We
+    evolve <strong>a single program for all 30 types</strong>. It reads the text observation, room, inventory, task
+    score and the list of valid commands at every step and answers with one command, so it has to react to what it
+    sees: the champion runs experiments (it closes a circuit and checks whether the bulb lights, heats a substance
+    while reading a thermometer) rather than replaying a script. Seeds: 60 train (2 per type), 90 hidden dev (3 per
+    type), test as below; ScienceWorld's <em>easy</em> simplification, at most 100 commands per episode. The program
+    calls no model, cannot import ScienceWorld, and never sees the gold action sequence.</p>
+    {% include curves-scienceworld.html %}
+    <p class="pending">Left: the incumbent on 90 hidden dev seeds (●) and on 300 test seeds, 10 per type (○), one point
+    per generation; promoted in 8 of 10 generations. Right: the mean over task types on <strong>all 1,819
+    official test variations</strong>, each played once; generations whose full test is still running have no point.
+    Dashed lines: published agents (SwiftSage protocol, see Table 8b).</p>
+    <h4>Every task type, one program</h4>
+    <p>Full-test score (0–100) of the incumbent of every generation, per task type; <span class="bad">red</span> marks a
+    point below the seed program; the dashed line is SwiftSage (GPT-4) on that type; n is the number of official test
+    variations. The thermodynamics types (1-1 to 1-4) stay near 0: ScienceWorld's test variations of boil, melt and
+    freeze are metals (tin, caesium, mercury, gallium, lead) while train and dev use juices, chocolate, soap and ice
+    cream, and the program never learned to reach their temperatures.</p>
+    {% include curves-scienceworld-tasks.html %}
+    <figure class="table-figure">
+      <figcaption><strong>Table 8b.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
+      seed program and champion on every official test variation (n), mean ± sample std over variations; a failed
+      episode counts 0. <em>First 10</em>: the champion on the first 10 test variations of each type, the episodes
+      SwiftSage used. References from SwiftSage (Lin et al., NeurIPS 2023), Table 1: first 10 test variations, a failed
+      episode counted at its last non-negative score, so their rule is more lenient than ours. SwiftSage = flan-T5
+      fine-tuned on oracle trajectories plus GPT-4 at run time; Reflexion and ReAct with GPT-4 (Reflexion gets up to
+      four tries); DRRN is reinforcement learning.</figcaption>
+      <table>
+        <thead><tr><th>ID</th><th>Task</th><th class="num">n</th><th class="num">Seed</th><th class="num">Best (all test)</th><th class="num">Best (first 10)</th><th class="num">SwiftSage</th><th class="num">Reflexion</th><th class="num">ReAct</th><th class="num">DRRN</th></tr></thead>
+        <tbody>
+          {% include table-scienceworld.html %}
+        </tbody>
+      </table>
+      <p class="table-note">The program generalizes where an experiment decides the answer (conductivity, melting
+      point of an unknown substance, inclined planes, finding things), and fails where test variations need what train
+      never showed (metals for 1-1 to 1-4, the long grow-fruit procedure). For lifespans and known Mendelian traits it
+      answers from general knowledge written into the code rather than by experiment, as LLM agents do.</p>
+    </figure>
   </div>
   <div data-panel="process" hidden>
     <figure class="table-figure">

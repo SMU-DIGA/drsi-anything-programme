@@ -313,3 +313,7 @@ details.more[open] > summary::before { content: "− "; }
   .curves-5 .c-tick, .curves-5 .c-ref-label, .curves-5 .c-val { font-size: 13.5px; }
   .curves-5 .c-title { font-size: 17px; }
 }
+
+/* ScienceWorld: a second series (300-seed test) and points below the seed program */
+.c-line2 { stroke: var(--muted); stroke-dasharray: 5 4; }
+.c-dot.bad { fill: var(--bad); }
