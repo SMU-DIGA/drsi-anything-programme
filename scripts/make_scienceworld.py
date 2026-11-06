@@ -163,9 +163,18 @@ xs = {g: X0 + (X1 - X0) * i / (len(gens) - 1) for i, g in enumerate(gens)}
 
 
 def tick_x(out):
+    text = lambda g: "seed" if g == 0 else "g%d" % (g - starts.get(round_of(g), 0))
+    room = lambda a, b: xs[b] - xs[a] >= 3.7 * (len(text(a)) + len(text(b))) + 4  # 12px mono: ~7.3 px a char
+    shown = []  # every other generation without overlaps; the last one always
     for i, g in enumerate(gens):
-        if i % 2 == 0 or g == gens[-1]:
-            out.append(f'<text class="c-tick" x="{xs[g]:.1f}" y="200" text-anchor="middle">{"seed" if g == 0 else "g%d" % (g - starts.get(round_of(g), 0))}</text>')
+        if g == gens[-1]:
+            while shown and not room(shown[-1], g):
+                shown.pop()
+            shown.append(g)
+        elif i % 2 == 0 and (not shown or room(shown[-1], g)):
+            shown.append(g)
+    for g in shown:
+        out.append(f'<text class="c-tick" x="{xs[g]:.1f}" y="200" text-anchor="middle">{text(g)}</text>')
 
 
 def grid(out, small=False):
@@ -185,22 +194,32 @@ def point(out, x, v, cls, tip, r=4.5):
                f'<circle class="{cls}" cx="{x:.1f}" cy="{y(v):.1f}" r="{r}"/><title>{tip}</title></g>')
 
 
-def refs(out, items):
-    last = -99
+def refs(out, items, pts=()):
+    """Reference lines with labels placed where they cover no data point (pts: [(x, y)] in svg units):
+    right then left of the plot, above then below the line."""
+    taken = []
     for v, lab in sorted(items, key=lambda t: y(t[0])):
-        ly = y(v) - 4
-        if ly - last < 13: ly = y(v) + 12
-        last = ly
-        out.append(f'<line class="c-ref" x1="{X0}" x2="{X1}" y1="{y(v):.1f}" y2="{y(v):.1f}"/>'
-                   f'<text class="c-ref-label" x="{X1-2}" y="{ly:.1f}" text-anchor="end">{lab} {v:.1f}</text>')
+        text, w = f"{lab} {v:.1f}", 7.3 * len(f"{lab} {v:.1f}")
+        options = [(X1 - 2, "end", y(v) - 4), (X1 - 2, "end", y(v) + 12),
+                   (X0 + 4, "start", y(v) - 4), (X0 + 4, "start", y(v) + 12)]
+        def clear(o):
+            x0 = o[0] - w if o[1] == "end" else o[0]
+            box = (x0 - 3, o[2] - 12, x0 + w + 3, o[2] + 3)
+            return (not any(box[0] <= px <= box[2] and box[1] <= py <= box[3] for px, py in pts)
+                    and not any(abs(o[2] - ty) < 13 and o[1] == ta for ta, ty in taken))
+        x, anchor, ly = next((o for o in options if clear(o)), options[0])
+        taken.append((anchor, ly))
+        out.append(f'<line class="c-ref" x1="{X0}" x2="{X1}" y1="{y(v):.1f}" y2="{y(v):.1f}"/>')
+        out.append(f'<text class="c-ref-label" x="{x}" y="{ly:.1f}" text-anchor="{anchor}">{text}</text>')
 
 
 def overall_card(title, series, note):
     out = [f'<text class="c-title" x="12" y="22">{title}</text>',
            f'<text class="c-tick" x="{X1}" y="22" text-anchor="end">{note}</text>']
     grid(out)
+    every = [(xs[g], y(vals[g])) for _, vals, _ in series for g in gens if vals.get(g) is not None]
     refs(out, [(OVERALL["SwiftSage"], "SwiftSage"), (OVERALL["Reflexion"], "Reflexion"), (OVERALL["ReAct"], "ReAct"),
-               (OVERALL["DRRN"], "DRRN")])
+               (OVERALL["DRRN"], "DRRN")], every)
     tick_x(out)
     for cls, vals, what in series:
         pts = [(g, vals[g]) for g in gens if vals.get(g) is not None]
@@ -230,7 +249,7 @@ for tid, name in TASKS:
     base = vals.get(0)
     out = [f'<text class="c-title" x="12" y="22">{tid} {SHORT.get(name, name)}</text>']
     grid(out)
-    refs(out, [(REF[tid][0], "SwiftSage")])
+    refs(out, [(REF[tid][0], "SwiftSage")], [(xs[g], y(v)) for g, v in vals.items() if v is not None])
     tick_x(out)
     pts = [(g, v) for g, v in vals.items() if v is not None]
     if len(pts) > 1:
