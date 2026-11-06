@@ -41,7 +41,7 @@ the implementation is not public.
 | RSI loop, archive, promotion gate, resume, env-step ledger | Done |
 | Isolated evaluator (policy in a separate process, no access to reward or seed) | Done |
 | Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
-| Games: Atari RAM: Breakout 864 on all test seeds; Pong 21, Ms. Pac-Man 17,207, Montezuma 9,700 on dev | Running |
+| Games: Atari-5 from pixels, sticky actions (above human on 4 of 5; Q*bert 52,418 test) | Running |
 | Games: VizDoom | Done |
 | Games: poker (Leduc variants by NashConv; heads-up no-limit hold'em, duplicate) | Running |
 | Embodied robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
@@ -53,9 +53,9 @@ Status: Done (integrated and tested) · Running (experiment in progress) · In p
 
 Headline results (programs written and refined by LLM improvers; no gradient training, no demonstrations):
 
-- **Breakout (RAM):** 864, the maximum, on all 64 unseen test seeds after 4 generations (seed program: 2.2).
+- **Atari-5 (pixels only, sticky actions):** above the human score on 4 of 5 games on 64 unseen test seeds; Q*bert 183 → 52,418.
 - **LIBERO (state):** 99.0% on 400 test episodes for both LIBERO-Spatial and LIBERO-10, each after 1 generation.
-- **Montezuma's Revenge / Ms. Pac-Man / Pong (RAM, hidden dev):** 9,700 / 17,207 / 21 after 1 generation.
+- **ScienceWorld:** one program for all 30 task types, 2.5 → 59.3 on all 1,819 official test variations.
 
 
 ## Progress log

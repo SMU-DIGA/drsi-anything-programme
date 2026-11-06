@@ -26,7 +26,7 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 | RSI 主循环、版本库、晋升门槛、断点续跑、环境步数统计 | Done |
 | 隔离评测：策略运行在独立进程，拿不到 reward 和 seed | Done |
 | Improver：Codex CLI、Claude Code、OpenAI 兼容 API（DeepSeek） | Done |
-| 游戏：Atari RAM：Breakout 全部 test seed 864；Pong 21、Ms. Pac-Man 17,207、Montezuma 9,700（dev） | Running |
+| 游戏：Atari-5 纯像素输入、sticky actions（5 个游戏中 4 个超过人类；Q*bert test 52,418） | Running |
 | 游戏：VizDoom | Done |
 | 游戏：扑克（Leduc 变体，用 NashConv 评测；单挑无限注德州，复式对局） | Running |
 | 具身机器人：MuJoCo 运动控制、MetaWorld、ManiSkill3 | Done |
@@ -38,9 +38,9 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 
 主要结果（全部由 LLM 改进者编写和改进的程序取得，没有梯度训练，也没有示范数据）：
 
-- **Breakout（RAM）：** 4 代后，在 64 个从未用过的 test seed 上全部拿到满分 864（初始程序 2.2）。
+- **Atari-5（纯像素、sticky actions）：** 在 64 个从未用过的 test seed 上，5 个游戏中 4 个超过人类分数；Q*bert 183 → 52,418。
 - **LIBERO（state）：** LIBERO-Spatial 和 LIBERO-10 都只用 1 代，400 局 test 成功率均为 99.0%。
-- **Montezuma's Revenge / Ms. Pac-Man / Pong（RAM，隐藏 dev）：** 1 代后分别为 9,700 / 17,207 / 21。
+- **ScienceWorld：** 一个程序覆盖全部 30 类任务，在全部 1,819 个官方 test 变体上 2.5 → 59.3。
 
 本仓库只公开方案文档与实验结果，不包含实现代码。
 
