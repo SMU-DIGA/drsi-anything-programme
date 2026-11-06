@@ -1,8 +1,8 @@
 The fonts in this directory are licensed under the SIL Open Font License, Version 1.1
-(https://openfontlicense.org), and are redistributed from Google Fonts, unmodified unless noted:
+(https://openfontlicense.org), and are redistributed unmodified from Google Fonts:
 
 - DM Sans: Copyright 2014 The DM Sans Project Authors (https://github.com/googlefonts/dm-fonts)
-- Fraunces (Black Italic, subset to the glyph "D" as fraunces-black-italic-D.woff2; modified by subsetting): Copyright 2018 The Fraunces Project Authors (https://github.com/undercasetype/Fraunces)
+- Parisienne (latin subset as served by Google Fonts, via Fontsource): Copyright (c) 2012 by Brian J. Bonislawsky DBA Astigmatic (AOETI) (astigma@astigmatic.com), with Reserved Font Names "Parisienne"
 - Manrope: Copyright 2018 The Manrope Project Authors (https://github.com/sharanda/manrope)
 - JetBrains Mono: Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)
 
