@@ -154,7 +154,7 @@ layout: default
         {% comment %}<tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>{% endcomment %}
         {% comment %}<tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp / 99.0% ± 10.0 pp</strong></td><td class="num">privileged state</td></tr>{% endcomment %}
         {% include row-scienceworld.html %}
-        <tr><td>ARC-AGI</td><td>ARC-AGI-1 / 2 / 3, one program</td><td>100 / 80 dev puzzles, 8 dev games (running)</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>37.0%</strong> / 1.3% / 0%</td><td class="num">—</td></tr>
+        <tr><td>ARC-AGI</td><td>ARC-AGI-1 / 2 / 3, one program</td><td>100 / 80 dev puzzles, 8 dev games (paused)</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>40.0%</strong> / 1.3% / 0%</td><td class="num">—</td></tr>
         <tr><td>OSWorld</td><td>Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>
       </tbody>
     </table>
@@ -619,10 +619,11 @@ layout: default
         <tbody>
           <tr><td>0</td><td>seed program</td><td class="num">—</td><td class="num">0%</td><td class="num">0%</td><td class="num">0%</td><td class="num">0.000</td></tr>
           <tr class="best"><td>1</td><td>Claude Sonnet</td><td class="num">1,251</td><td class="num">30.5%</td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num">0.168</td></tr>
-          <tr class="best"><td>2</td><td>Claude Opus</td><td class="num">2,429</td><td class="num"><u>34.0%</u></td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num"><u>0.186</u></td></tr>
+          <tr class="best"><td>2</td><td>Claude Opus</td><td class="num">2,429</td><td class="num">34.0%</td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num">0.186</td></tr>
           <tr><td>3</td><td>no promotion</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr class="best"><td>4</td><td>Claude Opus</td><td class="num">3,653</td><td class="num"><strong>37.0%</strong></td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num"><strong>0.202</strong></td></tr>
+          <tr class="best"><td>4</td><td>Claude Opus</td><td class="num">3,653</td><td class="num"><u>37.0%</u></td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num"><u>0.202</u></td></tr>
           <tr><td>5</td><td>no promotion</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr class="best"><td>6</td><td>Claude Sonnet</td><td class="num">3,819</td><td class="num"><strong>40.0%</strong></td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num"><strong>0.218</strong></td></tr>
         </tbody>
       </table>
     </figure>
@@ -631,14 +632,14 @@ layout: default
       <p>The program is a generate-and-verify solver: it searches grid transformations (symmetries and colour maps,
       scaling and tiling, symmetry and period completion, boolean operations on split parts, object selection and
       movement, local rule tables, two-step compositions) and answers only with one that reproduces every
-      demonstration exactly. On unseen ARC-AGI-1 puzzles it climbs from 30.5% to 37.0% in four generations. On
+      demonstration exactly. On unseen ARC-AGI-1 puzzles it climbs from 30.5% to 40.0% in six generations. On
       ARC-AGI-2 it solves 1 of 80 dev puzzles throughout: its train score (29–35%) comes from revised ARC-AGI-1 puzzles
       inside ARC-AGI-2 training, and dev uses only puzzles new in ARC-AGI-2. Train also overfits: in generation 3 an
       Opus candidate grew to 4,189 lines and reached 68.5% on its ARC-AGI-1 train puzzles but only 36% on dev, short of
       the gate. In the games, an early candidate cleared the first level of three dev games, but no promoted version
       clears any.</p>
     </div>
-    <p class="pending">Running: generation 6 of at most 10, patience 3; five generations cost $194 in improver sessions. Three Claude improvers (Opus and two Sonnet); the improvers
+    <p class="pending">Paused after generation 6 (of at most 10); six generations cost $212 in improver sessions; test not yet run. Three Claude improvers (Opus and two Sonnet); the improvers
     cannot read the data, the split manifest or the game engine, and the guard rejects a program that does.</p>
   </div>
   <div data-panel="process" hidden>
@@ -648,7 +649,7 @@ layout: default
       <table>
         <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
         <tbody>
-          <tr><td>Claude Code (agent with tools)</td><td class="num">25</td><td>ScienceWorld 19 (rounds 1–4 and the electricity specialist) · OSWorld 3 · ARC-AGI 3</td></tr>
+          <tr><td>Claude Code (agent with tools)</td><td class="num">26</td><td>ScienceWorld 19 (rounds 1–4 and the electricity specialist) · OSWorld 3 · ARC-AGI 4</td></tr>
           <tr><td>Codex CLI (agent with tools)</td><td class="num">15</td><td>Atari-5 pixels 14 · OSWorld 1</td></tr>
           <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">4</td><td>Atari-5 pixels 3 · ScienceWorld 1</td></tr>
         </tbody>
