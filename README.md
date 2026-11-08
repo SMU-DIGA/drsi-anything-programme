@@ -1,6 +1,6 @@
 # DRSI-Anything
 
-**Delegative Recursive Self-Improvement across General Domains**: LLMs do not act themselves; they delegate the acting to programs they write and repeatedly improve, for games, embodied robotics and OSWorld. Neuro-symbolic programs (code, optionally calling smaller models) are our main form of delegation. The programme was earlier called NS-RSI-Anything.
+**Delegative Recursive Self-Improvement across General Domains**: LLMs do not act themselves; they delegate the acting to programs they write and repeatedly improve, for video games, text games, embodied robotics, computer use and abstract reasoning. Neuro-symbolic programs (code, optionally calling smaller models) are our main form of delegation. The programme was earlier called NS-RSI-Anything.
 
 **[Project page](https://smu-diga.github.io/drsi-anything-programme/)** · [中文](README.zh-CN.md) · [Design](https://smu-diga.github.io/drsi-anything-programme/#design) · [Environments](https://smu-diga.github.io/drsi-anything-programme/#environments) · [Results](https://smu-diga.github.io/drsi-anything-programme/#results)
 
@@ -40,13 +40,14 @@ the implementation is not public.
 | RSI loop, archive, promotion gate, resume, env-step ledger | Done |
 | Isolated evaluator (policy in a separate process, no access to reward or seed) | Done |
 | Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
-| Games: Atari-5 from pixels, sticky actions (above human on 4 of 5; Q*bert 52,418 test) | Done |
-| Games: VizDoom | Done |
+| Video games: Atari-5 from pixels, sticky actions (above human on 4 of 5; Q*bert 52,418 test) | Done |
+| Video games: VizDoom | Done |
+| Text games: ScienceWorld, one program for 30 task types (85.0 test) | Done |
 | Embodied robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
 | Embodied robotics: LIBERO (Spatial state 99.0% test; LIBERO-10 state 99.0% test; Spatial vision 95.3% test; LIBERO-10 vision 87.0% test) | Done |
 | Embodied robotics: SimplerEnv, RoboTwin 2.0 | Planned |
-| OSWorld: Calc + OS (test 16.7% with a small model available, 4.2% pure code) | Done |
-| ARC-AGI-1, 2 and 3: one program for static puzzles and interactive games | Running |
+| Computer use: OSWorld Calc + OS (test 16.7% with a small model available, 4.2% pure code) | Done |
+| Abstract reasoning: ARC-AGI-1, 2 and 3, one program for static puzzles and interactive games | Running |
 
 Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).
 
