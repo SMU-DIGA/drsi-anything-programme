@@ -342,13 +342,13 @@ body { font-size: 16px; line-height: 1.62; }
 .abstract { max-width: 820px; margin-top: 40px; }
 .abstract-title { font-size: 22px; margin-bottom: 8px; }
 .abstract p { font-size: 16px; }
-.article-layout { max-width: 1040px; }
+.article-layout { max-width: 1060px; }  /* same edges as the teaser, TL;DR and stats */
 .article-body h2 { font-size: 26px; margin: 44px 0 12px; padding-top: 0; }
 .article-body h2:first-of-type { margin-top: 20px; }
 .article-body h2[data-num]::before { font-size: 12px; margin-bottom: 2px; }
 .article-body h3 { font-size: 18px; margin: 24px 0 8px; }
 .article-body h4 { font-family: var(--display); font-size: 16px; margin: 22px 0 6px; }
-.article-body > p, [data-panel] > p { max-width: 76ch; }
+.article-body p, .article-body ul, .article-body ol { max-width: none; }  /* prose spans the same column as tables and cards */
 .article-body .lead { margin: 0 0 12px; font-size: 16px; font-weight: 500; }
 .step-grid { gap: 10px; margin: 14px 0; }
 .step { padding: 13px 15px; border-radius: 12px; }
