@@ -22,9 +22,5 @@ nav:
     url: /#environments
   - title: Results
     url: /#results
-  - title: Progress
-    url: /#progress
-  - title: Roadmap
-    url: /#roadmap
   - title: BibTeX
     url: /#bibtex

@@ -2,7 +2,7 @@
 
 **Delegative Recursive Self-Improvement across General Domains（跨通用领域的委托式递归自我改进）**：LLM 不直接与环境交互，而是把"行动"委托给自己编写并不断递归改进的程序，覆盖游戏、具身机器人和 OSWorld。神经-符号程序（代码，可调用小模型）是我们主要的委托形式，但只是委托的一种实现方式。项目原名 NS-RSI-Anything。
 
-**[项目主页与进度日志](https://smu-diga.github.io/drsi-anything-programme/)** · [English](README.md) · [方案设计](https://smu-diga.github.io/drsi-anything-programme/#design) · [环境选型](https://smu-diga.github.io/drsi-anything-programme/#environments) · [路线图](https://smu-diga.github.io/drsi-anything-programme/#roadmap)
+**[项目主页](https://smu-diga.github.io/drsi-anything-programme/)** · [English](README.md) · [方案设计](https://smu-diga.github.io/drsi-anything-programme/#design) · [环境选型](https://smu-diga.github.io/drsi-anything-programme/#environments) · [结果](https://smu-diga.github.io/drsi-anything-programme/#results)
 
 LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制器或桌面 agent。之后多个 LLM 根据环境交互反馈，逐代改进这个程序。被改进的对象是**委托对象（delegate）**：目前主要是代码；程序也可以把部分决策委托给 LLM，并且参考 [Weight-Space Programming](https://rikiyat.github.io/blog/weight-space-programming/)（LLM 不经过优化器，直接读写网络权重），improver 可以直接修改这个 LLM 的权重。目前已报告的结果只用了代码（计算机使用任务里另外调用一个冻结的小模型）；直接修改权重是计划中的方向，尚未实验。一个程序包括策略、状态检测与技能函数，以及一份作为程序记忆的 `NOTES.md`。
 
@@ -44,6 +44,5 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 
 本仓库只公开方案文档与实验结果，不包含实现代码。
 
-添加进度记录：在 `_posts/` 下新建 `YYYY-MM-DD-标题.md`，格式见 [README.md](README.md#progress-log)。
 
 许可证：MIT。

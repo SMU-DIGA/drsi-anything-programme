@@ -1,5 +1,5 @@
 ---
 layout: redirect
 permalink: /roadmap/
-redirect_to: /#roadmap
+redirect_to: /#results
 ---

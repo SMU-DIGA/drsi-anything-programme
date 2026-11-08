@@ -12,13 +12,18 @@ layout: default
     <a class="pill" href="#design"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 5v3l2 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Design</a>
     <a class="pill" href="#environments"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="4.5" height="4.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Environments</a>
     <a class="pill" href="#results"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13V8M8 13V3M13 13V6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Results</a>
-    <a class="pill" href="#progress"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13h12M4 10l3-3 2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Progress</a>
-    <a class="pill" href="#roadmap"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3v10M3 4h8l-1.5 2.5L11 9H3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Roadmap</a>
     <a class="pill" href="#bibtex"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h6l2.5 2.5v8.5h-8.5z M10 2.5v2.5h2.5 M6 8h4 M6 10.5h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>BibTeX</a>
     <a class="pill pill-dark" href="https://github.com/{{ site.repository }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
   </div>
     <p class="hook">LLMs rewrite the <strong>program</strong>, not the weights. A version survives only if it wins on seeds no one has seen.</p>
 </section>
+
+
+<figure class="teaser">
+  {% include teaser.svg %}
+  <figcaption><strong>Figure 1.</strong> Improvers edit the current program in parallel. Each candidate is re-scored
+  in isolation and promoted only if it beats the incumbent on hidden dev seeds.</figcaption>
+</figure>
 
 <section class="tldr-block" id="tldr">
   <div class="tldr">
@@ -32,22 +37,6 @@ layout: default
     <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 95.3%</p><p class="stat-label">LIBERO-Spatial, vision only</p><p class="stat-sub">400 test episodes · no demonstrations</p></div>
     <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · ScienceWorld · LIBERO · OSWorld · ARC-AGI</p></div>
   </div>
-</section>
-
-<figure class="teaser">
-  {% include teaser.svg %}
-  <figcaption><strong>Figure 1.</strong> Improvers edit the current program in parallel. Each candidate is re-scored
-  in isolation and promoted only if it beats the incumbent on hidden dev seeds.</figcaption>
-</figure>
-
-<section class="abstract">
-  <h2 class="abstract-title">Abstract</h2>
-  <p>Deep RL improves an agent by changing weights. <strong>DRSI-Anything</strong> lets LLMs improve a program
-  instead: they <strong>delegate</strong> the acting to a policy they write, with its skills and notes, so what is
-  learned is stored as readable code. A population of coding agents edits the program generation after generation;
-  every candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We study
-  when such loops keep improving, what transfers, and how they compare with RL, on Atari, ScienceWorld, LIBERO,
-  OSWorld and ARC-AGI.</p>
 </section>
 
 <div class="article-layout">
@@ -347,26 +336,6 @@ layout: default
       71–303 M frames, the same order as deep RL's 200 M.</p>
     </figure>
   </div>
-
-  <h2 id="progress">Progress</h2>
-  <ol class="timeline">
-  {% for post in site.posts %}
-    <li id="{{ post.slug }}">
-      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
-      <p class="tl-title">{{ post.title }}</p>
-      <p>{{ post.summary }}</p>
-      {% if post.tags.size > 0 %}<p class="tags">{% for tag in post.tags %}<span class="tag">{{ tag }}</span>{% endfor %}</p>{% endif %}
-      <details class="update">
-        <summary>Read the full update</summary>
-        <div class="update-body">{{ post.content | replace: '<h2', '<h4' | replace: '</h2>', '</h4>' }}</div>
-      </details>
-    </li>
-  {% endfor %}
-  </ol>
-
-  <h2 id="roadmap">Roadmap</h2>
-  {% capture roadmap_md %}{% include roadmap.md %}{% endcapture %}
-  {{ roadmap_md | markdownify }}
 
   <h2 id="bibtex">BibTeX</h2>
   <div class="bib-wrap">

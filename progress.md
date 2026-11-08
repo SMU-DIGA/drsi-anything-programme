@@ -1,5 +1,5 @@
 ---
 layout: redirect
 permalink: /progress/
-redirect_to: /#progress
+redirect_to: /#results
 ---

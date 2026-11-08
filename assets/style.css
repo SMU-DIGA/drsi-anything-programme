@@ -381,3 +381,6 @@ tbody tr:last-child td { border-bottom-width: 1.5px; }
 .site-footer { margin-top: 56px; }
 @media (min-width: 980px) { .domains { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 .domain li { flex-wrap: wrap; row-gap: 2px; }
+.hook { max-width: 920px; }
+@media (min-width: 900px) { .hook { white-space: nowrap; } }
+.tldr-block { margin-top: 32px; }
