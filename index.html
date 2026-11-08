@@ -23,22 +23,22 @@ layout: default
 <section class="tldr-block" id="tldr">
   <div class="tldr">
     <p class="tldr-label">TL;DR</p>
-    <p>An LLM writes a program that solves a task, such as an Atari bot, a robot-arm controller, a science-experiment agent or a desktop agent.
+    <p>An LLM writes a program that solves a task, such as an Atari bot, a science-experiment agent, a robot-arm controller or a desktop agent.
     A <em>population</em> of LLM improvers (Codex CLI, Claude Code, DeepSeek) then improves that program over many
     generations, using only feedback from interaction with the environment. Promotion is gated on hidden seeds, and
-    we evaluate on game, embodied-robotics, text science-experiment, ARC-AGI and OSWorld benchmarks the community reports on most often.</p>
+    we evaluate on game, text science-experiment, embodied-robotics, OSWorld and ARC-AGI benchmarks the community reports on most often.</p>
   </div>
   <div class="stats">
     {% comment %}Atari RAM hidden
 <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input · 788 test with sticky actions</p></div>
 {% endcomment %}
     <div class="stat"><p class="stat-num">183 <span class="arrow">→</span> 52,418</p><p class="stat-label">Q*bert from pixels only, unseen test seeds</p><p class="stat-sub">sticky actions · Atari-5 above human on 4 of 5 games</p></div>
+    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 85.0</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
     <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>
     {% comment %}Atari RAM hidden
 <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
 {% endcomment %}
-    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 85.0</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
-    <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · LIBERO robotics · ScienceWorld · ARC-AGI · OSWorld</p></div>
+    <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · ScienceWorld · LIBERO robotics · OSWorld · ARC-AGI</p></div>
   </div>
 </section>
 
@@ -63,7 +63,7 @@ layout: default
   skills and its notes, is improved generation after generation by a heterogeneous population of LLM improvers.
   Each candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We
   study when such loops keep improving, what transfers across tasks, and how they compare with RL under the same
-  environment-step budget, on games (Atari), embodied manipulation (LIBERO, ManiSkill3), text science experiments (ScienceWorld), abstract reasoning (ARC-AGI-1, 2 and 3) and OSWorld.</p>
+  environment-step budget, on games (Atari), text science experiments (ScienceWorld), embodied manipulation (LIBERO, ManiSkill3), OSWorld and abstract reasoning (ARC-AGI-1, 2 and 3).</p>
 </section>
 
 <div class="article-layout">
@@ -94,6 +94,13 @@ layout: default
       <p class="domain-note">Same suite as <em>Learning Beyond Gradients</em>, so results compare directly.</p>
     </div>
     <div class="domain">
+      <h4>Science agents (text)</h4>
+      <ul>
+        <li>ScienceWorld <span class="badge done">Done</span></li>
+      </ul>
+      <p class="domain-note">30 text-based science experiments; dev and test use ScienceWorld's own unseen variations.</p>
+    </div>
+    <div class="domain">
       <h4>Embodied robotics</h4>
       <ul>
         <li>MetaWorld · MuJoCo <span class="badge done">Done</span></li>
@@ -109,13 +116,6 @@ layout: default
         <li>OSWorld <span class="badge running">Running</span></li>
       </ul>
       <p class="domain-note">A desktop agent with an app-level skill library, split by application.</p>
-    </div>
-    <div class="domain">
-      <h4>Science agents (text)</h4>
-      <ul>
-        <li>ScienceWorld <span class="badge done">Done</span></li>
-      </ul>
-      <p class="domain-note">30 text-based science experiments; dev and test use ScienceWorld's own unseen variations.</p>
     </div>
     <div class="domain">
       <h4>Abstract reasoning</h4>
@@ -149,12 +149,12 @@ layout: default
         <tr><td>Atari</td><td>Phoenix, pixels only</td><td>sticky actions, test</td><td class="num">745 ± 605</td><td class="num"><strong>65,076 ± 19,536</strong></td><td class="num">human 7,243; Muesli 805,305</td></tr>
         {% comment %}<tr><td>Poker</td><td>Leduc variants, NashConv ↓</td><td>24 unseen variants, test</td><td class="num">1.331 ± 0.681</td><td class="num"><strong>0.106 ± 0.030</strong></td><td class="num">CFR, 100 iterations 0.045</td></tr>{% endcomment %}
         {% comment %}<tr><td>Poker</td><td>HUNL vs DecisionHoldem, mbb/hand ↑</td><td>400 hands, 8 unseen seeds</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td><td class="num">0 = break even</td></tr>{% endcomment %}
+        {% include row-scienceworld.html %}
         <tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>
         <tr><td>Robotics</td><td>LIBERO-10, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>87.0% ± 33.6 pp</strong></td><td class="num">OpenVLA-OFT 94.5%</td></tr>
         <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp / 99.0% ± 10.0 pp</strong></td><td class="num">privileged state</td></tr>
-        {% include row-scienceworld.html %}
-        <tr><td>ARC-AGI</td><td>ARC-AGI-1 / 2 / 3, one program</td><td>100 / 80 dev puzzles, 8 dev games (paused)</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>40.0%</strong> / 1.3% / 1.5%</td><td class="num">—</td></tr>
         <tr><td>OSWorld</td><td>Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>
+        <tr><td>ARC-AGI</td><td>ARC-AGI-1 / 2 / 3, one program</td><td>100 / 80 dev puzzles, 8 dev games (paused)</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>40.0%</strong> / 1.3% / 1.5%</td><td class="num">—</td></tr>
       </tbody>
     </table>
   </figure>
@@ -164,9 +164,9 @@ layout: default
   <div class="tabs" role="tablist">
     <button class="on" data-tab="atari" role="tab">Atari</button>
     {% comment %}<button data-tab="poker" role="tab">Poker</button>{% endcomment %}
+    <button data-tab="science" role="tab">ScienceWorld</button>
     <button data-tab="embodied" role="tab">Embodied robotics</button>
     <button data-tab="computer" role="tab">OSWorld</button>
-    <button data-tab="science" role="tab">ScienceWorld</button>
     <button data-tab="arc" role="tab">ARC-AGI</button>
     <button data-tab="process" role="tab">Improvers and cost</button>
   </div>
@@ -361,137 +361,6 @@ layout: default
     </details>
 {% endcomment %}
   </div>
-  {% comment %}Poker hidden (results not representative yet)
-  <div data-panel="poker" hidden>
-    {% include curves-poker.html %}
-    {% include curves-hunl.html %}
-    <figure class="table-figure">
-      <figcaption><strong>Table 3a.</strong> Poker, Leduc variants (OpenSpiel <code>universal_poker</code>). Score: NashConv divided by the
-      largest raise, <strong>lower is better</strong> (0 is a Nash equilibrium).</figcaption>
-      <table>
-        <thead><tr><th></th><th class="num">Seed program<br><small>uniform policy</small></th><th class="num">Best, dev<br><small>24 variants</small></th><th class="num">Test<br><small>24 variants</small></th><th class="num">Test<br><small>standard Leduc</small></th></tr></thead>
-        <tbody>
-          <tr class="best"><td>Evolved readable policy</td><td class="num">1.381 ± 0.499</td><td class="num"><strong>0.109 ± 0.029</strong></td><td class="num"><strong>0.106 ± 0.030</strong></td><td class="num">0.087</td></tr>
-          <tr class="ref"><td>CFR, 30 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.141</td><td class="num">0.156</td></tr>
-          <tr class="ref"><td>CFR, 100 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.045</td><td class="num">0.048</td></tr>
-          <tr class="ref"><td>CFR, 1,000 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.005</td><td class="num">0.006</td></tr>
-        </tbody>
-      </table>
-      <p class="table-note">72 Leduc-like limit games with different ranks, suits, raise sizes and raise caps, split 24 / 24 / 24; standard Leduc is a test
-      variant. Programs must be readable rules (no search or equilibrium computation at run time, at most 8 KB of data). All 10 generations promoted.
-      CFR rows are a solver run on each test variant, shown for scale, not a readable policy.</p>
-    </figure>
-    <figure class="table-figure">
-      <figcaption><strong>Table 3b.</strong> Poker, heads-up no-limit hold'em. Score: mbb/hand (thousandths of a big blind per hand),
-      <strong>higher is better</strong>, 0 is break even.</figcaption>
-      <table>
-        <thead><tr><th>Opponent</th><th class="num">Evaluated on<br><small>mean ± std over seeds</small></th><th class="num">Seed program<br><small>always call</small></th><th class="num">Champion<br><small>g001c0</small></th></tr></thead>
-        <tbody>
-          <tr class="best"><td>Rule bots + past champions</td><td class="num">64 test seeds</td><td class="num">−13,731 ± 1,301</td><td class="num"><strong>+29,090 ± 2,116</strong></td></tr>
-          <tr><td>DecisionHoldem</td><td class="num">8 unseen seeds, 400 hands</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td></tr>
-        </tbody>
-      </table>
-      <p class="table-note">Every deal is played from both seats by separate processes. The loop's opponents are three rule bots (call station, maniac, equity bot)
-      and the three most recent champions; on its 32 dev seeds the champion scores 39,512 ± 1,857 against −1,252 ± 614 for the seed program. It stopped after 1 promotion and
-      3 more generations without one. DecisionHoldem is a published CFR-based agent (blueprint strategy). ± is the sample standard deviation over seeds (n = 64 test, 32 dev, 8 for DecisionHoldem), not the standard error. A figure in red is below the seed program.</p>
-    </figure>
-    <p class="pending">For scale: the readable Leduc policy (test 0.106) sits between 30 and 100 iterations of vanilla CFR
-    run on each test variant, which reaches 0.005 after 1,000 iterations. It generalizes across variants without solving
-    any of them, but it is still far from an equilibrium.</p>
-    <p class="pending">HUNL: the champion beats the rule bots (call station, maniac, equity bot) and earlier champions by
-    29,090 mbb/hand on 64 test seeds, but those opponents are easy to exploit. Against DecisionHoldem, a strong
-    published agent, the same program loses about 4.6 big blinds per hand (± 5.7, standard deviation over 8 seeds of 50
-    hands each), so beating weak opponents did not make it strong. The starting program (always call) scores −1.7 big blinds per hand (± 4.2) on the same 8 seeds, so against DecisionHoldem the champion is lower than its starting point (shown in red); with 8 seeds and a standard deviation this large the gap is within noise. DecisionHoldem's search makes every hand take
-    seconds, so this is a small sample; a loop that trains against DecisionHoldem directly is being set up.</p>
-    <div class="finding">
-      <p class="finding-label">A run we threw away</p>
-      <p>The first HUNL run reported +62,790 mbb/hand, which was too good to be true. Its program had found a hole in
-      our harness: the mirrored hand of each duplicate pair was replayed right away in the same process, so it could
-      remember the board and its own earlier cards, which were now its opponent's. Each seat is now played by a
-      separate, fresh process; every deal is seen once per process; and temp files, sockets, subprocesses and
-      native code are rejected. The run was restarted from scratch.</p>
-    </div>
-  </div>
-  {% endcomment %}
-  <div data-panel="embodied" hidden>
-    {% include curves-embodied.html %}
-    <figure class="table-figure">
-      <figcaption><strong>Table 3.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
-      each: scenes 0–1 are train, 2–9 hidden dev (80 episodes), 10–49 test (400 episodes, used once). <em>State</em>
-      gives object poses (privileged). <em>Vision</em> gives only RGB-D from the agent-view and wrist cameras, camera
-      parameters and proprioception.</figcaption>
-      <table>
-        <thead><tr><th>Setting</th><th class="num">Seed</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
-          <tr class="best"><td>LIBERO-10 (long-horizon) · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
-          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0% ± 0 pp</td><td class="num">95.0% ± 21.9 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong> (381 / 400)</td><td>done after 10 generations</td></tr>
-          <tr><td>LIBERO-10 (long-horizon) · vision</td><td class="num">0% ± 0 pp</td><td class="num">91.2% ± 28.5 pp*</td><td class="num"><strong>87.0% ± 33.6 pp</strong> (348 / 400)</td><td>stopped after 8 generations</td></tr>
-          <tr class="ref"><td>OpenVLA, fine-tuned (RGB; Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">84.7% / 53.7%</td><td>—</td></tr>
-          <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">97.6% / 94.5%</td><td>—</td></tr>
-        </tbody>
-      </table>
-    </figure>
-    <div class="finding">
-      <p class="finding-label">How to read these numbers</p>
-      <p>No demonstrations and no learned weights: every policy is readable code. State mode is easier than the VLA
-      setting and is not comparable to it. Vision mode is the closest match, but it uses depth and camera calibration,
-      which the VLA models do not. Programs contain routines per task family and generalize across unseen initial
-      scenes, which is what LIBERO's protocol tests.</p>
-      <p>* LIBERO-10 vision ran before the seed guard existed. One improver (generation 5) evaluated its candidate on 40
-      dev scenes through a hand-edited task file, and the generation-6 improver whose program became the champion read
-      that candidate's notes and code, so the dev number is optimistic. Test scenes were never touched; 87.0% is a
-      clean test estimate (per task 65–100%; the microwave task is the weakest). The guard now refuses any seed outside
-      train.</p>
-    </div>
-    <div class="finding">
-      <p class="finding-label">What the programs found by probing</p>
-      <p>The vision program measured that its agent-view estimate of a bowl's centre is biased by about 4 cm, so it
-      re-centres with the wrist camera before grasping. The LIBERO-10 program worked out each goal condition (e.g. the
-      stove counts as on once its knob turns past about 0.45 rad) and found initial scenes where objects fly off the
-      table on the first step, which no policy can solve.</p>
-    </div>
-    <p class="pending">LIBERO-Spatial vision finished its 10 generations at 95.0% on dev. In the last generation two
-    candidates reached 96.3%, but one extra win was not enough for the paired gate. On the 400 test episodes it scored
-    95.3%, in line with dev. LIBERO-10 vision then ran from the LIBERO-Spatial vision champion and stopped after 8
-    generations at 87.0% on test. Next: the vision setting on <strong>LIBERO-Object and LIBERO-Goal</strong>, so that all
-    four suites compare with OpenVLA-OFT, then ManiSkill3. No embodied run is going now.</p>
-  </div>
-  <div data-panel="computer" hidden>
-    {% include curves-computer.html %}
-    <figure class="table-figure">
-      <figcaption><strong>Table 4.</strong> OSWorld, LibreOffice Calc and OS tasks: 71 tasks split 23 / 24 / 24 into
-      train, hidden dev and test, scored by OSWorld's own checkers (success rate). Both runs start from a program that
-      answers DONE at once. <em>Model available</em>: the program may also ask a fixed small model (Qwen3.5-2B) typed
-      multiple-choice questions.</figcaption>
-      <table>
-        <thead><tr><th>Setting</th><th class="num">Seed program</th><th class="num">Train</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr class="best"><td>Pure code</td><td class="num">0% ± 0 pp</td><td class="num">65.2% ± 48.7 pp</td><td class="num"><strong>8.3% ± 28.2 pp</strong> (2 / 24)</td><td class="num">after the run</td><td>promoted in generation 1 only; generation 9 running</td></tr>
-          <tr class="best"><td>Model available</td><td class="num">0% ± 0 pp</td><td class="num">78.3% ± 42.2 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong> (5 / 24)</td><td class="num">after the run</td><td>promoted in generations 3 and 6; generation 9 running</td></tr>
-        </tbody>
-      </table>
-    </figure>
-    <div class="finding">
-      <p class="finding-label">A large train–dev gap</p>
-      <p>Both champions solve most train tasks (65% and 78%) but few dev tasks. They are skill libraries: regular
-      expressions map an instruction to a handler that scripts LibreOffice through its UNO interface or runs shell and
-      settings commands. A handler written for a train task rarely covers a dev task, which usually needs a different
-      skill. The better run (5 / 24) probes the desktop first and has 28 spreadsheet and about 20 desktop handlers.</p>
-    </div>
-    <div class="finding">
-      <p class="finding-label">The model was available but not used</p>
-      <p>The 5 / 24 champion never calls the small model; only unpromoted candidates did. So the difference between the
-      two runs is two independent searches over pure-code programs, not evidence that the model helps. The next runs
-      cover eight applications (Calc, Writer, Impress, OS, VS Code, GIMP, VLC, Thunderbird; 222 tasks split by
-      application into 70 / 76 / 76) and tell the improvers where the model can help, so the comparison becomes a real
-      ablation.</p>
-    </div>
-    <p class="pending">The program decides every action in code, including running code inside the desktop and reading
-    its output. The model never writes text or actions; it returns a probability per option and acts as a smart
-    if-statement inside the program (in the style of TypeSafe's Jev). In both settings the program may learn a memory
-    from its own train episodes, frozen during dev and test.</p>
-  </div>
   <div data-panel="science" hidden>
     <h3 id="scienceworld">ScienceWorld: one program for 30 science experiments</h3>
     <p>ScienceWorld (Wang et al., 2022) is a text world of a house with a kitchen, greenhouse, workshop and so on:
@@ -556,7 +425,7 @@ layout: default
     seeds, so its dev curve is drawn separately) in all 6, round 3 (after R3) in 5 of 7, round 4 (after R4) in 1 of 2, then the merged electricity specialist. Right: the mean over task types on <strong>all 1,819
     official test variations</strong>, each played once, for the incumbent of every generation. On test, round 2
     gained most by its generation 4 (64.1, 65.9, 65.6, 67.5, 67.2, 67.5) and was flat after it, although dev kept rising.
-    Dashed lines: published agents (SwiftSage protocol, see Table 5).</p>
+    Dashed lines: published agents (SwiftSage protocol, see Table 3).</p>
     <h4>Every task type, one program</h4>
     <p>Full-test score (0–100) of the incumbent of every generation, per task type; <span class="bad">red</span> marks a
     point below the seed program; the dashed line is SwiftSage (GPT-4) on that type; n is the number of official test
@@ -565,7 +434,7 @@ layout: default
     cream, and the program never learned to reach their temperatures.</p>
     {% include curves-scienceworld-tasks.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 5.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
+      <figcaption><strong>Table 3.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
       seed program and champion on every official test variation (n), mean ± sample std over variations; a failed
       episode counts 0. <em>First 10</em>: the champion on the first 10 test variations of each type, the episodes
       SwiftSage used. References from SwiftSage (Lin et al., NeurIPS 2023), Table 1: first 10 test variations, a failed
@@ -585,6 +454,137 @@ layout: default
       Mendelian traits it answers from general knowledge written into the code rather than by experiment, as LLM agents
       do.</p>
     </figure>
+  </div>
+  {% comment %}Poker hidden (results not representative yet)
+  <div data-panel="poker" hidden>
+    {% include curves-poker.html %}
+    {% include curves-hunl.html %}
+    <figure class="table-figure">
+      <figcaption><strong>Table 3a.</strong> Poker, Leduc variants (OpenSpiel <code>universal_poker</code>). Score: NashConv divided by the
+      largest raise, <strong>lower is better</strong> (0 is a Nash equilibrium).</figcaption>
+      <table>
+        <thead><tr><th></th><th class="num">Seed program<br><small>uniform policy</small></th><th class="num">Best, dev<br><small>24 variants</small></th><th class="num">Test<br><small>24 variants</small></th><th class="num">Test<br><small>standard Leduc</small></th></tr></thead>
+        <tbody>
+          <tr class="best"><td>Evolved readable policy</td><td class="num">1.381 ± 0.499</td><td class="num"><strong>0.109 ± 0.029</strong></td><td class="num"><strong>0.106 ± 0.030</strong></td><td class="num">0.087</td></tr>
+          <tr class="ref"><td>CFR, 30 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.141</td><td class="num">0.156</td></tr>
+          <tr class="ref"><td>CFR, 100 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.045</td><td class="num">0.048</td></tr>
+          <tr class="ref"><td>CFR, 1,000 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.005</td><td class="num">0.006</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">72 Leduc-like limit games with different ranks, suits, raise sizes and raise caps, split 24 / 24 / 24; standard Leduc is a test
+      variant. Programs must be readable rules (no search or equilibrium computation at run time, at most 8 KB of data). All 10 generations promoted.
+      CFR rows are a solver run on each test variant, shown for scale, not a readable policy.</p>
+    </figure>
+    <figure class="table-figure">
+      <figcaption><strong>Table 3b.</strong> Poker, heads-up no-limit hold'em. Score: mbb/hand (thousandths of a big blind per hand),
+      <strong>higher is better</strong>, 0 is break even.</figcaption>
+      <table>
+        <thead><tr><th>Opponent</th><th class="num">Evaluated on<br><small>mean ± std over seeds</small></th><th class="num">Seed program<br><small>always call</small></th><th class="num">Champion<br><small>g001c0</small></th></tr></thead>
+        <tbody>
+          <tr class="best"><td>Rule bots + past champions</td><td class="num">64 test seeds</td><td class="num">−13,731 ± 1,301</td><td class="num"><strong>+29,090 ± 2,116</strong></td></tr>
+          <tr><td>DecisionHoldem</td><td class="num">8 unseen seeds, 400 hands</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Every deal is played from both seats by separate processes. The loop's opponents are three rule bots (call station, maniac, equity bot)
+      and the three most recent champions; on its 32 dev seeds the champion scores 39,512 ± 1,857 against −1,252 ± 614 for the seed program. It stopped after 1 promotion and
+      3 more generations without one. DecisionHoldem is a published CFR-based agent (blueprint strategy). ± is the sample standard deviation over seeds (n = 64 test, 32 dev, 8 for DecisionHoldem), not the standard error. A figure in red is below the seed program.</p>
+    </figure>
+    <p class="pending">For scale: the readable Leduc policy (test 0.106) sits between 30 and 100 iterations of vanilla CFR
+    run on each test variant, which reaches 0.005 after 1,000 iterations. It generalizes across variants without solving
+    any of them, but it is still far from an equilibrium.</p>
+    <p class="pending">HUNL: the champion beats the rule bots (call station, maniac, equity bot) and earlier champions by
+    29,090 mbb/hand on 64 test seeds, but those opponents are easy to exploit. Against DecisionHoldem, a strong
+    published agent, the same program loses about 4.6 big blinds per hand (± 5.7, standard deviation over 8 seeds of 50
+    hands each), so beating weak opponents did not make it strong. The starting program (always call) scores −1.7 big blinds per hand (± 4.2) on the same 8 seeds, so against DecisionHoldem the champion is lower than its starting point (shown in red); with 8 seeds and a standard deviation this large the gap is within noise. DecisionHoldem's search makes every hand take
+    seconds, so this is a small sample; a loop that trains against DecisionHoldem directly is being set up.</p>
+    <div class="finding">
+      <p class="finding-label">A run we threw away</p>
+      <p>The first HUNL run reported +62,790 mbb/hand, which was too good to be true. Its program had found a hole in
+      our harness: the mirrored hand of each duplicate pair was replayed right away in the same process, so it could
+      remember the board and its own earlier cards, which were now its opponent's. Each seat is now played by a
+      separate, fresh process; every deal is seen once per process; and temp files, sockets, subprocesses and
+      native code are rejected. The run was restarted from scratch.</p>
+    </div>
+  </div>
+  {% endcomment %}
+  <div data-panel="embodied" hidden>
+    {% include curves-embodied.html %}
+    <figure class="table-figure">
+      <figcaption><strong>Table 4.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
+      each: scenes 0–1 are train, 2–9 hidden dev (80 episodes), 10–49 test (400 episodes, used once). <em>State</em>
+      gives object poses (privileged). <em>Vision</em> gives only RGB-D from the agent-view and wrist cameras, camera
+      parameters and proprioception.</figcaption>
+      <table>
+        <thead><tr><th>Setting</th><th class="num">Seed</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
+          <tr class="best"><td>LIBERO-10 (long-horizon) · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
+          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0% ± 0 pp</td><td class="num">95.0% ± 21.9 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong> (381 / 400)</td><td>done after 10 generations</td></tr>
+          <tr><td>LIBERO-10 (long-horizon) · vision</td><td class="num">0% ± 0 pp</td><td class="num">91.2% ± 28.5 pp*</td><td class="num"><strong>87.0% ± 33.6 pp</strong> (348 / 400)</td><td>stopped after 8 generations</td></tr>
+          <tr class="ref"><td>OpenVLA, fine-tuned (RGB; Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">84.7% / 53.7%</td><td>—</td></tr>
+          <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">97.6% / 94.5%</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <div class="finding">
+      <p class="finding-label">How to read these numbers</p>
+      <p>No demonstrations and no learned weights: every policy is readable code. State mode is easier than the VLA
+      setting and is not comparable to it. Vision mode is the closest match, but it uses depth and camera calibration,
+      which the VLA models do not. Programs contain routines per task family and generalize across unseen initial
+      scenes, which is what LIBERO's protocol tests.</p>
+      <p>* LIBERO-10 vision ran before the seed guard existed. One improver (generation 5) evaluated its candidate on 40
+      dev scenes through a hand-edited task file, and the generation-6 improver whose program became the champion read
+      that candidate's notes and code, so the dev number is optimistic. Test scenes were never touched; 87.0% is a
+      clean test estimate (per task 65–100%; the microwave task is the weakest). The guard now refuses any seed outside
+      train.</p>
+    </div>
+    <div class="finding">
+      <p class="finding-label">What the programs found by probing</p>
+      <p>The vision program measured that its agent-view estimate of a bowl's centre is biased by about 4 cm, so it
+      re-centres with the wrist camera before grasping. The LIBERO-10 program worked out each goal condition (e.g. the
+      stove counts as on once its knob turns past about 0.45 rad) and found initial scenes where objects fly off the
+      table on the first step, which no policy can solve.</p>
+    </div>
+    <p class="pending">LIBERO-Spatial vision finished its 10 generations at 95.0% on dev. In the last generation two
+    candidates reached 96.3%, but one extra win was not enough for the paired gate. On the 400 test episodes it scored
+    95.3%, in line with dev. LIBERO-10 vision then ran from the LIBERO-Spatial vision champion and stopped after 8
+    generations at 87.0% on test. Next: the vision setting on <strong>LIBERO-Object and LIBERO-Goal</strong>, so that all
+    four suites compare with OpenVLA-OFT, then ManiSkill3. No embodied run is going now.</p>
+  </div>
+  <div data-panel="computer" hidden>
+    {% include curves-computer.html %}
+    <figure class="table-figure">
+      <figcaption><strong>Table 5.</strong> OSWorld, LibreOffice Calc and OS tasks: 71 tasks split 23 / 24 / 24 into
+      train, hidden dev and test, scored by OSWorld's own checkers (success rate). Both runs start from a program that
+      answers DONE at once. <em>Model available</em>: the program may also ask a fixed small model (Qwen3.5-2B) typed
+      multiple-choice questions.</figcaption>
+      <table>
+        <thead><tr><th>Setting</th><th class="num">Seed program</th><th class="num">Train</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>Pure code</td><td class="num">0% ± 0 pp</td><td class="num">65.2% ± 48.7 pp</td><td class="num"><strong>8.3% ± 28.2 pp</strong> (2 / 24)</td><td class="num">after the run</td><td>promoted in generation 1 only; generation 9 running</td></tr>
+          <tr class="best"><td>Model available</td><td class="num">0% ± 0 pp</td><td class="num">78.3% ± 42.2 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong> (5 / 24)</td><td class="num">after the run</td><td>promoted in generations 3 and 6; generation 9 running</td></tr>
+        </tbody>
+      </table>
+    </figure>
+    <div class="finding">
+      <p class="finding-label">A large train–dev gap</p>
+      <p>Both champions solve most train tasks (65% and 78%) but few dev tasks. They are skill libraries: regular
+      expressions map an instruction to a handler that scripts LibreOffice through its UNO interface or runs shell and
+      settings commands. A handler written for a train task rarely covers a dev task, which usually needs a different
+      skill. The better run (5 / 24) probes the desktop first and has 28 spreadsheet and about 20 desktop handlers.</p>
+    </div>
+    <div class="finding">
+      <p class="finding-label">The model was available but not used</p>
+      <p>The 5 / 24 champion never calls the small model; only unpromoted candidates did. So the difference between the
+      two runs is two independent searches over pure-code programs, not evidence that the model helps. The next runs
+      cover eight applications (Calc, Writer, Impress, OS, VS Code, GIMP, VLC, Thunderbird; 222 tasks split by
+      application into 70 / 76 / 76) and tell the improvers where the model can help, so the comparison becomes a real
+      ablation.</p>
+    </div>
+    <p class="pending">The program decides every action in code, including running code inside the desktop and reading
+    its output. The model never writes text or actions; it returns a probability per option and acts as a smart
+    if-statement inside the program (in the style of TypeSafe's Jev). In both settings the program may learn a memory
+    from its own train episodes, frozen during dev and test.</p>
   </div>
   <div data-panel="arc" hidden>
     <h3 id="arc">ARC-AGI-1, 2 and 3: one program</h3>

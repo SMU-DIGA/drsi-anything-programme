@@ -46,16 +46,16 @@ the implementation is not public.
 | Embodied robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
 | Embodied robotics: LIBERO (Spatial state 99.0% test; LIBERO-10 state 99.0% test; Spatial vision 95.3% test; LIBERO-10 vision 87.0% test) | Done |
 | Embodied robotics: SimplerEnv, RoboTwin 2.0 | Planned |
-| ARC-AGI-1, 2 and 3: one program for static puzzles and interactive games | Running |
 | OSWorld (pure code vs code + typed 2B decision function) | Running |
+| ARC-AGI-1, 2 and 3: one program for static puzzles and interactive games | Running |
 
 Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).
 
 Headline results (programs written and refined by LLM improvers; no gradient training, no demonstrations):
 
 - **Atari-5 (pixels only, sticky actions):** above the human score on 4 of 5 games on 64 unseen test seeds; Q*bert 183 → 52,418.
-- **LIBERO (state):** 99.0% on 400 test episodes for both LIBERO-Spatial and LIBERO-10, each after 1 generation; from vision only (RGB-D), 95.3% on LIBERO-Spatial and 87.0% on LIBERO-10.
 - **ScienceWorld:** one program for all 30 task types, 2.5 → 85.0 on all 1,819 official test variations after four rounds and one merged specialist (86.8 on SwiftSage's first 10 variations per type, above SwiftSage with GPT-4: 84.68).
+- **LIBERO (state):** 99.0% on 400 test episodes for both LIBERO-Spatial and LIBERO-10, each after 1 generation; from vision only (RGB-D), 95.3% on LIBERO-Spatial and 87.0% on LIBERO-10.
 
 
 ## Progress log
