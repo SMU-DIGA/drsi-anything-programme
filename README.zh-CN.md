@@ -28,6 +28,9 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 | Improver：Codex CLI、Claude Code、OpenAI 兼容 API（DeepSeek） | Done |
 | 游戏：Atari-5 纯像素输入、sticky actions（5 个游戏中 4 个超过人类；Q*bert test 52,418） | Running |
 | 游戏：VizDoom | Done |
+| 具身机器人：MuJoCo 运动控制、MetaWorld、ManiSkill3 | Done |
+| 具身机器人：LIBERO（Spatial state test 99.0%；LIBERO-10 state test 99.0%；Spatial vision test 95.3%；LIBERO-10 vision test 87.0%） | Done |
+| 具身机器人：SimplerEnv、RoboTwin 2.0 | Planned |
 | ARC-AGI-1、2、3：一个程序同时处理静态谜题和交互游戏 | Running |
 | OSWorld（纯代码 vs 代码 + 2B 小模型的类型化决策函数） | Running |
 
@@ -36,6 +39,7 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 主要结果（全部由 LLM 改进者编写和改进的程序取得，没有梯度训练，也没有示范数据）：
 
 - **Atari-5（纯像素、sticky actions）：** 在 64 个从未用过的 test seed 上，5 个游戏中 4 个超过人类分数；Q*bert 183 → 52,418。
+- **LIBERO（state）：** LIBERO-Spatial 和 LIBERO-10 都只用 1 代，400 局 test 成功率均为 99.0%；只用视觉（RGB-D）时 LIBERO-Spatial 95.3%、LIBERO-10 87.0%。
 - **ScienceWorld：** 一个程序覆盖全部 30 类任务，四轮加一个合并进来的专家程序之后，在全部 1,819 个官方 test 变体上 2.5 → 85.0（按 SwiftSage 协议、每类前 10 个变体为 86.8，超过 SwiftSage 用 GPT-4 的 84.68）。
 
 本仓库只公开方案文档与实验结果，不包含实现代码。

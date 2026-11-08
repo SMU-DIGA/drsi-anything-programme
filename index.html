@@ -23,22 +23,22 @@ layout: default
 <section class="tldr-block" id="tldr">
   <div class="tldr">
     <p class="tldr-label">TL;DR</p>
-    <p>An LLM writes a program that solves a task, such as an Atari bot, a science-experiment agent or a desktop agent.
+    <p>An LLM writes a program that solves a task, such as an Atari bot, a robot-arm controller, a science-experiment agent or a desktop agent.
     A <em>population</em> of LLM improvers (Codex CLI, Claude Code, DeepSeek) then improves that program over many
     generations, using only feedback from interaction with the environment. Promotion is gated on hidden seeds, and
-    we evaluate on game, text science-experiment, ARC-AGI and OSWorld benchmarks the community reports on most often.</p>
+    we evaluate on game, embodied-robotics, text science-experiment, ARC-AGI and OSWorld benchmarks the community reports on most often.</p>
   </div>
   <div class="stats">
     {% comment %}Atari RAM hidden
 <div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input · 788 test with sticky actions</p></div>
 {% endcomment %}
     <div class="stat"><p class="stat-num">183 <span class="arrow">→</span> 52,418</p><p class="stat-label">Q*bert from pixels only, unseen test seeds</p><p class="stat-sub">sticky actions · Atari-5 above human on 4 of 5 games</p></div>
-    {% comment %}<div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>{% endcomment %}
+    <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>
     {% comment %}Atari RAM hidden
 <div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
 {% endcomment %}
     <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 85.0</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
-    <div class="stat"><p class="stat-num">4</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · ScienceWorld · ARC-AGI · OSWorld</p></div>
+    <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · LIBERO robotics · ScienceWorld · ARC-AGI · OSWorld</p></div>
   </div>
 </section>
 
@@ -63,7 +63,7 @@ layout: default
   skills and its notes, is improved generation after generation by a heterogeneous population of LLM improvers.
   Each candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We
   study when such loops keep improving, what transfers across tasks, and how they compare with RL under the same
-  environment-step budget, on games (Atari), text science experiments (ScienceWorld), abstract reasoning (ARC-AGI-1, 2 and 3) and OSWorld.</p>
+  environment-step budget, on games (Atari), embodied manipulation (LIBERO, ManiSkill3), text science experiments (ScienceWorld), abstract reasoning (ARC-AGI-1, 2 and 3) and OSWorld.</p>
 </section>
 
 <div class="article-layout">
@@ -93,18 +93,16 @@ layout: default
       </ul>
       <p class="domain-note">Same suite as <em>Learning Beyond Gradients</em>, so results compare directly.</p>
     </div>
-    {% comment %}
     <div class="domain">
       <h4>Embodied robotics</h4>
       <ul>
         <li>MetaWorld · MuJoCo <span class="badge done">Done</span></li>
-        <li>LIBERO <span class="badge running">Running</span></li>
+        <li>LIBERO <span class="badge done">Done</span></li>
         <li>ManiSkill3 <span class="badge done">Done</span></li>
         <li>SimplerEnv · RoboTwin 2.0 <span class="badge planned">Planned</span></li>
       </ul>
       <p class="domain-note">State mode (object poses) and vision mode (RGB-D and camera parameters only).</p>
     </div>
-    {% endcomment %}
     <div class="domain">
       <h4>OSWorld</h4>
       <ul>
@@ -135,10 +133,10 @@ layout: default
   <p>Every number is the score of a <strong>program written and refined by LLM improvers</strong>: no gradient
   training, no demonstrations. A candidate is promoted only if it beats the incumbent in a paired bootstrap test on
   <strong>hidden dev seeds</strong> that no improver has seen. <strong>Test seeds</strong> are used once, after a run
-  stops. Status: 7 Nov 2026.</p>
+  stops. Status: 8 Nov 2026.</p>
   <figure class="table-figure">
     <figcaption><strong>Table 1.</strong> Headline results, one row per benchmark, on test seeds or tasks that no
-    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below. <strong>± is the sample standard deviation over seeds</strong> (n − 1), not the standard error: n = 64 for Atari test, 1,819 variations for ScienceWorld, 24 tasks for OSWorld, 100 / 80 puzzles and 8 games for ARC-AGI dev. For a success rate it is the std of the 0 / 1 outcomes, in percentage points. For ScienceWorld (score 0–100) it is the std over the 30 task-type means. *SwiftSage calls GPT-4 at run time, uses the first 10 test variations per type (270 episodes) and counts a failed episode at its last non-negative score; our program calls no model, and a failed episode counts 0.</figcaption>
+    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below. <strong>± is the sample standard deviation over seeds</strong> (n − 1), not the standard error: n = 64 for Atari test, 400 episodes for LIBERO, 1,819 variations for ScienceWorld, 24 tasks for OSWorld, 100 / 80 puzzles and 8 games for ARC-AGI dev. For a success rate it is the std of the 0 / 1 outcomes, in percentage points. For ScienceWorld (score 0–100) it is the std over the 30 task-type means. *SwiftSage calls GPT-4 at run time, uses the first 10 test variations per type (270 episodes) and counts a failed episode at its last non-negative score; our program calls no model, and a failed episode counts 0.</figcaption>
     <table>
       <thead><tr><th>Domain</th><th>Benchmark</th><th>Protocol</th><th class="num">Seed program</th><th class="num">Best program</th><th class="num">Reference</th></tr></thead>
       <tbody>
@@ -151,21 +149,22 @@ layout: default
         <tr><td>Atari</td><td>Phoenix, pixels only</td><td>sticky actions, test</td><td class="num">745 ± 605</td><td class="num"><strong>65,076 ± 19,536</strong></td><td class="num">human 7,243; Muesli 805,305</td></tr>
         {% comment %}<tr><td>Poker</td><td>Leduc variants, NashConv ↓</td><td>24 unseen variants, test</td><td class="num">1.331 ± 0.681</td><td class="num"><strong>0.106 ± 0.030</strong></td><td class="num">CFR, 100 iterations 0.045</td></tr>{% endcomment %}
         {% comment %}<tr><td>Poker</td><td>HUNL vs DecisionHoldem, mbb/hand ↑</td><td>400 hands, 8 unseen seeds</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td><td class="num">0 = break even</td></tr>{% endcomment %}
-        {% comment %}<tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>{% endcomment %}
-        {% comment %}<tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp / 99.0% ± 10.0 pp</strong></td><td class="num">privileged state</td></tr>{% endcomment %}
+        <tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>
+        <tr><td>Robotics</td><td>LIBERO-10, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>87.0% ± 33.6 pp</strong></td><td class="num">OpenVLA-OFT 94.5%</td></tr>
+        <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp / 99.0% ± 10.0 pp</strong></td><td class="num">privileged state</td></tr>
         {% include row-scienceworld.html %}
-        <tr><td>ARC-AGI</td><td>ARC-AGI-1 / 2 / 3, one program</td><td>100 / 80 dev puzzles, 8 dev games (paused)</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>40.0%</strong> / 1.3% / 0%</td><td class="num">—</td></tr>
+        <tr><td>ARC-AGI</td><td>ARC-AGI-1 / 2 / 3, one program</td><td>100 / 80 dev puzzles, 8 dev games (paused)</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>40.0%</strong> / 1.3% / 1.5%</td><td class="num">—</td></tr>
         <tr><td>OSWorld</td><td>Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>
       </tbody>
     </table>
   </figure>
   <p class="pending">In every table, shaded rows are promoted versions and grey rows are references. Curves follow
   the incumbent on hidden dev, one point per generation; dashed lines are references; hover a point for its value.</p>
-  <p class="prog-link"><a class="pill" href="{{ '/programs/' | relative_url }}">Read the learned programs: the merged Atari-5 program, the ScienceWorld program and the OSWorld programs, with full source →</a></p>
+  <p class="prog-link"><a class="pill" href="{{ '/programs/' | relative_url }}">Read the learned programs: the merged Atari-5 program, the LIBERO programs, the ScienceWorld program and the OSWorld programs, with full source →</a></p>
   <div class="tabs" role="tablist">
     <button class="on" data-tab="atari" role="tab">Atari</button>
-    {% comment %}<button data-tab="poker" role="tab">Poker</button>
-    <button data-tab="embodied" role="tab">Embodied robotics</button>{% endcomment %}
+    {% comment %}<button data-tab="poker" role="tab">Poker</button>{% endcomment %}
+    <button data-tab="embodied" role="tab">Embodied robotics</button>
     <button data-tab="computer" role="tab">OSWorld</button>
     <button data-tab="science" role="tab">ScienceWorld</button>
     <button data-tab="arc" role="tab">ARC-AGI</button>
@@ -259,7 +258,7 @@ layout: default
     <p class="pending">Running now, all with sticky actions and from the generic seed program: the
     <strong>Atari-5</strong> subset (Battle Zone, Double Dunk, Name This Game, Phoenix, Q*bert; Aitchison et al., 2023),
     whose scores predict performance on the full suite, then the remaining games of <strong>Atari-57</strong>, four runs at
-    a time. Costs are in Table 8, under <em>Improvers and cost</em>.</p>
+    a time. Costs are in Table 9, under <em>Improvers and cost</em>.</p>
     {% comment %}Atari RAM hidden
 <details class="more">
       <summary>Earlier runs without sticky actions</summary>
@@ -362,7 +361,7 @@ layout: default
     </details>
 {% endcomment %}
   </div>
-  {% comment %}Poker and embodied hidden (results not representative yet)
+  {% comment %}Poker hidden (results not representative yet)
   <div data-panel="poker" hidden>
     {% include curves-poker.html %}
     {% include curves-hunl.html %}
@@ -413,10 +412,11 @@ layout: default
       native code are rejected. The run was restarted from scratch.</p>
     </div>
   </div>
+  {% endcomment %}
   <div data-panel="embodied" hidden>
     {% include curves-embodied.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 4.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
+      <figcaption><strong>Table 3.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
       each: scenes 0–1 are train, 2–9 hidden dev (80 episodes), 10–49 test (400 episodes, used once). <em>State</em>
       gives object poses (privileged). <em>Vision</em> gives only RGB-D from the agent-view and wrist cameras, camera
       parameters and proprioception.</figcaption>
@@ -453,15 +453,14 @@ layout: default
     </div>
     <p class="pending">LIBERO-Spatial vision finished its 10 generations at 95.0% on dev. In the last generation two
     candidates reached 96.3%, but one extra win was not enough for the paired gate. On the 400 test episodes it scored
-    95.3%, in line with dev. Running next: the vision setting on <strong>LIBERO-10, LIBERO-Object and LIBERO-Goal</strong>,
-    each starting from the LIBERO-Spatial vision champion, so that all four suites compare with OpenVLA-OFT. ManiSkill3 is
-    queued.</p>
+    95.3%, in line with dev. LIBERO-10 vision then ran from the LIBERO-Spatial vision champion and stopped after 8
+    generations at 87.0% on test. Next: the vision setting on <strong>LIBERO-Object and LIBERO-Goal</strong>, so that all
+    four suites compare with OpenVLA-OFT, then ManiSkill3. No embodied run is going now.</p>
   </div>
-  {% endcomment %}
   <div data-panel="computer" hidden>
     {% include curves-computer.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 3.</strong> OSWorld, LibreOffice Calc and OS tasks: 71 tasks split 23 / 24 / 24 into
+      <figcaption><strong>Table 4.</strong> OSWorld, LibreOffice Calc and OS tasks: 71 tasks split 23 / 24 / 24 into
       train, hidden dev and test, scored by OSWorld's own checkers (success rate). Both runs start from a program that
       answers DONE at once. <em>Model available</em>: the program may also ask a fixed small model (Qwen3.5-2B) typed
       multiple-choice questions.</figcaption>
@@ -557,7 +556,7 @@ layout: default
     seeds, so its dev curve is drawn separately) in all 6, round 3 (after R3) in 5 of 7, round 4 (after R4) in 1 of 2, then the merged electricity specialist. Right: the mean over task types on <strong>all 1,819
     official test variations</strong>, each played once, for the incumbent of every generation. On test, round 2
     gained most by its generation 4 (64.1, 65.9, 65.6, 67.5, 67.2, 67.5) and was flat after it, although dev kept rising.
-    Dashed lines: published agents (SwiftSage protocol, see Table 4).</p>
+    Dashed lines: published agents (SwiftSage protocol, see Table 5).</p>
     <h4>Every task type, one program</h4>
     <p>Full-test score (0–100) of the incumbent of every generation, per task type; <span class="bad">red</span> marks a
     point below the seed program; the dashed line is SwiftSage (GPT-4) on that type; n is the number of official test
@@ -566,7 +565,7 @@ layout: default
     cream, and the program never learned to reach their temperatures.</p>
     {% include curves-scienceworld-tasks.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 4.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
+      <figcaption><strong>Table 5.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
       seed program and champion on every official test variation (n), mean ± sample std over variations; a failed
       episode counts 0. <em>First 10</em>: the champion on the first 10 test variations of each type, the episodes
       SwiftSage used. References from SwiftSage (Lin et al., NeurIPS 2023), Table 1: first 10 test variations, a failed
@@ -597,21 +596,21 @@ layout: default
     <code>obs["kind"]</code> and must handle both; it is never told the puzzle's or game's name, nor whether an answer
     was right.</p>
     <figure class="table-figure">
-      <figcaption><strong>Table 5.</strong> ARC splits. Test is the official public evaluation sets and 8 of the 25
+      <figcaption><strong>Table 6.</strong> ARC splits. Test is the official public evaluation sets and 8 of the 25
       public ARC-AGI-3 games, used once after the run. Dev (the promotion gate) uses only puzzles new in ARC-AGI-2 and
       games never shown in train. Every task whose name appears in either evaluation set, or in ARC-AGI-1 dev, is kept
       out of train and dev, including the revised copies of ARC-AGI-1 evaluation tasks inside ARC-AGI-2 training.</figcaption>
       <table>
         <thead><tr><th>Split</th><th class="num">ARC-AGI-1</th><th class="num">ARC-AGI-2</th><th class="num">ARC-AGI-3</th><th>Source</th></tr></thead>
         <tbody>
-          <tr><td>Train</td><td class="num">300</td><td class="num">445</td><td class="num">9 games</td><td>public training sets; 100 + 100 + 9 rotated in per generation</td></tr>
+          <tr><td>Train</td><td class="num">592</td><td class="num">153</td><td class="num">9 games</td><td>public training sets; 100 + 100 + 9 rotated in per generation. Since generation 7 the 292 revised ARC-AGI-1 puzzles inside ARC-AGI-2 training count as ARC-AGI-1, so the ARC-AGI-2 train score, like dev, measures puzzles new in version 2</td></tr>
           <tr><td>Dev (hidden)</td><td class="num">100</td><td class="num">80</td><td class="num">8 games</td><td>held-out training puzzles; ARC-AGI-2 dev only puzzles new in version 2</td></tr>
           <tr><td>Test (once)</td><td class="num">400</td><td class="num">120</td><td class="num">8 games</td><td>official public evaluation sets</td></tr>
         </tbody>
       </table>
     </figure>
     <figure class="table-figure">
-      <figcaption><strong>Table 6.</strong> ARC on hidden dev, the incumbent after each generation (success rate per
+      <figcaption><strong>Table 7.</strong> ARC on hidden dev, the incumbent after each generation (success rate per
       puzzle; level-weighted score for the games). The seed program copies the input and moves at random. Test is run
       once, after the run.</figcaption>
       <table>
@@ -623,12 +622,13 @@ layout: default
           <tr><td>3</td><td>no promotion</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
           <tr class="best"><td>4</td><td>Claude Opus</td><td class="num">3,653</td><td class="num"><u>37.0%</u></td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num"><u>0.202</u></td></tr>
           <tr><td>5</td><td>no promotion</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr class="best"><td>6</td><td>Claude Sonnet</td><td class="num">3,819</td><td class="num"><strong>40.0%</strong></td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num"><strong>0.218</strong></td></tr>
+          <tr class="best"><td>6</td><td>Claude Sonnet</td><td class="num">3,819</td><td class="num"><strong>40.0%</strong></td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num">0.218</td></tr>
+          <tr class="best"><td>7</td><td>Claude Opus</td><td class="num">4,369</td><td class="num"><strong>40.0%</strong></td><td class="num"><strong>1.3%</strong></td><td class="num"><strong>1.5%</strong></td><td class="num"><strong>0.219</strong></td></tr>
         </tbody>
       </table>
     </figure>
     <div class="finding">
-      <p class="finding-label">ARC-AGI-1 rises; ARC-AGI-2 and ARC-AGI-3 do not yet</p>
+      <p class="finding-label">ARC-AGI-1 rises and ARC-AGI-3 starts; ARC-AGI-2 does not yet</p>
       <p>The program is a generate-and-verify solver: it searches grid transformations (symmetries and colour maps,
       scaling and tiling, symmetry and period completion, boolean operations on split parts, object selection and
       movement, local rule tables, two-step compositions) and answers only with one that reproduces every
@@ -637,26 +637,34 @@ layout: default
       inside ARC-AGI-2 training, and dev uses only puzzles new in ARC-AGI-2. Train also overfits: in generation 3 an
       Opus candidate grew to 4,189 lines and reached 68.5% on its ARC-AGI-1 train puzzles but only 36% on dev, short of
       the gate. In the games, an early candidate cleared the first level of three dev games, but no promoted version
-      clears any.</p>
+      cleared any until generation 7. There an Opus improver found that most games draw a step or energy counter that
+      changes on every action, so every frame looked new and the program's state graph never revisited a state;
+      separating the counter from the rest of the frame let it revisit states, and the promoted version clears the
+      first level of 3 of the 8 dev games (3 wins, 0 losses against the incumbent). In the same generation a Sonnet
+      candidate solved 7 more ARC-AGI-1 train puzzles but not a single additional dev puzzle.</p>
     </div>
-    <p class="pending">Paused after generation 6 (of at most 10); six generations cost $212 in improver sessions; test not yet run. Three Claude improvers (Opus and two Sonnet); the improvers
+    <p class="pending">Paused after generation 7 (of at most 10); seven generations cost $243 in improver sessions, plus
+    $61 for two generations we discarded because we had started them with the wrong Python environment; test not yet
+    run. Next, the improvers are asked to make the program infer each rule at run time (observe, hypothesise, test,
+    revise, shared by puzzles and games) and to measure it by leave-one-out on the demonstration pairs, and train adds
+    ConceptARC, MINI-ARC and RE-ARC puzzles, never a dev or test rule. Three Claude improvers (Opus and two Sonnet); the improvers
     cannot read the data, the split manifest or the game engine, and the guard rejects a program that does.</p>
   </div>
   <div data-panel="process" hidden>
     <figure class="table-figure">
-      <figcaption><strong>Table 7.</strong> Who produced the promoted versions. Each generation runs one candidate per
+      <figcaption><strong>Table 8.</strong> Who produced the promoted versions. Each generation runs one candidate per
       improver, in parallel, from the same incumbent.</figcaption>
       <table>
         <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
         <tbody>
-          <tr><td>Claude Code (agent with tools)</td><td class="num">26</td><td>ScienceWorld 19 (rounds 1–4 and the electricity specialist) · OSWorld 3 · ARC-AGI 4</td></tr>
-          <tr><td>Codex CLI (agent with tools)</td><td class="num">15</td><td>Atari-5 pixels 14 · OSWorld 1</td></tr>
+          <tr><td>Claude Code (agent with tools)</td><td class="num">32</td><td>ScienceWorld 19 (rounds 1–4 and the electricity specialist) · LIBERO 5 · OSWorld 3 · ARC-AGI 5</td></tr>
+          <tr><td>Codex CLI (agent with tools)</td><td class="num">17</td><td>Atari-5 pixels 14 · LIBERO 2 · OSWorld 1</td></tr>
           <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">4</td><td>Atari-5 pixels 3 · ScienceWorld 1</td></tr>
         </tbody>
       </table>
     </figure>
     <figure class="table-figure">
-      <figcaption><strong>Table 8.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
+      <figcaption><strong>Table 9.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
       gates, the tests and the improvers' own trial runs (for Atari, one step is four frames). <em>Agent hours</em> is the
       wall time of all improver sessions. Claude Code reports its cost in USD; Codex CLI reports tokens only. Runs still in
       progress are not listed.</figcaption>
@@ -673,9 +681,10 @@ layout: default
             <tr><td>Ms. Pac-Man</td><td>sticky</td><td class="num">97.1 M</td><td class="num">11.3</td><td class="num">$18</td><td class="num">2.3 M</td><td class="num">24</td></tr>
             <tr><td>Montezuma's Revenge</td><td>sticky</td><td class="num">79.9 M</td><td class="num">13.0</td><td class="num">$32</td><td class="num">3.7 M</td><td class="num">30</td></tr>
 {% endcomment %}
-            {% comment %}<tr><td>LIBERO-Spatial</td><td>state</td><td class="num">0.3 M</td><td class="num">1.0</td><td class="num">$2</td><td class="num">0.1 M</td><td class="num">6</td></tr>{% endcomment %}
-            {% comment %}<tr><td>LIBERO-10</td><td>state</td><td class="num">1.7 M</td><td class="num">4.8</td><td class="num">$20</td><td class="num">0.5 M</td><td class="num">21</td></tr>{% endcomment %}
-            {% comment %}<tr><td>LIBERO-Spatial</td><td>vision</td><td class="num">1.0 M</td><td class="num">11.5</td><td class="num">$27</td><td class="num">1.3 M</td><td class="num">32</td></tr>{% endcomment %}
+            <tr><td>LIBERO-Spatial</td><td>state</td><td class="num">0.3 M</td><td class="num">1.0</td><td class="num">$2</td><td class="num">0.1 M</td><td class="num">6</td></tr>
+            <tr><td>LIBERO-10</td><td>state</td><td class="num">1.7 M</td><td class="num">4.8</td><td class="num">$20</td><td class="num">0.5 M</td><td class="num">21</td></tr>
+            <tr><td>LIBERO-Spatial</td><td>vision</td><td class="num">1.0 M</td><td class="num">11.5</td><td class="num">$27</td><td class="num">1.3 M</td><td class="num">32</td></tr>
+            <tr><td>LIBERO-10</td><td>vision</td><td class="num">1.3 M</td><td class="num">12.8</td><td class="num">$15</td><td class="num">1.5 M</td><td class="num">28</td></tr>
             {% comment %}<tr><td>Leduc variants</td><td>10 generations</td><td class="num">—</td><td class="num">16.0</td><td class="num">$31</td><td class="num">2.6 M</td><td class="num">40</td></tr>{% endcomment %}
             <tr><td>OSWorld</td><td>pure code</td><td class="num">—</td><td class="num">23.5</td><td class="num">$29</td><td class="num">1.1 M</td><td class="num">24</td></tr>
             <tr><td>OSWorld</td><td>model available</td><td class="num">—</td><td class="num">23.6</td><td class="num">$38</td><td class="num">0.9 M</td><td class="num">23</td></tr>
