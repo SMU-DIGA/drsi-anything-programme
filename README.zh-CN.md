@@ -26,12 +26,12 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 | RSI 主循环、版本库、晋升门槛、断点续跑、环境步数统计 | Done |
 | 隔离评测：策略运行在独立进程，拿不到 reward 和 seed | Done |
 | Improver：Codex CLI、Claude Code、OpenAI 兼容 API（DeepSeek） | Done |
-| 游戏：Atari-5 纯像素输入、sticky actions（5 个游戏中 4 个超过人类；Q*bert test 52,418） | Running |
+| 游戏：Atari-5 纯像素输入、sticky actions（5 个游戏中 4 个超过人类；Q*bert test 52,418） | Done |
 | 游戏：VizDoom | Done |
 | 具身机器人：MuJoCo 运动控制、MetaWorld、ManiSkill3 | Done |
 | 具身机器人：LIBERO（Spatial state test 99.0%；LIBERO-10 state test 99.0%；Spatial vision test 95.3%；LIBERO-10 vision test 87.0%） | Done |
 | 具身机器人：SimplerEnv、RoboTwin 2.0 | Planned |
-| OSWorld（纯代码 vs 代码 + 2B 小模型的类型化决策函数） | Running |
+| OSWorld：Calc + OS（test：可调用小模型 16.7%，纯代码 4.2%） | Done |
 | ARC-AGI-1、2、3：一个程序同时处理静态谜题和交互游戏 | Running |
 
 状态：Done（已接入并测试）· Running（实验进行中）· In progress（开发中）· Planned（尚未开始）。

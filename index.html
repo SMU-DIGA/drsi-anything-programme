@@ -17,220 +17,152 @@ layout: default
     <a class="pill" href="#bibtex"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5h6l2.5 2.5v8.5h-8.5z M10 2.5v2.5h2.5 M6 8h4 M6 10.5h4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>BibTeX</a>
     <a class="pill pill-dark" href="https://github.com/{{ site.repository }}"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
   </div>
-  <p class="hook"><em>Deep RL updates weights. Prompt optimization tunes instructions. We let LLMs rewrite the <strong>program itself</strong>, keep a version only if it wins on seeds it never saw, and repeat.</em></p>
+    <p class="hook">LLMs rewrite the <strong>program</strong>, not the weights. A version survives only if it wins on seeds no one has seen.</p>
 </section>
 
 <section class="tldr-block" id="tldr">
   <div class="tldr">
     <p class="tldr-label">TL;DR</p>
-    <p>An LLM writes a program that solves a task, such as an Atari bot, a science-experiment agent, a robot-arm controller or a desktop agent.
-    A <em>population</em> of LLM improvers (Codex CLI, Claude Code, DeepSeek) then improves that program over many
-    generations, using only feedback from interaction with the environment. Promotion is gated on hidden seeds, and
-    we evaluate on game, text science-experiment, embodied-robotics, OSWorld and ARC-AGI benchmarks the community reports on most often.</p>
+    <p>Coding agents write a program for a task and improve it over many generations, using only feedback from the
+    environment. A new version replaces the old one only if it wins on hidden seeds. One loop, five domains.</p>
   </div>
   <div class="stats">
-    {% comment %}Atari RAM hidden
-<div class="stat"><p class="stat-num">2.2 <span class="arrow">→</span> 864</p><p class="stat-label">Breakout: the maximum on all 64 unseen test seeds</p><p class="stat-sub">4 generations · RAM input · 788 test with sticky actions</p></div>
-{% endcomment %}
-    <div class="stat"><p class="stat-num">183 <span class="arrow">→</span> 52,418</p><p class="stat-label">Q*bert from pixels only, unseen test seeds</p><p class="stat-sub">sticky actions · Atari-5 above human on 4 of 5 games</p></div>
-    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 85.0</p><p class="stat-label">ScienceWorld, all 30 task types, one program</p><p class="stat-sub">1,819 official test variations · no model at run time</p></div>
-    <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 99%</p><p class="stat-label">LIBERO-Spatial and LIBERO-10 (state), test</p><p class="stat-sub">1 generation each · 400 test episodes</p></div>
-    {% comment %}Atari RAM hidden
-<div class="stat"><p class="stat-num">277 <span class="arrow">→</span> 57,606</p><p class="stat-label">Ms. Pac-Man, unseen test seeds</p><p class="stat-sub">9 promotions · 38,306 test with sticky actions · human 6,952</p></div>
-{% endcomment %}
-    <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · ScienceWorld · LIBERO robotics · OSWorld · ARC-AGI</p></div>
+    <div class="stat"><p class="stat-num">183 <span class="arrow">→</span> 52,418</p><p class="stat-label">Q*bert, pixels only</p><p class="stat-sub">Atari-5 above human on 4 of 5 games</p></div>
+    <div class="stat"><p class="stat-num">2.5 <span class="arrow">→</span> 85.0</p><p class="stat-label">ScienceWorld, one program</p><p class="stat-sub">all 30 types · above SwiftSage (GPT-4)</p></div>
+    <div class="stat"><p class="stat-num">0 <span class="arrow">→</span> 95.3%</p><p class="stat-label">LIBERO-Spatial, vision only</p><p class="stat-sub">400 test episodes · no demonstrations</p></div>
+    <div class="stat"><p class="stat-num">5</p><p class="stat-label">Domains</p><p class="stat-sub">Atari · ScienceWorld · LIBERO · OSWorld · ARC-AGI</p></div>
   </div>
 </section>
 
 <figure class="teaser">
   {% include teaser.svg %}
-  <figcaption><strong>Figure 1.</strong> The self-improvement loop. Several coding agents and LLMs edit the current
-  program in parallel. Every candidate is re-scored in isolation, and only a version that beats the incumbent
-  on <em>hidden</em> dev seeds is promoted. The object being improved is software (policy, skills and a notes
-  file that serves as memory); editing the weights of an LLM the program calls is planned.</figcaption>
+  <figcaption><strong>Figure 1.</strong> Improvers edit the current program in parallel. Each candidate is re-scored
+  in isolation and promoted only if it beats the incumbent on hidden dev seeds.</figcaption>
 </figure>
 
 <section class="abstract">
   <h2 class="abstract-title">Abstract</h2>
-  <p>Deep reinforcement learning improves agents by adjusting weights. Recent evidence suggests that coding agents
-  editing <strong>hand-written programs</strong> can reach competitive scores on Atari, MuJoCo and VizDoom without
-  any gradient step, and that cross-domain <strong>recursive self-improvement</strong> loops benefit from frozen
-  evaluation protocols. <strong>DRSI-Anything</strong> combines the two into a <strong>delegative</strong> loop: the
-  models that reason and edit (LLMs) do not act in the environment themselves; they delegate the acting to an
-  artifact they write and keep improving, and what is learned is stored in that delegate. Our main delegate is a
-  neuro-symbolic one, readable, testable code and notes that persist across generations, optionally calling
-  smaller models as tools, whose weights an improver may also write directly (weight-space programming, planned); neuro-symbolic programs are one way to delegate, not the only one. A program, consisting of a policy, its
-  skills and its notes, is improved generation after generation by a heterogeneous population of LLM improvers.
-  Each candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We
-  study when such loops keep improving, what transfers across tasks, and how they compare with RL under the same
-  environment-step budget, on games (Atari), text science experiments (ScienceWorld), embodied manipulation (LIBERO, ManiSkill3), OSWorld and abstract reasoning (ARC-AGI-1, 2 and 3).</p>
+  <p>Deep RL improves an agent by changing weights. <strong>DRSI-Anything</strong> lets LLMs improve a program
+  instead: they <strong>delegate</strong> the acting to a policy they write, with its skills and notes, so what is
+  learned is stored as readable code. A population of coding agents edits the program generation after generation;
+  every candidate is re-evaluated in an isolated process and promoted only by a paired test on hidden seeds. We study
+  when such loops keep improving, what transfers, and how they compare with RL, on Atari, ScienceWorld, LIBERO,
+  OSWorld and ARC-AGI.</p>
 </section>
 
 <div class="article-layout">
   <article class="article-body" data-numbered>
 
   <h2 id="design">Design</h2>
-  <p class="lead">LLMs improve a program; a version is kept only if it wins on seeds no one saw.</p>
   <div class="step-grid">
-    <div class="step"><p class="step-num">1</p><h4>Propose</h4><p>Each improver edits its own copy of the current program, with feedback and an evaluator on <em>train</em> seeds only.</p></div>
-    <div class="step"><p class="step-num">2</p><h4>Re-evaluate</h4><p>Every candidate is re-scored in isolation; scores the improver reports are ignored.</p></div>
-    <div class="step"><p class="step-num">3</p><h4>Promote</h4><p>The best candidate replaces the incumbent only if a paired bootstrap test on <em>hidden dev seeds</em> says it is better.</p></div>
-    <div class="step"><p class="step-num">4</p><h4>Simplify</h4><p>Optionally, the winner is shortened, and the shorter version is kept only if its dev score does not drop.</p></div>
+    <div class="step"><p class="step-num">1</p><h4>Propose</h4><p>Each improver edits its own copy, seeing train seeds only.</p></div>
+    <div class="step"><p class="step-num">2</p><h4>Re-evaluate</h4><p>Every candidate is re-scored in isolation; self-reported scores are ignored.</p></div>
+    <div class="step"><p class="step-num">3</p><h4>Promote</h4><p>Only a paired win on <em>hidden dev seeds</em> replaces the incumbent.</p></div>
+    <div class="step"><p class="step-num">4</p><h4>Test once</h4><p>Test seeds are used after the run, never to choose a version.</p></div>
   </div>
   {% capture design_md %}{% include design.md %}{% endcapture %}
   {{ design_md | markdownify }}
 
   <h2 id="environments">Environments</h2>
-  <p class="lead">Benchmarks people already trust.</p>
-  <p>We prioritize the benchmarks the community reports on most often, so that every number is directly comparable with
-  published RL and VLA results.</p>
   <div class="domains">
     <div class="domain">
       <h4>Games</h4>
       <ul>
-        <li>Atari (pixels) <span class="badge running">Running</span></li>
+        <li>Atari-5 (pixels) <span class="badge done">Done</span></li>
         <li>VizDoom <span class="badge done">Done</span></li>
       </ul>
-      <p class="domain-note">Same suite as <em>Learning Beyond Gradients</em>, so results compare directly.</p>
+      <p class="domain-note">Same suite as <em>Learning Beyond Gradients</em>.</p>
     </div>
     <div class="domain">
-      <h4>Science agents (text)</h4>
+      <h4>Science (text)</h4>
       <ul>
         <li>ScienceWorld <span class="badge done">Done</span></li>
       </ul>
-      <p class="domain-note">30 text-based science experiments; dev and test use ScienceWorld's own unseen variations.</p>
+      <p class="domain-note">30 experiment types; unseen official variations.</p>
     </div>
     <div class="domain">
       <h4>Embodied robotics</h4>
       <ul>
-        <li>MetaWorld · MuJoCo <span class="badge done">Done</span></li>
         <li>LIBERO <span class="badge done">Done</span></li>
-        <li>ManiSkill3 <span class="badge done">Done</span></li>
+        <li>ManiSkill3 · MetaWorld · MuJoCo <span class="badge done">Done</span></li>
         <li>SimplerEnv · RoboTwin 2.0 <span class="badge planned">Planned</span></li>
       </ul>
-      <p class="domain-note">State mode (object poses) and vision mode (RGB-D and camera parameters only).</p>
+      <p class="domain-note">State (object poses) or vision (RGB-D only).</p>
     </div>
     <div class="domain">
       <h4>OSWorld</h4>
       <ul>
-        <li>OSWorld <span class="badge running">Running</span></li>
+        <li>Calc + OS <span class="badge done">Done</span></li>
+        <li>All ten applications <span class="badge planned">Planned</span></li>
       </ul>
-      <p class="domain-note">A desktop agent with an app-level skill library, split by application.</p>
+      <p class="domain-note">Scored by OSWorld's own checkers.</p>
     </div>
     <div class="domain">
       <h4>Abstract reasoning</h4>
       <ul>
         <li>ARC-AGI-1, 2 and 3 <span class="badge running">Running</span></li>
       </ul>
-      <p class="domain-note">Static grid puzzles and interactive games, one program for all three versions.</p>
+      <p class="domain-note">One program for puzzles and games.</p>
     </div>
   </div>
-  <p class="status-legend"><span class="badge done">Done</span> integrated and tested <span class="badge running">Running</span> experiment in progress <span class="badge wip">In progress</span> being built <span class="badge planned">Planned</span> not started</p>
   {% capture environments_md %}{% include environments.md %}{% endcapture %}
   {{ environments_md | markdownify }}
 
   <h2 id="results">Results</h2>
-  <p>Every number is the score of a <strong>program written and refined by LLM improvers</strong>: no gradient
-  training, no demonstrations. A candidate is promoted only if it beats the incumbent in a paired bootstrap test on
-  <strong>hidden dev seeds</strong> that no improver has seen. <strong>Test seeds</strong> are used once, after a run
-  stops. Status: 8 Nov 2026.</p>
+  <p class="lead">Every number is a program written by LLMs: no gradients, no demonstrations. Status: 8 Nov 2026.</p>
   <figure class="table-figure">
-    <figcaption><strong>Table 1.</strong> Headline results, one row per benchmark, on test seeds or tasks that no
-    improver or gate ever saw (dev where the run is still going). Details and references are in the tabs below. <strong>± is the sample standard deviation over seeds</strong> (n − 1), not the standard error: n = 64 for Atari test, 400 episodes for LIBERO, 1,819 variations for ScienceWorld, 24 tasks for OSWorld, 100 / 80 puzzles and 8 games for ARC-AGI dev. For a success rate it is the std of the 0 / 1 outcomes, in percentage points. For ScienceWorld (score 0–100) it is the std over the 30 task-type means. *SwiftSage calls GPT-4 at run time, uses the first 10 test variations per type (270 episodes) and counts a failed episode at its last non-negative score; our program calls no model, and a failed episode counts 0.</figcaption>
+    <figcaption><strong>Table 1.</strong> Headline results on test seeds no improver or gate saw (dev where marked).
+    ± is the sample std over seeds; for success rates, of the 0 / 1 outcomes (pp). *SwiftSage calls GPT-4 at run time
+    and scores failures more leniently; our program calls no model.</figcaption>
     <table>
-      <thead><tr><th>Domain</th><th>Benchmark</th><th>Protocol</th><th class="num">Seed program</th><th class="num">Best program</th><th class="num">Reference</th></tr></thead>
+      <thead><tr><th>Domain</th><th>Benchmark</th><th>Protocol</th><th class="num">Seed</th><th class="num">Best</th><th class="num">Reference</th></tr></thead>
       <tbody>
-        {% comment %}Atari RAM hidden
-<tr><td>Atari</td><td>Ms. Pac-Man</td><td>sticky actions, test</td><td class="num">9,781 ± 6,014</td><td class="num"><strong>38,306 ± 14,389</strong></td><td class="num">human 6,952</td></tr>
-        <tr><td>Atari</td><td>Breakout</td><td>sticky actions, test</td><td class="num">473 ± 149</td><td class="num"><strong>788 ± 119</strong></td><td class="num">human 30.5</td></tr>
-        <tr><td>Atari</td><td>Montezuma's Revenge</td><td>sticky actions, dev (running)</td><td class="num">3,441 ± 9,233</td><td class="num"><strong>113,659 ± 8,986</strong></td><td class="num">human 4,753</td></tr>
-{% endcomment %}
-        <tr><td>Atari</td><td>Q*bert, pixels only</td><td>sticky actions, test</td><td class="num">183 ± 125</td><td class="num"><strong>52,418 ± 9,199</strong></td><td class="num">human 13,455; BTR 42,927</td></tr>
-        <tr><td>Atari</td><td>Phoenix, pixels only</td><td>sticky actions, test</td><td class="num">745 ± 605</td><td class="num"><strong>65,076 ± 19,536</strong></td><td class="num">human 7,243; Muesli 805,305</td></tr>
-        {% comment %}<tr><td>Poker</td><td>Leduc variants, NashConv ↓</td><td>24 unseen variants, test</td><td class="num">1.331 ± 0.681</td><td class="num"><strong>0.106 ± 0.030</strong></td><td class="num">CFR, 100 iterations 0.045</td></tr>{% endcomment %}
-        {% comment %}<tr><td>Poker</td><td>HUNL vs DecisionHoldem, mbb/hand ↑</td><td>400 hands, 8 unseen seeds</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td><td class="num">0 = break even</td></tr>{% endcomment %}
-        {% include row-scienceworld.html %}
-        <tr><td>Robotics</td><td>LIBERO-Spatial, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong></td><td class="num">OpenVLA-OFT 97.6%</td></tr>
-        <tr><td>Robotics</td><td>LIBERO-10, vision</td><td>400 test episodes</td><td class="num">0% ± 0 pp</td><td class="num"><strong>87.0% ± 33.6 pp</strong></td><td class="num">OpenVLA-OFT 94.5%</td></tr>
-        <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp / 99.0% ± 10.0 pp</strong></td><td class="num">privileged state</td></tr>
-        <tr><td>OSWorld</td><td>Calc + OS</td><td>24 dev tasks (running)</td><td class="num">0% ± 0 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong></td><td class="num">—</td></tr>
-        <tr><td>ARC-AGI</td><td>ARC-AGI-1 / 2 / 3, one program</td><td>100 / 80 dev puzzles, 8 dev games (paused)</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>40.0%</strong> / 1.3% / 1.5%</td><td class="num">—</td></tr>
+        <tr><td>Atari</td><td>Q*bert, pixels only</td><td>sticky, 64 test seeds</td><td class="num">183 ± 125</td><td class="num"><strong>52,418 ± 9,199</strong></td><td class="num">human 13,455; BTR 42,927</td></tr>
+        <tr><td>Atari</td><td>Phoenix, pixels only</td><td>sticky, 64 test seeds</td><td class="num">745 ± 605</td><td class="num"><strong>65,076 ± 19,536</strong></td><td class="num">human 7,243; Muesli 805,305</td></tr>
+        <tr><td>Science</td><td>ScienceWorld, 30 types</td><td>1,819 test variations</td><td class="num">2.5 ± 3.1</td><td class="num"><strong>85.0 ± 23.3</strong></td><td class="num">SwiftSage (GPT-4) 84.68*</td></tr>
+        <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, vision</td><td>400 test episodes each</td><td class="num">0%</td><td class="num"><strong>95.3% / 87.0%</strong></td><td class="num">OpenVLA-OFT 97.6% / 94.5%</td></tr>
+        <tr><td>Robotics</td><td>LIBERO-Spatial / LIBERO-10, state</td><td>400 test episodes each</td><td class="num">0%</td><td class="num"><strong>99.0% / 99.0%</strong></td><td class="num">privileged state</td></tr>
+        <tr><td>OSWorld</td><td>Calc + OS</td><td>24 test tasks</td><td class="num">0%</td><td class="num"><strong>16.7% ± 38.1 pp</strong></td><td class="num">—</td></tr>
+        <tr><td>ARC-AGI</td><td>ARC-AGI-1 / 2 / 3, one program</td><td>dev, running</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>40.0%</strong> / 1.3% / 1.5%</td><td class="num">—</td></tr>
       </tbody>
     </table>
   </figure>
-  <p class="pending">In every table, shaded rows are promoted versions and grey rows are references. Curves follow
-  the incumbent on hidden dev, one point per generation; dashed lines are references; hover a point for its value.</p>
-  <p class="prog-link"><a class="pill" href="{{ '/programs/' | relative_url }}">Read the learned programs: the merged Atari-5 program, the LIBERO programs, the ScienceWorld program and the OSWorld programs, with full source →</a></p>
+  <p class="prog-link"><a class="pill" href="{{ '/programs/' | relative_url }}">Read the learned programs, with full source →</a></p>
   <div class="tabs" role="tablist">
     <button class="on" data-tab="atari" role="tab">Atari</button>
-    {% comment %}<button data-tab="poker" role="tab">Poker</button>{% endcomment %}
     <button data-tab="science" role="tab">ScienceWorld</button>
     <button data-tab="embodied" role="tab">Embodied robotics</button>
     <button data-tab="computer" role="tab">OSWorld</button>
     <button data-tab="arc" role="tab">ARC-AGI</button>
     <button data-tab="process" role="tab">Improvers and cost</button>
   </div>
+
   <div data-panel="atari">
-    {% comment %}Atari RAM hidden
-<p>Atari from RAM with <strong>sticky actions</strong> (each step repeats the previous action with probability
-    0.25, the protocol of Machado et al., 2018), frame skip 4, full game with all lives, at most 27,000 steps. Each run
-    starts from the champion of an earlier run without sticky actions (below) and uses new seeds.</p>
-    {% include curves-atari.html %}
-    <figure class="table-figure">
-      <figcaption><strong>Table 2.</strong> <strong>Sticky-action runs</strong> (p = 0.25). Each run starts from the
-      no-sticky champion and keeps improving it with sticky actions in train, dev and test. All seeds are new: 16 train,
-      32 hidden dev and 64 test. <em>Start</em> is the starting program's dev score with sticky actions.</figcaption>
-      <table>
-        <thead><tr><th>Game</th><th class="num">Start (dev)</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
-        <tbody>
-          <tr class="best"><td>Ms. Pac-Man</td><td class="num">10,029 ± 5,699</td><td class="num">44,257 ± 10,812</td><td class="num"><strong>38,306 ± 14,389</strong></td><td class="num">6,952</td><td>done: 3 promotions in 7 generations</td></tr>
-          <tr class="best"><td>Breakout</td><td class="num">479 ± 138</td><td class="num">766 ± 151</td><td class="num"><strong>788 ± 119</strong></td><td class="num">30.5</td><td>done: 3 promotions in 6 generations</td></tr>
-          <tr class="best"><td>Montezuma's Revenge</td><td class="num">3,441 ± 9,233</td><td class="num"><strong>113,659 ± 8,986</strong></td><td class="num">after the run</td><td class="num">4,753</td><td>7 promotions in 8 generations; running</td></tr>
-          <tr class="best"><td>Space Invaders</td><td class="num">28,219 ± 11,058</td><td class="num"><strong>43,625 ± 4,622</strong></td><td class="num">after the run</td><td class="num">1,669</td><td>promoted in generations 1 and 2; running</td></tr>
-          <tr class="best"><td>Pong</td><td class="num">16.6 ± 1.7</td><td class="num"><strong>18.8 ± 1.6</strong></td><td class="num">after the run</td><td class="num">14.6</td><td>promoted in generations 1 and 2; running</td></tr>
-        </tbody>
-      </table>
-    </figure>
-{% endcomment %}
     <h3 id="atari5">Atari-5, pixels only</h3>
-    <p>The five games of Atari-5 (Aitchison et al., 2022), played from <strong>RGB frames only</strong> (no RAM) with
-    sticky actions (p = 0.25), from the generic seed program. All five runs are shown. Dashed lines are the human score, Rainbow (Dopamine)
-    and Muesli on the same game; Double Dunk has negative scores, so its axis is linear and the others are logarithmic.</p>
+    <p>RGB frames only, sticky actions (p = 0.25), from a generic seed program. Dashed lines: human, Rainbow and Muesli.</p>
     {% include curves-atari5.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 2.</strong> Atari-5 from pixels with sticky actions (p = 0.25), test seeds, against
-      reinforcement learning <strong>under the same sticky-action protocol</strong>. Ours: mean ± sample standard deviation over
-      64 test seeds that no loop used (a figure in red would be below the seed program). In each row the best agent is in <strong>bold</strong> and the second best <span class="second">underlined</span>; the human score is a reference and not ranked. <em>Rainbow</em> (Dopamine) and
-      <em>BTR</em> are from Table A2 of Clark et al. 2024 (arXiv 2411.03820), 200 M frames, 3 seeds, maximum score during
-      training. <em>MuZero</em> and <em>Muesli</em> are from Table 11 of Hessel et al. 2021 (arXiv 2104.06159), 200 M frames,
-      sticky actions p = 0.25, no start no-ops, mean of the last 200 episodes; their ± is the <em>standard error over 2 seeds</em>,
-      not a standard deviation. Human is the usual human baseline. <em>Env steps</em> is ours (frame skip 4, so 200 M frames is 50 M steps).</figcaption>
+      <figcaption><strong>Table 2.</strong> Atari-5 test (64 unseen seeds) against RL under the same sticky-action
+      protocol; best in <strong>bold</strong>, second <span class="second">underlined</span>. Rainbow and BTR: Clark et
+      al. 2024, Table A2; MuZero and Muesli: Hessel et al. 2021, Table 11 (± is a standard error over 2 seeds), all
+      200 M frames.</figcaption>
       <table>
         <thead><tr><th>Game</th><th class="num">Seed program<br><small>test</small></th><th class="num">Best program<br><small>test</small></th><th class="num">Human</th><th class="num">Rainbow<br><small>Dopamine</small></th><th class="num">BTR</th><th class="num">MuZero</th><th class="num">Muesli</th><th class="num">Env steps<br><small>ours</small></th></tr></thead>
         <tbody>
 {% include table-atari5.html %}
         </tbody>
       </table>
-      <p class="table-note">Our best program is above the human score on four of the five games (Battle Zone is just below it). It is above Rainbow
-      (Dopamine) on Name This Game, Phoenix and Q*bert and below it on Battle Zone and Double Dunk, and above BTR only on Q*bert
-      (52,418 against 42,927). <strong>Against MuZero it is lower on all five.</strong> Against Muesli it is lower on four: by a factor of 11 on Battle Zone,
-      5 on Name This Game, 12 on Phoenix and 3 on Q*bert. On Double Dunk it is higher (0.81 against −3 ± 2, where Muesli's ± is a standard error over only
-      2 seeds), but Double Dunk is a score difference capped at +24 and MuZero, BTR and Rainbow are at 22 to 24 there. Ours uses 71 M to 303 M frames
-      (Double Dunk the most) against 200 M for the RL agents, so the gaps are not explained by experience. Double Dunk was stopped by hand during generation 9
-      for time, not by the no-promotion rule; its program is the one selected at generation 6. The RL numbers are maxima or last-episode averages of
-      trained networks, ours is one readable program chosen on dev.</p>
+      <p class="table-note">Above human on four games, above Rainbow on three, above BTR on Q*bert; below MuZero on
+      all five. Ours uses 71–303 M frames, so the gap to MuZero is not one of experience. RL numbers are trained
+      networks; ours is one readable program chosen on dev.</p>
     </figure>
     <h4 id="atari5-merged">One program for all five games, from the screen alone</h4>
-    <p>Programs compose. We merged the five champions into a single program that is <strong>not told which game it
-    plays</strong>: the environment hides the game id and all <code>info</code> (lives included), and every game uses
-    the full 18-action set, so the action count says nothing either. At the first non-blank frame the program matches
-    the screen, downsampled to 21 × 16 colour cells, to the nearest of five reference screens (the mean first frame of
-    train seeds 0–15 of each game; on 40 held-out seeds the nearest wrong game is more than 10 times farther than the
-    right one), then runs that game's program unchanged and maps its actions to the full set. One episode of Q*bert
-    starts on a black frame; the program waits on such frames with NOOP. On the same 64 test seeds per game:</p>
+    <p>The five champions merged into one program that is <strong>not told the game</strong>: no game id, no
+    <code>info</code>, the full 18-action set. It recognises the game from the first frame (21 × 16 colour cells,
+    nearest reference screen) and runs that game's program.</p>
     <figure class="table-figure">
       <table>
-        <thead><tr><th>Game</th><th class="num">Per-game champion</th><th class="num">One merged program<br><small>screen only</small></th><th class="num">Episodes identical</th></tr></thead>
+        <thead><tr><th>Game</th><th class="num">Per-game champion</th><th class="num">Merged program</th><th class="num">Identical episodes</th></tr></thead>
         <tbody>
           <tr><td>Battle Zone</td><td class="num">36,859</td><td class="num">36,859</td><td class="num">64 / 64</td></tr>
           <tr><td>Double Dunk</td><td class="num">0.8</td><td class="num">0.8</td><td class="num">64 / 64</td></tr>
@@ -239,466 +171,184 @@ layout: default
           <tr><td>Q*bert</td><td class="num">52,418</td><td class="num">52,136</td><td class="num">3 / 64</td></tr>
         </tbody>
       </table>
-      <p class="table-note">The game is recognised in all 320 episodes. Four games replay their champion's episodes
-      exactly. Q*bert's program used the lives counter to reset its state after a death; without <code>info</code> it
-      no longer does, so its episodes diverge, at a cost of 0.5% of the mean. The merged program is still the five
-      programs side by side; distilling their shared skills (reading objects from the screen, tracking, timing) into one
-      library is the next step.</p>
+      <p class="table-note">All 320 games recognised. Q*bert diverges because its program used the lives counter,
+      which is now hidden (−0.5%).</p>
     </figure>
-    {% comment %}Atari RAM hidden
-<div class="finding">
-      <p class="finding-label">Robustness can be improved too</p>
-      <p>With sticky actions in the loop, the improvers made the same programs robust. Ms. Pac-Man went from 10,029 to
-      38,306 on sticky test seeds, two thirds of its no-sticky test score. Montezuma's Revenge went from 3,441 to 113,659
-      on dev, above its no-sticky score, with real spread across seeds (28,200 to 65,300 for the generation 6 champion),
-      so it is not one memorised game. Under sticky actions dev seeds also stopped tying: all 32 Ms. Pac-Man dev seeds
-      score differently, which makes the paired gate a real test of generalization.</p>
-    </div>
-{% endcomment %}
-    <p class="pending">Running now, all with sticky actions and from the generic seed program: the
-    <strong>Atari-5</strong> subset (Battle Zone, Double Dunk, Name This Game, Phoenix, Q*bert; Aitchison et al., 2023),
-    whose scores predict performance on the full suite, then the remaining games of <strong>Atari-57</strong>, four runs at
-    a time. Costs are in Table 9, under <em>Improvers and cost</em>.</p>
-    {% comment %}Atari RAM hidden
-<details class="more">
-      <summary>Earlier runs without sticky actions</summary>
-      <p>Our first protocol had no sticky actions, so the game was nearly deterministic and many seeds replayed the same
-      game. These runs produced the starting programs above; the tables show what they scored and how much of it
-      survived sticky actions.</p>
-      {% include curves-atari-nosticky.html %}
-      <figure class="table-figure">
-        <figcaption><strong>Table 3.</strong> Atari from RAM: frame skip 4, full game with all lives, at most 27,000
-        steps, <strong>no sticky actions</strong>, so the game is nearly deterministic. 8 train, 32 hidden dev and 64 test seeds per
-        game. Human scores are the standard reference values. These runs are superseded by the sticky-action runs in
-        Table 2.</figcaption>
-        <table>
-          <thead><tr><th>Game</th><th class="num">Seed program</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Human</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr class="best"><td>Breakout</td><td class="num">2.5 ± 0.7</td><td class="num">864.0 ± 0.0</td><td class="num"><strong>864.0 ± 0.0</strong></td><td class="num">30.5</td><td>done after 4 generations</td></tr>
-            <tr class="best"><td>Pong</td><td class="num">−19.9 ± 1.0</td><td class="num">21.0 ± 0.0</td><td class="num"><strong>21.0 ± 0.0</strong></td><td class="num">14.6</td><td>done: maximum in generation 1</td></tr>
-            <tr class="best"><td>Ms. Pac-Man</td><td class="num">276.9 ± 110.4</td><td class="num">50,545 ± 38,076</td><td class="num"><strong>57,606 ± 36,289</strong></td><td class="num">6,952</td><td>done: 9 promotions in 10 generations</td></tr>
-            <tr class="best"><td>Montezuma's Revenge</td><td class="num">0 ± 0</td><td class="num"><strong>65,506 ± 1,292</strong></td><td class="num">—</td><td class="num">4,753</td><td>stopped at generation 7 for the sticky run</td></tr>
-            <tr class="best"><td>Space Invaders</td><td class="num">112.0 ± 61.4</td><td class="num"><strong>45,376 ± 1,091</strong></td><td class="num">—</td><td class="num">1,669</td><td>stopped at generation 5 for the sticky run</td></tr>
-            <tr><td>Seaquest</td><td colspan="5">planned, with sticky actions</td></tr>
-            <tr class="ref"><td colspan="2"><em>Learning Beyond Gradients</em></td><td class="num" colspan="3">Breakout 864 (seed 0) · Pong 21 · Montezuma 400</td><td>different protocol</td></tr>
-          </tbody>
-        </table>
-      </figure>
-      <figure class="table-figure">
-        <figcaption><strong>Table 4.</strong> The same champions under <strong>sticky actions</strong> (each step repeats the
-        previous action with probability 0.25, the protocol of Machado et al., 2018). 64 fresh seeds that no loop ever
-        used, each played with and without sticky actions. The programs were improved without sticky actions; this
-        measures how much of each score survives random perturbation. No ± here: the per-seed scores of this re-test were not saved, only the median and minimum shown.</figcaption>
-        <table>
-          <thead><tr><th>Game</th><th>Champion</th><th class="num">No sticky</th><th class="num">Sticky 0.25</th><th class="num">Kept</th><th class="num">Sticky median / min</th><th class="num">Human</th></tr></thead>
-          <tbody>
-            <tr><td>Breakout</td><td>gen 4</td><td class="num">864</td><td class="num"><strong>456</strong></td><td class="num">53%</td><td class="num">425 / 286</td><td class="num">30.5</td></tr>
-            <tr><td>Pong</td><td>gen 1</td><td class="num">21.0</td><td class="num"><strong>15.8</strong></td><td class="num">75%</td><td class="num">16 / 8</td><td class="num">14.6</td></tr>
-            <tr><td>Space Invaders</td><td>gen 3</td><td class="num">44,469</td><td class="num"><strong>20,878</strong></td><td class="num">47%</td><td class="num">18,595 / 3,900</td><td class="num">1,669</td></tr>
-            <tr><td>Ms. Pac-Man</td><td>gen 9</td><td class="num">61,084</td><td class="num"><strong>10,831</strong></td><td class="num">18%</td><td class="num">8,700 / 3,920</td><td class="num">6,952</td></tr>
-            <tr><td>Montezuma's Revenge</td><td>gen 6</td><td class="num">53,700</td><td class="num"><strong>2,781</strong></td><td class="num">5%</td><td class="num">2,400 / 0</td><td class="num">4,753</td></tr>
-          </tbody>
-        </table>
-      </figure>
-      <div class="finding">
-        <p class="finding-label">Sticky actions: what survives</p>
-        <p>Every score drops, so part of each no-sticky result came from a deterministic game whose play can be memorised.
-        How much drops follows how the program works. Pong, Breakout and Space Invaders re-plan from the live state at
-        every step and keep half or more. Ms. Pac-Man keeps 18%: it relies on exact timing, such as passing a junction just
-        ahead of a ghost. Montezuma's Revenge keeps 5%: its route is scripted against countdowns and distances, and one
-        mistimed jump costs a life. Under sticky actions four of the five champions still score above the human reference
-        (Breakout about 15×, Space Invaders about 12×, Ms. Pac-Man 1.6×, Pong slightly); Montezuma's Revenge does not. On the
-        same fresh seeds without sticky actions Ms. Pac-Man scored 61,084, above its dev score, so dev itself was not
-        overfitted; the weakness is determinism.</p>
-      </div>
-      <figure class="table-figure">
-        <figcaption><strong>Table 5.</strong> Breakout, every promoted version and the one rejected candidate, with
-        test scores over 64 unseen seeds.</figcaption>
-        <table>
-          <thead><tr><th>Version</th><th>Improver</th><th class="num">Train</th><th class="num">Dev</th><th class="num">Test</th><th>Gate</th></tr></thead>
-          <tbody>
-            <tr class="ref"><td>Seed program</td><td>—</td><td class="num">1.9 ± 0.8</td><td class="num">2.5 ± 0.7</td><td class="num">2.2 ± 0.8</td><td>—</td></tr>
-            <tr class="best"><td>Gen 1</td><td>Claude Code</td><td class="num">694.1 ± 220.4</td><td class="num">702.8 ± 202.1</td><td class="num">737.8 ± 187.8</td><td>promoted · won 32 / 32</td></tr>
-            <tr class="best"><td>Gen 2</td><td>Codex</td><td class="num">862.5 ± 2.1</td><td class="num">849.9 ± 16.9</td><td class="num">854.3 ± 15.3</td><td>promoted · won 21, lost 11</td></tr>
-            <tr><td>Gen 3</td><td>Codex</td><td class="num">864.0 ± 0.0</td><td class="num">714.1 ± 210.4</td><td class="num">—</td><td>rejected · won 11, lost 11</td></tr>
-            <tr class="best"><td>Gen 4</td><td>Codex</td><td class="num">864.0 ± 0.0</td><td class="num"><strong>864.0 ± 0.0</strong></td><td class="num"><strong>864.0 ± 0.0</strong></td><td>promoted · won 22, lost 0</td></tr>
-          </tbody>
-        </table>
-      </figure>
-      <div class="finding">
-        <p class="finding-label">The gate caught overfitting</p>
-        <p>In generation 3 a candidate scored the maximum on all 8 train seeds but only 714 on dev: it had tuned itself
-        to the few train trajectories. It was rejected. Generation 4 reached 864 on every dev seed and then on every
-        one of the 64 test seeds, which no improver or gate had ever touched.</p>
-      </div>
-      <div class="finding">
-        <p class="finding-label">Recursive improvement, nine generations in a row</p>
-        <p>Ms. Pac-Man was promoted in every generation so far: 17,207, 19,173, 20,031, 25,663, 29,688, 30,715, 32,295,
-        34,174, then 50,545 on hidden dev, each version built on the previous one and each winning the paired dev test.
-        The first program decoded the maze, dots and ghosts from RAM and planned over a maze graph. Later generations
-        added escapes at junctions when a ghost is close, detours for fruit, more cautious routing after quick life
-        losses and, in generation 9, a reflex that reverses when a ghost comes head-on on the last life.</p>
-        <p>A caveat on what dev measures here. Without sticky actions the game is nearly deterministic, so many dev seeds
-        replay the same game. Generation 9 tied its parent exactly on 25 of 32 seeds and won on 7: on those 7 it no longer
-        dies at the same spot and plays to the 27,000-step limit (37,491 → about 112,330). The gain is real, but it fixes
-        one failure that recurs across seeds rather than showing broad generalization; Table 4 shows the cost under sticky
-        actions.</p>
-      </div>
-      <div class="finding">
-        <p class="finding-label">Montezuma's Revenge without exploration bonuses</p>
-        <p>The promoted program follows an explicit room-by-room route over RAM state (room, position, inventory, enemy
-        positions, and a laser countdown it discovered). It times jumps on the skull's live position and laser crossings
-        on the countdown, collects keys, treasures and a sword, and opens four doors. Where a respawn keeps the inventory,
-        it loses a life on purpose as a shortcut back. Generation 6 extended the route through level 2, keeping both keys for the exit doors and collecting its prizes, and into level 3 (53,700 on every dev seed). Caveat: without sticky actions, different seeds mostly shift
-        start-up timing, so dev mainly tests robustness to timing; under sticky actions it keeps only 5% (Table 4); the sticky run brought it back (Table 2).</p>
-      </div>
-      <div class="finding">
-        <p class="finding-label">Space Invaders by aiming, not by luck</p>
-        <p>The program located the invader grid, its speed and descent, both enemy bullets and the shields in RAM, and
-        fitted the missile's flight time from about 1,700 kills. It fires with a lead computed from the grid's motion and
-        steps out of the path of falling bullets.</p>
-      </div>
-    </details>
-{% endcomment %}
   </div>
+
   <div data-panel="science" hidden>
-    <h3 id="scienceworld">ScienceWorld: one program for 30 science experiments</h3>
-    <p>ScienceWorld (Wang et al., 2022) is a text world of a house with a kitchen, greenhouse, workshop and so on:
-    the agent boils and melts substances, wires circuits, tests conductivity, grows plants, reads life stages, times
-    blocks on inclined planes and crosses plants for Mendelian traits. Each of its 30 task types has variations
-    (other substances, objects, plants, animals, rooms) that ScienceWorld itself splits into train, dev and test. We
-    evolve <strong>a single program for all 30 types</strong>. It reads the text observation, room, inventory, task
-    score and the list of valid commands at every step and answers with one command, so it has to react to what it
-    sees: the champion runs experiments (it closes a circuit and checks whether the bulb lights, heats a substance
-    while reading a thermometer) rather than replaying a script. Seeds: 60 train (2 per type), 90 hidden dev (3 per
-    type), test as below; ScienceWorld's <em>easy</em> simplification, at most 100 commands per episode. The program
-    calls no model, cannot import ScienceWorld, and never sees the gold action sequence.</p>
-    <p><strong>Round 2</strong> starts from the round-1 champion (generation 10) with more seeds (300 train, 150 other
-    hidden dev) and a new instruction: first classify the causes of failure in the transcripts of failing episodes,
-    then fix the largest cause with one closed-loop mechanism (act, check the effect, recover). Improvers: Claude Code
-    and DeepSeek (Codex only in its first generation). It was promoted in all 6 generations and stopped by hand during
-    generation 7, when train had saturated (99.3%). On all 1,819 test variations it raised the mean from 59.3 to
-    <strong>67.5</strong>, and on SwiftSage's first 10 variations per type from 62.5 to 71.3 (SwiftSage 84.68).</p>
-    <p><strong>Round 3</strong> starts from the round-2 champion with 600 train and 300 other hidden dev seeds,
-    a stricter gate (confidence 0.9) and Claude Code only (one Opus, two Sonnet), each improver assigned a group of
-    ScienceWorld topics. The instruction asks first for a generalization audit: remove every branch keyed on an object
-    seen in train, and share one skill per capability across task types. After generation 3 we analysed the test
-    failures of the change-of-state types and added one general rule (a default that only works on train is a special
-    case; search the whole world for the exact target and never substitute another object; escalate to another means
-    when one has no effect); it names no test object, but it was written after looking at test, which we report here.
-    From generation 5 the train seeds change every generation, every candidate within 0.5 points of the incumbent's
-    train goes to the dev gate (the best passing one is promoted), and there is no simplify pass. So far: 67.5 → 69.8
-    on all test variations after 3 generations (genetics of an unknown plant 37.5 → 77.5, friction 77.6 → 100), then
-    → 78.1 → <strong>80.8</strong> after generations 5 and 6 (dev 89.1 → 90.8 → 92.9, both promotions from the Opus improver on change of
-    state): boil 0.7 → 75.9, melt 0.4 → 100, freeze 0 → 58.4, change state 0.2 → 93.1. On SwiftSage's first 10
-    variations per type this is <strong>82.1</strong> (SwiftSage 84.68); the largest remaining gaps are power
-    component (8.2 vs 88.7), renewable energy (6.0 vs 55.3), melting point of a known substance (19.5 vs 88.2) and
-    life stages 2 (25.0 vs 68.5). Generation 7 promoted nothing: train was at 99% and every one of these types scored 1.0
-    on train, so the improvers saw no failure to fix (power component has only 10 official train variations). We stopped
-    round 3 during generation 8.</p>
-    <p><strong>Round 4</strong> starts from g006c0 and splits ScienceWorld's official dev variations into two
-    disjoint halves: one joins train (300 of each generation's 750 train seeds), the other stays the hidden promotion
-    gate; test is unchanged. On the half moved to train the incumbent scores 0.07 on power component, so the failures
-    are now visible to the improvers without looking at test. Generation 1 promoted g001c1 (dev 92.1 → 94.4; freeze
-    58.4 → 94.9 on test): <strong>82.7</strong> on all test variations, 84.25 on SwiftSage's protocol.</p>
-    <p><strong>Composition.</strong> Next to round 4 we ran three specialists from g001c1, each a short DRSI run
-    restricted to a few task types (electricity; heat; life stages, chemistry, genetics and lifespans), with two
-    Sonnet improvers asked to build every fix as a self-contained, general skill so that it can be merged back. The
-    electricity specialist found the cause of the power-component failures in its first generation: the circuit
-    skill only handled tasks that light a bulb, so "turn on the electric motor" (and any other target) fell through;
-    it now reads the target from the task text and searches the world for it (specialist dev 87.3 → 100). Its program
-    is g001c1 with only the circuit skill changed, so we gated it like any candidate, on all 30 types of round 4's
-    hidden dev: 94.4 → <strong>96.2</strong> (7 wins, 1 loss, P(gain) 0.999). On test: power component 8.2 → 46.4,
-    renewable energy 6.0 → 34.0, no type lower by more than 2 points; <strong>85.0</strong> on all 1,819 test
-    variations and <strong>86.8 on SwiftSage's protocol, above SwiftSage's 84.68</strong> (GPT-4 at run time; ours
-    uses no model at run time). In round 4 we ran the full test after every promotion and stopped all runs once the
-    SwiftSage-protocol score passed 84.68; test was only this stopping rule, never shown to an improver or used to
-    pick a candidate. We then merged the heat and life-science specialists too, by a plain three-way text merge (all
-    three started from g001c1 and changed different skills; no conflict). The merged program scores 96.5 on round 4's
-    dev (2 wins, 2 losses: not a significant gain, so our gate would not promote it) but <strong>86.4</strong> on all
-    test variations and <strong>88.5</strong> on SwiftSage's protocol (melting point of a known substance 27.8 → 65.4,
-    genetics of an unknown plant 76.1 → 82.5): that skill is already at 100 on dev, so dev cannot see the gain. Because
-    it did not pass the gate, our headline stays 86.8; we report 88.5 here as the merge we did not select.</p>
+    <h3 id="scienceworld">ScienceWorld: one program for 30 experiments</h3>
+    <p>Boil, melt, wire circuits, test conductivity, grow plants, cross them for Mendelian traits: one program reads
+    the text observation and answers with one command per step. It calls no model and never sees the gold actions;
+    test variations use substances, objects and rooms that train never shows.</p>
+    <figure class="table-figure">
+      <figcaption><strong>Table 3.</strong> Four rounds, each starting from the last champion. Test: mean over the 30
+      types on all 1,819 official test variations. SwiftSage protocol: first 10 variations per type.</figcaption>
+      <table>
+        <thead><tr><th>Round</th><th>What changed</th><th class="num">Test</th><th class="num">SwiftSage protocol</th></tr></thead>
+        <tbody>
+          <tr><td>Seed</td><td>generic program</td><td class="num">2.5</td><td class="num">—</td></tr>
+          <tr><td>1</td><td>10 generations, mixed improvers</td><td class="num">59.3</td><td class="num">62.5</td></tr>
+          <tr><td>2</td><td>classify failures, fix each with one closed-loop skill</td><td class="num">67.5</td><td class="num">71.3</td></tr>
+          <tr><td>3</td><td>generalisation audit; train seeds rotate every generation</td><td class="num">80.8</td><td class="num">82.1</td></tr>
+          <tr><td>4</td><td>half of official dev joins train, the other half gates</td><td class="num">82.7</td><td class="num">84.25</td></tr>
+          <tr class="best"><td>+ merge</td><td>electricity specialist merged in, passes the dev gate</td><td class="num"><strong>85.0</strong></td><td class="num"><strong>86.8</strong></td></tr>
+          <tr class="ref"><td colspan="2">SwiftSage (GPT-4 at run time)</td><td class="num">—</td><td class="num">84.68</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Round 3 added one general rule after we looked at test failures (it names no test object).
+      In round 4 test served only as a stopping rule. Merging two more specialists gives 86.4 / 88.5 but fails the dev
+      gate, so it is not the headline.</p>
+    </figure>
     {% include curves-scienceworld.html %}
-    <p class="pending">Left: the incumbent on 90 hidden dev seeds (●) and on 300 test seeds, 10 per type (○), one point
-    per generation; round 1 promoted in 7 of 10 generations (not 1, 2 or 8), round 2 (after the R2 divider, other dev
-    seeds, so its dev curve is drawn separately) in all 6, round 3 (after R3) in 5 of 7, round 4 (after R4) in 1 of 2, then the merged electricity specialist. Right: the mean over task types on <strong>all 1,819
-    official test variations</strong>, each played once, for the incumbent of every generation. On test, round 2
-    gained most by its generation 4 (64.1, 65.9, 65.6, 67.5, 67.2, 67.5) and was flat after it, although dev kept rising.
-    Dashed lines: published agents (SwiftSage protocol, see Table 3).</p>
-    <h4>Every task type, one program</h4>
-    <p>Full-test score (0–100) of the incumbent of every generation, per task type; <span class="bad">red</span> marks a
-    point below the seed program; the dashed line is SwiftSage (GPT-4) on that type; n is the number of official test
-    variations. The thermodynamics types (1-1 to 1-4) stay near 0: ScienceWorld's test variations of boil, melt and
-    freeze are metals (tin, caesium, mercury, gallium, lead) while train and dev use juices, chocolate, soap and ice
-    cream, and the program never learned to reach their temperatures.</p>
+    <h4>Every task type</h4>
+    <p>Per-type test score of each incumbent; <span class="bad">red</span> is below the seed program, dashed is
+    SwiftSage.</p>
     {% include curves-scienceworld-tasks.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 3.</strong> ScienceWorld by task type, score 0–100. <em>Seed</em> and <em>best</em>: our
-      seed program and champion on every official test variation (n), mean ± sample std over variations; a failed
-      episode counts 0. <em>First 10</em>: the champion on the first 10 test variations of each type, the episodes
-      SwiftSage used. References from SwiftSage (Lin et al., NeurIPS 2023), Table 1: first 10 test variations, a failed
-      episode counted at its last non-negative score, so their rule is more lenient than ours. SwiftSage = flan-T5
-      fine-tuned on oracle trajectories plus GPT-4 at run time; Reflexion and ReAct with GPT-4 (Reflexion gets up to
-      four tries); DRRN is reinforcement learning. In each row the best of <em>Best (first 10)</em>, SwiftSage, Reflexion, ReAct and DRRN (the columns on the SwiftSage protocol) is in <strong>bold</strong> and the second best <span class="second">underlined</span>; ties share the mark.</figcaption>
+      <figcaption><strong>Table 4.</strong> By task type, score 0–100. Seed and best on every test variation (n); the
+      last five columns on SwiftSage's protocol, best <strong>bold</strong>, second <span class="second">underlined</span>.
+      References: Lin et al., NeurIPS 2023, Table 1.</figcaption>
       <table>
         <thead><tr><th>ID</th><th>Task</th><th class="num">n</th><th class="num">Seed</th><th class="num">Best (all test)</th><th class="num">Best (first 10)</th><th class="num">SwiftSage</th><th class="num">Reflexion</th><th class="num">ReAct</th><th class="num">DRRN</th></tr></thead>
         <tbody>
           {% include table-scienceworld.html %}
         </tbody>
       </table>
-      <p class="table-note">The program generalizes where an experiment decides the answer (conductivity, melting
-      point of an unknown substance, inclined planes, finding things). The remaining gaps are types whose test
-      variations need what neither train nor dev showed: power components other than a light bulb (3-1, 3-2), a known
-      substance whose melting point is beyond the stove (2-2) and the rarer life stages (8-2). For lifespans and known
-      Mendelian traits it answers from general knowledge written into the code rather than by experiment, as LLM agents
-      do.</p>
+      <p class="table-note">Strong where an experiment decides the answer; weakest where test needs what train never
+      showed (non-bulb power components, a melting point beyond the stove, rare life stages).</p>
     </figure>
   </div>
-  {% comment %}Poker hidden (results not representative yet)
-  <div data-panel="poker" hidden>
-    {% include curves-poker.html %}
-    {% include curves-hunl.html %}
-    <figure class="table-figure">
-      <figcaption><strong>Table 3a.</strong> Poker, Leduc variants (OpenSpiel <code>universal_poker</code>). Score: NashConv divided by the
-      largest raise, <strong>lower is better</strong> (0 is a Nash equilibrium).</figcaption>
-      <table>
-        <thead><tr><th></th><th class="num">Seed program<br><small>uniform policy</small></th><th class="num">Best, dev<br><small>24 variants</small></th><th class="num">Test<br><small>24 variants</small></th><th class="num">Test<br><small>standard Leduc</small></th></tr></thead>
-        <tbody>
-          <tr class="best"><td>Evolved readable policy</td><td class="num">1.381 ± 0.499</td><td class="num"><strong>0.109 ± 0.029</strong></td><td class="num"><strong>0.106 ± 0.030</strong></td><td class="num">0.087</td></tr>
-          <tr class="ref"><td>CFR, 30 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.141</td><td class="num">0.156</td></tr>
-          <tr class="ref"><td>CFR, 100 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.045</td><td class="num">0.048</td></tr>
-          <tr class="ref"><td>CFR, 1,000 iterations</td><td class="num">–</td><td class="num">–</td><td class="num">0.005</td><td class="num">0.006</td></tr>
-        </tbody>
-      </table>
-      <p class="table-note">72 Leduc-like limit games with different ranks, suits, raise sizes and raise caps, split 24 / 24 / 24; standard Leduc is a test
-      variant. Programs must be readable rules (no search or equilibrium computation at run time, at most 8 KB of data). All 10 generations promoted.
-      CFR rows are a solver run on each test variant, shown for scale, not a readable policy.</p>
-    </figure>
-    <figure class="table-figure">
-      <figcaption><strong>Table 3b.</strong> Poker, heads-up no-limit hold'em. Score: mbb/hand (thousandths of a big blind per hand),
-      <strong>higher is better</strong>, 0 is break even.</figcaption>
-      <table>
-        <thead><tr><th>Opponent</th><th class="num">Evaluated on<br><small>mean ± std over seeds</small></th><th class="num">Seed program<br><small>always call</small></th><th class="num">Champion<br><small>g001c0</small></th></tr></thead>
-        <tbody>
-          <tr class="best"><td>Rule bots + past champions</td><td class="num">64 test seeds</td><td class="num">−13,731 ± 1,301</td><td class="num"><strong>+29,090 ± 2,116</strong></td></tr>
-          <tr><td>DecisionHoldem</td><td class="num">8 unseen seeds, 400 hands</td><td class="num">−1,705 ± 4,168</td><td class="num"><span class="bad">−4,634 ± 5,665</span></td></tr>
-        </tbody>
-      </table>
-      <p class="table-note">Every deal is played from both seats by separate processes. The loop's opponents are three rule bots (call station, maniac, equity bot)
-      and the three most recent champions; on its 32 dev seeds the champion scores 39,512 ± 1,857 against −1,252 ± 614 for the seed program. It stopped after 1 promotion and
-      3 more generations without one. DecisionHoldem is a published CFR-based agent (blueprint strategy). ± is the sample standard deviation over seeds (n = 64 test, 32 dev, 8 for DecisionHoldem), not the standard error. A figure in red is below the seed program.</p>
-    </figure>
-    <p class="pending">For scale: the readable Leduc policy (test 0.106) sits between 30 and 100 iterations of vanilla CFR
-    run on each test variant, which reaches 0.005 after 1,000 iterations. It generalizes across variants without solving
-    any of them, but it is still far from an equilibrium.</p>
-    <p class="pending">HUNL: the champion beats the rule bots (call station, maniac, equity bot) and earlier champions by
-    29,090 mbb/hand on 64 test seeds, but those opponents are easy to exploit. Against DecisionHoldem, a strong
-    published agent, the same program loses about 4.6 big blinds per hand (± 5.7, standard deviation over 8 seeds of 50
-    hands each), so beating weak opponents did not make it strong. The starting program (always call) scores −1.7 big blinds per hand (± 4.2) on the same 8 seeds, so against DecisionHoldem the champion is lower than its starting point (shown in red); with 8 seeds and a standard deviation this large the gap is within noise. DecisionHoldem's search makes every hand take
-    seconds, so this is a small sample; a loop that trains against DecisionHoldem directly is being set up.</p>
-    <div class="finding">
-      <p class="finding-label">A run we threw away</p>
-      <p>The first HUNL run reported +62,790 mbb/hand, which was too good to be true. Its program had found a hole in
-      our harness: the mirrored hand of each duplicate pair was replayed right away in the same process, so it could
-      remember the board and its own earlier cards, which were now its opponent's. Each seat is now played by a
-      separate, fresh process; every deal is seen once per process; and temp files, sockets, subprocesses and
-      native code are rejected. The run was restarted from scratch.</p>
-    </div>
-  </div>
-  {% endcomment %}
+
   <div data-panel="embodied" hidden>
     {% include curves-embodied.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 4.</strong> LIBERO success rate. Each suite has 10 tasks with 50 fixed initial scenes
-      each: scenes 0–1 are train, 2–9 hidden dev (80 episodes), 10–49 test (400 episodes, used once). <em>State</em>
-      gives object poses (privileged). <em>Vision</em> gives only RGB-D from the agent-view and wrist cameras, camera
+      <figcaption><strong>Table 5.</strong> LIBERO success rate. Scenes 0–1 train, 2–9 hidden dev, 10–49 test (400
+      episodes, used once). <em>State</em>: object poses (privileged). <em>Vision</em>: RGB-D from two cameras, camera
       parameters and proprioception.</figcaption>
       <table>
-        <thead><tr><th>Setting</th><th class="num">Seed</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
+        <thead><tr><th>Setting</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Generations</th></tr></thead>
         <tbody>
-          <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
-          <tr class="best"><td>LIBERO-10 (long-horizon) · state</td><td class="num">0% ± 0 pp</td><td class="num">100% ± 0 pp</td><td class="num"><strong>99.0% ± 10.0 pp</strong> (396 / 400)</td><td>done in 1 generation</td></tr>
-          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">0% ± 0 pp</td><td class="num">95.0% ± 21.9 pp</td><td class="num"><strong>95.3% ± 21.3 pp</strong> (381 / 400)</td><td>done after 10 generations</td></tr>
-          <tr><td>LIBERO-10 (long-horizon) · vision</td><td class="num">0% ± 0 pp</td><td class="num">91.2% ± 28.5 pp*</td><td class="num"><strong>87.0% ± 33.6 pp</strong> (348 / 400)</td><td>stopped after 8 generations</td></tr>
-          <tr class="ref"><td>OpenVLA, fine-tuned (RGB; Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">84.7% / 53.7%</td><td>—</td></tr>
-          <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">published, trained on demonstrations</td><td class="num">97.6% / 94.5%</td><td>—</td></tr>
+          <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">100%</td><td class="num"><strong>99.0%</strong></td><td class="num">1</td></tr>
+          <tr class="best"><td>LIBERO-10 · state</td><td class="num">100%</td><td class="num"><strong>99.0%</strong></td><td class="num">1</td></tr>
+          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">95.0%</td><td class="num"><strong>95.3%</strong></td><td class="num">10</td></tr>
+          <tr class="best"><td>LIBERO-10 · vision</td><td class="num">91.2%*</td><td class="num"><strong>87.0%</strong></td><td class="num">8</td></tr>
+          <tr class="ref"><td>OpenVLA, fine-tuned (Spatial / 10)</td><td class="num" colspan="2">84.7% / 53.7%</td><td class="num">demos</td></tr>
+          <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">97.6% / 94.5%</td><td class="num">demos</td></tr>
         </tbody>
       </table>
+      <p class="table-note">Seed program 0% everywhere. Every policy is readable code; state mode is not comparable
+      with VLAs, vision mode is closest (it also uses depth). *Before the seed guard existed, one improver evaluated on
+      dev scenes, so this dev figure is optimistic; test was never touched.</p>
     </figure>
     <div class="finding">
-      <p class="finding-label">How to read these numbers</p>
-      <p>No demonstrations and no learned weights: every policy is readable code. State mode is easier than the VLA
-      setting and is not comparable to it. Vision mode is the closest match, but it uses depth and camera calibration,
-      which the VLA models do not. Programs contain routines per task family and generalize across unseen initial
-      scenes, which is what LIBERO's protocol tests.</p>
-      <p>* LIBERO-10 vision ran before the seed guard existed. One improver (generation 5) evaluated its candidate on 40
-      dev scenes through a hand-edited task file, and the generation-6 improver whose program became the champion read
-      that candidate's notes and code, so the dev number is optimistic. Test scenes were never touched; 87.0% is a
-      clean test estimate (per task 65–100%; the microwave task is the weakest). The guard now refuses any seed outside
-      train.</p>
+      <p class="finding-label">Found by probing</p>
+      <p>The vision program measured a 4 cm bias in its bowl estimate and re-centres with the wrist camera before
+      grasping. The LIBERO-10 program worked out each goal condition (the stove counts as on past 0.45 rad).</p>
     </div>
-    <div class="finding">
-      <p class="finding-label">What the programs found by probing</p>
-      <p>The vision program measured that its agent-view estimate of a bowl's centre is biased by about 4 cm, so it
-      re-centres with the wrist camera before grasping. The LIBERO-10 program worked out each goal condition (e.g. the
-      stove counts as on once its knob turns past about 0.45 rad) and found initial scenes where objects fly off the
-      table on the first step, which no policy can solve.</p>
-    </div>
-    <p class="pending">LIBERO-Spatial vision finished its 10 generations at 95.0% on dev. In the last generation two
-    candidates reached 96.3%, but one extra win was not enough for the paired gate. On the 400 test episodes it scored
-    95.3%, in line with dev. LIBERO-10 vision then ran from the LIBERO-Spatial vision champion and stopped after 8
-    generations at 87.0% on test. Next: the vision setting on <strong>LIBERO-Object and LIBERO-Goal</strong>, so that all
-    four suites compare with OpenVLA-OFT, then ManiSkill3. No embodied run is going now.</p>
+    <p class="pending">Next: LIBERO-Object and LIBERO-Goal from vision, then ManiSkill3.</p>
   </div>
+
   <div data-panel="computer" hidden>
     {% include curves-computer.html %}
     <figure class="table-figure">
-      <figcaption><strong>Table 5.</strong> OSWorld, LibreOffice Calc and OS tasks: 71 tasks split 23 / 24 / 24 into
-      train, hidden dev and test, scored by OSWorld's own checkers (success rate). Both runs start from a program that
-      answers DONE at once. <em>Model available</em>: the program may also ask a fixed small model (Qwen3.5-2B) typed
-      multiple-choice questions.</figcaption>
+      <figcaption><strong>Table 6.</strong> OSWorld, LibreOffice Calc and OS: 71 tasks split 23 / 24 / 24, scored by
+      OSWorld's checkers. <em>Model available</em>: the program may also ask a small model (Qwen3.5-2B) typed
+      multiple-choice questions. 10 generations each, from a program that answers DONE at once.</figcaption>
       <table>
-        <thead><tr><th>Setting</th><th class="num">Seed program</th><th class="num">Train</th><th class="num">Best dev</th><th class="num">Test</th><th>Status</th></tr></thead>
+        <thead><tr><th>Setting</th><th class="num">Train</th><th class="num">Best dev</th><th class="num">Test</th></tr></thead>
         <tbody>
-          <tr class="best"><td>Pure code</td><td class="num">0% ± 0 pp</td><td class="num">65.2% ± 48.7 pp</td><td class="num"><strong>8.3% ± 28.2 pp</strong> (2 / 24)</td><td class="num">after the run</td><td>promoted in generation 1 only; generation 9 running</td></tr>
-          <tr class="best"><td>Model available</td><td class="num">0% ± 0 pp</td><td class="num">78.3% ± 42.2 pp</td><td class="num"><strong>20.8% ± 41.5 pp</strong> (5 / 24)</td><td class="num">after the run</td><td>promoted in generations 3 and 6; generation 9 running</td></tr>
+          <tr class="best"><td>Model available</td><td class="num">78.3%</td><td class="num">20.8% (5 / 24)</td><td class="num"><strong>16.7%</strong> (4 / 24)</td></tr>
+          <tr class="best"><td>Pure code</td><td class="num">65.2%</td><td class="num">8.3% (2 / 24)</td><td class="num"><strong>4.2%</strong> (1 / 24)</td></tr>
         </tbody>
       </table>
     </figure>
     <div class="finding">
       <p class="finding-label">A large train–dev gap</p>
-      <p>Both champions solve most train tasks (65% and 78%) but few dev tasks. They are skill libraries: regular
-      expressions map an instruction to a handler that scripts LibreOffice through its UNO interface or runs shell and
-      settings commands. A handler written for a train task rarely covers a dev task, which usually needs a different
-      skill. The better run (5 / 24) probes the desktop first and has 28 spreadsheet and about 20 desktop handlers.</p>
+      <p>Both champions are libraries of handlers matched to instructions; a handler written for a train task rarely
+      covers an unseen one. The better champion never calls the model, so the two runs differ by search, not by the
+      model.</p>
     </div>
-    <div class="finding">
-      <p class="finding-label">The model was available but not used</p>
-      <p>The 5 / 24 champion never calls the small model; only unpromoted candidates did. So the difference between the
-      two runs is two independent searches over pure-code programs, not evidence that the model helps. The next runs
-      cover eight applications (Calc, Writer, Impress, OS, VS Code, GIMP, VLC, Thunderbird; 222 tasks split by
-      application into 70 / 76 / 76) and tell the improvers where the model can help, so the comparison becomes a real
-      ablation.</p>
-    </div>
-    <p class="pending">The program decides every action in code, including running code inside the desktop and reading
-    its output. The model never writes text or actions; it returns a probability per option and acts as a smart
-    if-statement inside the program (in the style of TypeSafe's Jev). In both settings the program may learn a memory
-    from its own train episodes, frozen during dev and test.</p>
+    <p class="pending">Next: all ten applications (360 tasks) with models for perception only (text and UI-element
+    detection) and every decision in code.</p>
   </div>
+
   <div data-panel="arc" hidden>
     <h3 id="arc">ARC-AGI-1, 2 and 3: one program</h3>
-    <p>The Abstraction and Reasoning Corpus asks for a rule inferred from a few examples. We put all three versions
-    into one task family solved by <strong>one program</strong>: ARC-AGI-1 and ARC-AGI-2 are static puzzles (a few
-    input–output grid pairs, then a test input; two attempts, exact match, as in ARC's pass@2), and ARC-AGI-3 is a set
-    of interactive turn-based games with several levels and no instructions (64 × 64 frames, keyboard-like actions and
-    clicks, played offline with the official engine, score weighted by level as in ARC-AGI-3). The program reads
-    <code>obs["kind"]</code> and must handle both; it is never told the puzzle's or game's name, nor whether an answer
-    was right.</p>
+    <p>Static puzzles (ARC-AGI-1, 2; pass@2, exact match) and interactive games (ARC-AGI-3, official engine offline,
+    level-weighted score), solved by <strong>one program</strong> that is never told the puzzle, the game or whether
+    an answer was right.</p>
     <figure class="table-figure">
-      <figcaption><strong>Table 6.</strong> ARC splits. Test is the official public evaluation sets and 8 of the 25
-      public ARC-AGI-3 games, used once after the run. Dev (the promotion gate) uses only puzzles new in ARC-AGI-2 and
-      games never shown in train. Every task whose name appears in either evaluation set, or in ARC-AGI-1 dev, is kept
-      out of train and dev, including the revised copies of ARC-AGI-1 evaluation tasks inside ARC-AGI-2 training.</figcaption>
+      <figcaption><strong>Table 7.</strong> Splits. Dev and test share no task name with train in any version; ARC-AGI-2
+      counts only puzzles new in version 2. Train rotates 100 + 100 + 9 per generation.</figcaption>
       <table>
         <thead><tr><th>Split</th><th class="num">ARC-AGI-1</th><th class="num">ARC-AGI-2</th><th class="num">ARC-AGI-3</th><th>Source</th></tr></thead>
         <tbody>
-          <tr><td>Train</td><td class="num">592</td><td class="num">153</td><td class="num">9 games</td><td>public training sets; 100 + 100 + 9 rotated in per generation. Since generation 7 the 292 revised ARC-AGI-1 puzzles inside ARC-AGI-2 training count as ARC-AGI-1, so the ARC-AGI-2 train score, like dev, measures puzzles new in version 2</td></tr>
-          <tr><td>Dev (hidden)</td><td class="num">100</td><td class="num">80</td><td class="num">8 games</td><td>held-out training puzzles; ARC-AGI-2 dev only puzzles new in version 2</td></tr>
-          <tr><td>Test (once)</td><td class="num">400</td><td class="num">120</td><td class="num">8 games</td><td>official public evaluation sets</td></tr>
+          <tr><td>Train</td><td class="num">592</td><td class="num">153</td><td class="num">9 games</td><td>public training sets</td></tr>
+          <tr><td>Dev (hidden)</td><td class="num">100</td><td class="num">80</td><td class="num">8 games</td><td>held-out training puzzles</td></tr>
+          <tr><td>Test (once)</td><td class="num">400</td><td class="num">120</td><td class="num">8 games</td><td>public evaluation sets</td></tr>
         </tbody>
       </table>
     </figure>
     <figure class="table-figure">
-      <figcaption><strong>Table 7.</strong> ARC on hidden dev, the incumbent after each generation (success rate per
-      puzzle; level-weighted score for the games). The seed program copies the input and moves at random. Test is run
-      once, after the run.</figcaption>
+      <figcaption><strong>Table 8.</strong> Hidden dev, the incumbent after each promotion.</figcaption>
       <table>
-        <thead><tr><th>Generation</th><th>Incumbent</th><th class="num">Lines</th><th class="num">ARC-AGI-1 (100)</th><th class="num">ARC-AGI-2 (80)</th><th class="num">ARC-AGI-3 (8 games)</th><th class="num">Mean</th></tr></thead>
+        <thead><tr><th>Generation</th><th>Improver</th><th class="num">Lines</th><th class="num">ARC-AGI-1</th><th class="num">ARC-AGI-2</th><th class="num">ARC-AGI-3</th><th class="num">Mean</th></tr></thead>
         <tbody>
-          <tr><td>0</td><td>seed program</td><td class="num">—</td><td class="num">0%</td><td class="num">0%</td><td class="num">0%</td><td class="num">0.000</td></tr>
-          <tr class="best"><td>1</td><td>Claude Sonnet</td><td class="num">1,251</td><td class="num">30.5%</td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num">0.168</td></tr>
-          <tr class="best"><td>2</td><td>Claude Opus</td><td class="num">2,429</td><td class="num">34.0%</td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num">0.186</td></tr>
-          <tr><td>3</td><td>no promotion</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr class="best"><td>4</td><td>Claude Opus</td><td class="num">3,653</td><td class="num"><u>37.0%</u></td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num"><u>0.202</u></td></tr>
-          <tr><td>5</td><td>no promotion</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr>
-          <tr class="best"><td>6</td><td>Claude Sonnet</td><td class="num">3,819</td><td class="num"><strong>40.0%</strong></td><td class="num"><strong>1.3%</strong></td><td class="num">0%</td><td class="num">0.218</td></tr>
+          <tr><td>0</td><td>seed</td><td class="num">—</td><td class="num">0%</td><td class="num">0%</td><td class="num">0%</td><td class="num">0.000</td></tr>
+          <tr class="best"><td>1</td><td>Claude Sonnet</td><td class="num">1,251</td><td class="num">30.5%</td><td class="num">1.3%</td><td class="num">0%</td><td class="num">0.168</td></tr>
+          <tr class="best"><td>2</td><td>Claude Opus</td><td class="num">2,429</td><td class="num">34.0%</td><td class="num">1.3%</td><td class="num">0%</td><td class="num">0.186</td></tr>
+          <tr class="best"><td>4</td><td>Claude Opus</td><td class="num">3,653</td><td class="num">37.0%</td><td class="num">1.3%</td><td class="num">0%</td><td class="num">0.202</td></tr>
+          <tr class="best"><td>6</td><td>Claude Sonnet</td><td class="num">3,819</td><td class="num">40.0%</td><td class="num">1.3%</td><td class="num">0%</td><td class="num">0.218</td></tr>
           <tr class="best"><td>7</td><td>Claude Opus</td><td class="num">4,369</td><td class="num"><strong>40.0%</strong></td><td class="num"><strong>1.3%</strong></td><td class="num"><strong>1.5%</strong></td><td class="num"><strong>0.219</strong></td></tr>
         </tbody>
       </table>
     </figure>
     <div class="finding">
-      <p class="finding-label">ARC-AGI-1 rises and ARC-AGI-3 starts; ARC-AGI-2 does not yet</p>
-      <p>The program is a generate-and-verify solver: it searches grid transformations (symmetries and colour maps,
-      scaling and tiling, symmetry and period completion, boolean operations on split parts, object selection and
-      movement, local rule tables, two-step compositions) and answers only with one that reproduces every
-      demonstration exactly. On unseen ARC-AGI-1 puzzles it climbs from 30.5% to 40.0% in six generations. On
-      ARC-AGI-2 it solves 1 of 80 dev puzzles throughout: its train score (29–35%) comes from revised ARC-AGI-1 puzzles
-      inside ARC-AGI-2 training, and dev uses only puzzles new in ARC-AGI-2. Train also overfits: in generation 3 an
-      Opus candidate grew to 4,189 lines and reached 68.5% on its ARC-AGI-1 train puzzles but only 36% on dev, short of
-      the gate. In the games, an early candidate cleared the first level of three dev games, but no promoted version
-      cleared any until generation 7. There an Opus improver found that most games draw a step or energy counter that
-      changes on every action, so every frame looked new and the program's state graph never revisited a state;
-      separating the counter from the rest of the frame let it revisit states, and the promoted version clears the
-      first level of 3 of the 8 dev games (3 wins, 0 losses against the incumbent). In the same generation a Sonnet
-      candidate solved 7 more ARC-AGI-1 train puzzles but not a single additional dev puzzle.</p>
+      <p class="finding-label">ARC-AGI-1 rises, ARC-AGI-3 starts, ARC-AGI-2 not yet</p>
+      <p>Games: in generation 7 an improver found that most games draw a step counter that changes every action, so
+      no frame ever repeated; separating it let the program revisit states, and it now clears a first level in 3 of 8
+      dev games. Puzzles: train gains often stay on train (one candidate solved 7 more ARC-AGI-1 train puzzles and no
+      more dev puzzles).</p>
     </div>
-    <p class="pending">Paused after generation 7 (of at most 10); seven generations cost $243 in improver sessions, plus
-    $61 for two generations we discarded because we had started them with the wrong Python environment; test not yet
-    run. Next, the improvers are asked to make the program infer each rule at run time (observe, hypothesise, test,
-    revise, shared by puzzles and games) and to measure it by leave-one-out on the demonstration pairs, and train adds
-    ConceptARC, MINI-ARC and RE-ARC puzzles, never a dev or test rule. Three Claude improvers (Opus and two Sonnet); the improvers
-    cannot read the data, the split manifest or the game engine, and the guard rejects a program that does.</p>
+    <p class="pending">Paused after generation 7; $243 of improver sessions. Next: the program infers each rule at run
+    time (observe, hypothesise, test, revise), measured by leave-one-out on the demonstration pairs; train adds
+    ConceptARC, MINI-ARC and RE-ARC.</p>
   </div>
+
   <div data-panel="process" hidden>
     <figure class="table-figure">
-      <figcaption><strong>Table 8.</strong> Who produced the promoted versions. Each generation runs one candidate per
-      improver, in parallel, from the same incumbent.</figcaption>
+      <figcaption><strong>Table 9.</strong> Who produced the promoted versions (one candidate per improver per
+      generation, from the same incumbent).</figcaption>
       <table>
         <thead><tr><th>Improver</th><th class="num">Promotions</th><th>Where</th></tr></thead>
         <tbody>
-          <tr><td>Claude Code (agent with tools)</td><td class="num">32</td><td>ScienceWorld 19 (rounds 1–4 and the electricity specialist) · LIBERO 5 · OSWorld 3 · ARC-AGI 5</td></tr>
-          <tr><td>Codex CLI (agent with tools)</td><td class="num">17</td><td>Atari-5 pixels 14 · LIBERO 2 · OSWorld 1</td></tr>
-          <tr><td>DeepSeek API (no tools, 4 rounds of feedback)</td><td class="num">4</td><td>Atari-5 pixels 3 · ScienceWorld 1</td></tr>
+          <tr><td>Claude Code</td><td class="num">32</td><td>ScienceWorld 19 · LIBERO 5 · OSWorld 3 · ARC-AGI 5</td></tr>
+          <tr><td>Codex CLI</td><td class="num">17</td><td>Atari-5 14 · LIBERO 2 · OSWorld 1</td></tr>
+          <tr><td>DeepSeek API</td><td class="num">4</td><td>Atari-5 3 · ScienceWorld 1</td></tr>
         </tbody>
       </table>
     </figure>
     <figure class="table-figure">
-      <figcaption><strong>Table 9.</strong> What each run cost. <em>Environment steps</em> count every evaluation: the
-      gates, the tests and the improvers' own trial runs (for Atari, one step is four frames). <em>Agent hours</em> is the
-      wall time of all improver sessions. Claude Code reports its cost in USD; Codex CLI reports tokens only. Runs still in
-      progress are not listed.</figcaption>
+      <figcaption><strong>Table 10.</strong> Cost per run. Environment steps include the improvers' own trial runs;
+      agent hours are the wall time of all improver sessions.</figcaption>
       <table>
         <thead><tr><th>Task</th><th>Setting</th><th class="num">Env steps</th><th class="num">Agent hours</th><th class="num">Claude Code</th><th class="num">Codex tokens</th><th class="num">Candidates</th></tr></thead>
         <tbody>
-            {% comment %}Atari RAM hidden
-<tr><td>Breakout</td><td>no sticky</td><td class="num">28.4 M</td><td class="num">6.0</td><td class="num">$7</td><td class="num">0.7 M</td><td class="num">15</td></tr>
-            <tr><td>Pong</td><td>no sticky</td><td class="num">14.7 M</td><td class="num">2.9</td><td class="num">$19</td><td class="num">0.3 M</td><td class="num">13</td></tr>
-            <tr><td>Ms. Pac-Man</td><td>no sticky</td><td class="num">65.8 M</td><td class="num">13.3</td><td class="num">$29</td><td class="num">2.4 M</td><td class="num">39</td></tr>
-            <tr><td>Montezuma's Revenge</td><td>no sticky</td><td class="num">53.6 M</td><td class="num">12.0</td><td class="num">$22</td><td class="num">3.0 M</td><td class="num">27</td></tr>
-            <tr><td>Space Invaders</td><td>no sticky</td><td class="num">54.0 M</td><td class="num">9.1</td><td class="num">$23</td><td class="num">1.0 M</td><td class="num">21</td></tr>
-            <tr><td>Breakout</td><td>sticky</td><td class="num">34.9 M</td><td class="num">8.2</td><td class="num">$13</td><td class="num">1.3 M</td><td class="num">21</td></tr>
-            <tr><td>Ms. Pac-Man</td><td>sticky</td><td class="num">97.1 M</td><td class="num">11.3</td><td class="num">$18</td><td class="num">2.3 M</td><td class="num">24</td></tr>
-            <tr><td>Montezuma's Revenge</td><td>sticky</td><td class="num">79.9 M</td><td class="num">13.0</td><td class="num">$32</td><td class="num">3.7 M</td><td class="num">30</td></tr>
-{% endcomment %}
-            <tr><td>LIBERO-Spatial</td><td>state</td><td class="num">0.3 M</td><td class="num">1.0</td><td class="num">$2</td><td class="num">0.1 M</td><td class="num">6</td></tr>
-            <tr><td>LIBERO-10</td><td>state</td><td class="num">1.7 M</td><td class="num">4.8</td><td class="num">$20</td><td class="num">0.5 M</td><td class="num">21</td></tr>
-            <tr><td>LIBERO-Spatial</td><td>vision</td><td class="num">1.0 M</td><td class="num">11.5</td><td class="num">$27</td><td class="num">1.3 M</td><td class="num">32</td></tr>
-            <tr><td>LIBERO-10</td><td>vision</td><td class="num">1.3 M</td><td class="num">12.8</td><td class="num">$15</td><td class="num">1.5 M</td><td class="num">28</td></tr>
-            {% comment %}<tr><td>Leduc variants</td><td>10 generations</td><td class="num">—</td><td class="num">16.0</td><td class="num">$31</td><td class="num">2.6 M</td><td class="num">40</td></tr>{% endcomment %}
-            <tr><td>OSWorld</td><td>pure code</td><td class="num">—</td><td class="num">23.5</td><td class="num">$29</td><td class="num">1.1 M</td><td class="num">24</td></tr>
-            <tr><td>OSWorld</td><td>model available</td><td class="num">—</td><td class="num">23.6</td><td class="num">$38</td><td class="num">0.9 M</td><td class="num">23</td></tr>
+          <tr><td>LIBERO-Spatial</td><td>state</td><td class="num">0.3 M</td><td class="num">1.0</td><td class="num">$2</td><td class="num">0.1 M</td><td class="num">6</td></tr>
+          <tr><td>LIBERO-10</td><td>state</td><td class="num">1.7 M</td><td class="num">4.8</td><td class="num">$20</td><td class="num">0.5 M</td><td class="num">21</td></tr>
+          <tr><td>LIBERO-Spatial</td><td>vision</td><td class="num">1.0 M</td><td class="num">11.5</td><td class="num">$27</td><td class="num">1.3 M</td><td class="num">32</td></tr>
+          <tr><td>LIBERO-10</td><td>vision</td><td class="num">1.3 M</td><td class="num">12.8</td><td class="num">$15</td><td class="num">1.5 M</td><td class="num">28</td></tr>
+          <tr><td>OSWorld</td><td>pure code</td><td class="num">—</td><td class="num">23.5</td><td class="num">$29</td><td class="num">1.1 M</td><td class="num">24</td></tr>
+          <tr><td>OSWorld</td><td>model available</td><td class="num">—</td><td class="num">23.6</td><td class="num">$38</td><td class="num">0.9 M</td><td class="num">23</td></tr>
         </tbody>
       </table>
+      <p class="table-note">A run costs tens of dollars. Sample efficiency is the weak point: an Atari-5 run uses
+      71–303 M frames, the same order as deep RL's 200 M.</p>
     </figure>
-    <p class="pending">Most environment steps are spent by the improvers' own trial runs, not by the
-    gates. An Atari-5 run uses 18–76 M steps (71–303 M frames): the same order as the standard deep-RL budget of 200 M
-    frames, and far above sample-efficient settings such as Atari 100k (400 K frames). Sample efficiency is a weakness of
-    this loop. In money a run costs tens of dollars of agent time.</p>
   </div>
 
   <h2 id="progress">Progress</h2>
-  <p>Dated updates, newest first. Open an entry to read the full update.</p>
   <ol class="timeline">
   {% for post in site.posts %}
     <li id="{{ post.slug }}">
@@ -719,7 +369,6 @@ layout: default
   {{ roadmap_md | markdownify }}
 
   <h2 id="bibtex">BibTeX</h2>
-  <p>The programme is ongoing. If you refer to it, please cite:</p>
   <div class="bib-wrap">
     <button class="copy" data-target="#bib">Copy</button>
 <pre class="bibtex" id="bib">@misc{drsianything2026,
@@ -730,7 +379,7 @@ layout: default
   howpublished = {\url{https://smu-diga.github.io/drsi-anything-programme/}}
 }</pre>
   </div>
-  <p>Questions and collaboration: please open an issue on <a href="https://github.com/{{ site.repository }}">GitHub</a>.</p>
+  <p class="pending">Questions and collaboration: open an issue on <a href="https://github.com/{{ site.repository }}">GitHub</a>.</p>
 
   </article>
 </div>

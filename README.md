@@ -41,12 +41,12 @@ the implementation is not public.
 | RSI loop, archive, promotion gate, resume, env-step ledger | Done |
 | Isolated evaluator (policy in a separate process, no access to reward or seed) | Done |
 | Improvers: Codex CLI, Claude Code, OpenAI-compatible chat API (DeepSeek) | Done |
-| Games: Atari-5 from pixels, sticky actions (above human on 4 of 5; Q*bert 52,418 test) | Running |
+| Games: Atari-5 from pixels, sticky actions (above human on 4 of 5; Q*bert 52,418 test) | Done |
 | Games: VizDoom | Done |
 | Embodied robotics: MuJoCo locomotion, MetaWorld, ManiSkill3 | Done |
 | Embodied robotics: LIBERO (Spatial state 99.0% test; LIBERO-10 state 99.0% test; Spatial vision 95.3% test; LIBERO-10 vision 87.0% test) | Done |
 | Embodied robotics: SimplerEnv, RoboTwin 2.0 | Planned |
-| OSWorld (pure code vs code + typed 2B decision function) | Running |
+| OSWorld: Calc + OS (test 16.7% with a small model available, 4.2% pure code) | Done |
 | ARC-AGI-1, 2 and 3: one program for static puzzles and interactive games | Running |
 
 Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).
