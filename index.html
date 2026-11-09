@@ -163,6 +163,11 @@ layout: default
       <p class="table-note">All 320 games recognised. Q*bert diverges because its program used the lives counter,
       which is now hidden (−0.5%).</p>
     </figure>
+    <h4 id="atari5-videos">Watch the merged program play</h4>
+    <p>One full episode per title. Each is the test seed with the <strong>median score</strong> of the
+    64, not the best one. The video is the screen the program receives, at twice real time. We re-ran the program to
+    record it, and score and length match the evaluation exactly.</p>
+    {% include videos-atari5.html %}
   </div>
 
   <div data-panel="science" hidden>
@@ -230,6 +235,11 @@ layout: default
       with VLAs, vision mode is closest (it also uses depth). *Before the seed guard existed, one improver evaluated on
       dev scenes, so this dev figure is optimistic; test was never touched.</p>
     </figure>
+    <h4 id="libero-videos">Watch the LIBERO-10 vision program</h4>
+    <p>The program's two RGB camera views (it also receives depth), upscaled, at real time. For each of the ten tasks,
+    the first test scene it solved, followed by a failure on each of the two hardest tasks. These are not a sample of
+    its overall rate of 87.0%; the caption gives the rate on each task. All 12 replays matched their evaluated outcome.</p>
+    {% include videos-libero10.html %}
     <div class="finding">
       <p class="finding-label">Found by probing</p>
       <p>The vision program measured a 4 cm bias in its bowl estimate and re-centres with the wrist camera before
