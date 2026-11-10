@@ -76,7 +76,7 @@ layout: default
         <li>ManiSkill3 · MetaWorld · MuJoCo <span class="badge done">Done</span></li>
         <li>SimplerEnv · RoboTwin 2.0 <span class="badge planned">Planned</span></li>
       </ul>
-      <p class="domain-note">State (object poses) or vision (RGB-D only).</p>
+      <p class="domain-note">Vision only (RGB-D cameras).</p>
     </div>
     <div class="domain">
       <h4>Computer use</h4>
@@ -110,9 +110,8 @@ layout: default
         <tr><td>Video games</td><td>Atari Q*bert, pixels only</td><td>sticky, 64 test seeds</td><td class="num">183 ± 125</td><td class="num"><strong>52,418 ± 9,199</strong></td><td class="num">human 13,455; BTR 42,927</td></tr>
         <tr><td>Video games</td><td>Atari Phoenix, pixels only</td><td>sticky, 64 test seeds</td><td class="num">745 ± 605</td><td class="num"><strong>65,076 ± 19,536</strong></td><td class="num">human 7,243; Muesli 805,305</td></tr>
         <tr><td>Text games</td><td>ScienceWorld, 30 types</td><td>1,819 test variations</td><td class="num">2.5 ± 3.1</td><td class="num"><strong>85.0 ± 23.3</strong></td><td class="num">SwiftSage (GPT-4) 84.68*</td></tr>
-        <tr><td>Embodied robotics</td><td>LIBERO-Spatial / 10, vision</td><td>400 test episodes</td><td class="num">0%</td><td class="num"><strong>95.3% / 87.0%</strong></td><td class="num">OpenVLA-OFT 97.6% / 94.5%</td></tr>
-        <tr><td>Embodied robotics</td><td>LIBERO-Spatial / 10, state</td><td>400 test episodes</td><td class="num">0%</td><td class="num"><strong>99.0% / 99.0%</strong></td><td class="num">privileged state</td></tr>
         <tr><td>Embodied robotics</td><td>RoboCasa365, 18 single-skill tasks, vision, code only</td><td>dev, 72 episodes</td><td class="num">8.3%†</td><td class="num"><strong>38.9%</strong></td><td class="num">—</td></tr>
+        <tr><td>Embodied robotics</td><td>LIBERO-Spatial / 10, vision</td><td>400 test episodes</td><td class="num">0%</td><td class="num"><strong>95.3% / 87.0%</strong></td><td class="num">OpenVLA-OFT 97.6% / 94.5%</td></tr>
         <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 test tasks</td><td class="num">0%</td><td class="num"><strong>16.7% ± 38.1 pp</strong></td><td class="num">—</td></tr>
         <tr><td>Abstract reasoning</td><td>ARC-AGI-1 / 2 / 3</td><td>dev, running</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>40.0%</strong> / 1.3% / 1.5%</td><td class="num">—</td></tr>
       </tbody>
@@ -217,38 +216,6 @@ layout: default
   </div>
 
   <div data-panel="embodied" hidden>
-    {% include curves-embodied.html %}
-    <figure class="table-figure">
-      <figcaption><strong>Table 5.</strong> LIBERO success rate. Scenes 0–1 train, 2–9 hidden dev, 10–49 test (400
-      episodes, used once). <em>State</em>: object poses (privileged). <em>Vision</em>: RGB-D from two cameras, camera
-      parameters and proprioception.</figcaption>
-      <table>
-        <thead><tr><th>Setting</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Generations</th></tr></thead>
-        <tbody>
-          <tr class="best"><td>LIBERO-Spatial · state</td><td class="num">100%</td><td class="num"><strong>99.0%</strong></td><td class="num">1</td></tr>
-          <tr class="best"><td>LIBERO-10 · state</td><td class="num">100%</td><td class="num"><strong>99.0%</strong></td><td class="num">1</td></tr>
-          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">95.0%</td><td class="num"><strong>95.3%</strong></td><td class="num">10</td></tr>
-          <tr class="best"><td>LIBERO-10 · vision</td><td class="num">91.2%*</td><td class="num"><strong>87.0%</strong></td><td class="num">8</td></tr>
-          <tr class="ref"><td>OpenVLA, fine-tuned (Spatial / 10)</td><td class="num" colspan="2">84.7% / 53.7%</td><td class="num">demos</td></tr>
-          <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">97.6% / 94.5%</td><td class="num">demos</td></tr>
-        </tbody>
-      </table>
-      <p class="table-note">Seed program 0% everywhere. Every policy is readable code; state mode is not comparable
-      with VLAs, vision mode is closest (it also uses depth). *Before the seed guard existed, one improver evaluated on
-      dev scenes, so this dev figure is optimistic; test was never touched.</p>
-    </figure>
-    <h4 id="libero-videos">Watch the LIBERO-10 vision program</h4>
-    <p>The program's two RGB camera views (it also receives depth), upscaled, at real time. For each of the ten tasks,
-    the first test scene it solved, followed by a failure on each of the two hardest tasks. These are not a sample of
-    its overall rate of 87.0%; the caption gives the rate on each task. All 12 replays matched their evaluated outcome.</p>
-    {% include videos-libero10.html %}
-    <div class="finding">
-      <p class="finding-label">Found by probing</p>
-      <p>The vision program measured a 4 cm bias in its bowl estimate and re-centres with the wrist camera before
-      grasping. The LIBERO-10 program worked out each goal condition (the stove counts as on past 0.45 rad).</p>
-    </div>
-    <p class="pending">Next: LIBERO-Object and LIBERO-Goal from vision, then ManiSkill3.</p>
-
     <h3 id="robocasa">RoboCasa365: single skills first, in code only</h3>
     <p>RoboCasa365 kitchens with the PandaOmron mobile manipulator, in the official vision mode: three 128-pixel RGB-D
     cameras, proprioception and the instruction. The program calls no model and has no learned weights. This stage
@@ -264,7 +231,7 @@ layout: default
     never developed on. The stage 1 round-10 point was checked by hand after that run (10 wins, 2 losses against round
     2, sign test p = 0.02); stage 2 measured the same program again at its start and got the same 17 of 72.</p>
     <figure class="table-figure">
-      <figcaption><strong>Table 5b.</strong> RoboCasa365 single-skill tasks, success on hidden dev (successes out of
+      <figcaption><strong>Table 5.</strong> RoboCasa365 single-skill tasks, success on hidden dev (successes out of
       4 per task, same 72 seeds in every column). Tasks not listed are 0 / 4 in all three columns.</figcaption>
       <table>
         <thead><tr><th>Task</th><th class="num">Start of stage 1</th><th class="num">End of stage 1</th><th class="num">Stage 2, best so far</th></tr></thead>
@@ -291,6 +258,37 @@ layout: default
     <p class="pending">Next: finish stage 2; the six tasks still at 0 on dev (cabinet doors, the blender lid, the
     stove knob, the faucet, the coffee mug, the toaster pick); new videos of the stage 2 program; the target50 test;
     then composite activities built from these skills.</p>
+
+    <h3 id="libero">LIBERO: tabletop manipulation from vision</h3>
+    {% include curves-embodied.html %}
+    <figure class="table-figure">
+      <figcaption><strong>Table 5b.</strong> LIBERO success rate. Scenes 0–1 train, 2–9 hidden dev, 10–49 test (400
+      episodes, used once). Vision: RGB-D from two cameras, camera parameters
+      and proprioception.</figcaption>
+      <table>
+        <thead><tr><th>Setting</th><th class="num">Best dev</th><th class="num">Test</th><th class="num">Generations</th></tr></thead>
+        <tbody>
+          <tr class="best"><td>LIBERO-Spatial · vision</td><td class="num">95.0%</td><td class="num"><strong>95.3%</strong></td><td class="num">10</td></tr>
+          <tr class="best"><td>LIBERO-10 · vision</td><td class="num">91.2%*</td><td class="num"><strong>87.0%</strong></td><td class="num">8</td></tr>
+          <tr class="ref"><td>OpenVLA, fine-tuned (Spatial / 10)</td><td class="num" colspan="2">84.7% / 53.7%</td><td class="num">demos</td></tr>
+          <tr class="ref"><td>OpenVLA-OFT (Spatial / 10)</td><td class="num" colspan="2">97.6% / 94.5%</td><td class="num">demos</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Seed program 0% everywhere. Every policy is readable code; unlike the VLAs, it also uses
+      depth. *Before the seed guard existed, one improver evaluated on
+      dev scenes, so this dev figure is optimistic; test was never touched.</p>
+    </figure>
+    <h4 id="libero-videos">Watch the LIBERO-10 vision program</h4>
+    <p>The program's two RGB camera views (it also receives depth), upscaled, at real time. For each of the ten tasks,
+    the first test scene it solved, followed by a failure on each of the two hardest tasks. These are not a sample of
+    its overall rate of 87.0%; the caption gives the rate on each task. All 12 replays matched their evaluated outcome.</p>
+    {% include videos-libero10.html %}
+    <div class="finding">
+      <p class="finding-label">Found by probing</p>
+      <p>The vision program measured a 4 cm bias in its bowl estimate and re-centres with the wrist camera before
+      grasping. The LIBERO-10 program worked out each goal condition (the stove counts as on past 0.45 rad).</p>
+    </div>
+    <p class="pending">Next: LIBERO-Object and LIBERO-Goal from vision, then ManiSkill3.</p>
   </div>
 
   <div data-panel="computer" hidden>
@@ -379,8 +377,6 @@ layout: default
       <table>
         <thead><tr><th>Task</th><th>Setting</th><th class="num">Env steps</th><th class="num">Agent hours</th><th class="num">Claude Code</th><th class="num">Codex tokens</th><th class="num">Candidates</th></tr></thead>
         <tbody>
-          <tr><td>LIBERO-Spatial</td><td>state</td><td class="num">0.3 M</td><td class="num">1.0</td><td class="num">$2</td><td class="num">0.1 M</td><td class="num">6</td></tr>
-          <tr><td>LIBERO-10</td><td>state</td><td class="num">1.7 M</td><td class="num">4.8</td><td class="num">$20</td><td class="num">0.5 M</td><td class="num">21</td></tr>
           <tr><td>LIBERO-Spatial</td><td>vision</td><td class="num">1.0 M</td><td class="num">11.5</td><td class="num">$27</td><td class="num">1.3 M</td><td class="num">32</td></tr>
           <tr><td>LIBERO-10</td><td>vision</td><td class="num">1.3 M</td><td class="num">12.8</td><td class="num">$15</td><td class="num">1.5 M</td><td class="num">28</td></tr>
           <tr><td>OSWorld</td><td>pure code</td><td class="num">—</td><td class="num">23.5</td><td class="num">$29</td><td class="num">1.1 M</td><td class="num">24</td></tr>
