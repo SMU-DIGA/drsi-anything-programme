@@ -103,7 +103,7 @@ layout: default
     <figcaption><strong>Table 1.</strong> Headline results on test seeds no improver or gate saw (dev where marked).
     ± is the sample std over seeds; for success rates, of the 0 / 1 outcomes (pp). *SwiftSage calls GPT-4 at run time
     and scores failures more leniently; our program calls no model. †RoboCasa: the start of the single-skill stage,
-    after six earlier rounds on all train tasks from an empty program; the run is still going.</figcaption>
+    after six earlier rounds on all train tasks from an empty program.</figcaption>
     <table>
       <thead><tr><th>Domain</th><th>Benchmark</th><th>Protocol</th><th class="num">Seed</th><th class="num">Best</th><th class="num">Reference</th></tr></thead>
       <tbody>
@@ -222,8 +222,8 @@ layout: default
     covers only the 18 single-skill tasks (open and close doors, drawers and lids, pick and place, press, turn,
     navigate); composite activities come next, built from these skills. Train uses RoboCasa's pretraining kitchens;
     hidden dev is 72 episodes, 4 per task, in held-out kitchens with held-out objects, the same 72 for every version.
-    One improver (Claude Opus). Stage 1 ran 10 rounds; stage 2 continues from its last program with larger train
-    measurements and is still running. Status: 10 Nov 2026, stage 2 round 8 of 10.</p>
+    One improver (Claude Opus). Stage 1 ran 10 rounds; stage 2 ran 10 more from its last program, with larger train
+    measurements. Status: 10 Nov 2026, both stages finished.</p>
     {% include curves-robocasa.html %}
     <p class="table-note">Solid: hidden dev of the best version so far; a dot is a dev check (hollow: checked, not
     promoted). A version is checked on dev only when its improver asks, and promoted only if it beats the current best
@@ -234,7 +234,7 @@ layout: default
       <figcaption><strong>Table 5.</strong> RoboCasa365 single-skill tasks, success on hidden dev (successes out of
       4 per task, same 72 seeds in every column). Tasks not listed are 0 / 4 in all three columns.</figcaption>
       <table>
-        <thead><tr><th>Task</th><th class="num">Start of stage 1</th><th class="num">End of stage 1</th><th class="num">Stage 2, best so far</th></tr></thead>
+        <thead><tr><th>Task</th><th class="num">Start of stage 1</th><th class="num">End of stage 1</th><th class="num">Stage 2, best</th></tr></thead>
         <tbody>
 {% include table-robocasa.html %}        </tbody>
       </table>
@@ -255,7 +255,8 @@ layout: default
     tasks it never solves. These are not a sample of its overall rate of 23.6%; the caption gives the rate on each
     task. All 10 replays matched their evaluated outcome.</p>
     {% include videos-robocasa.html %}
-    <p class="pending">Next: finish stage 2; the six tasks still at 0 on dev (cabinet doors, the blender lid, the
+    <p class="pending">Stage 2 rounds 8 to 10 did not ask for a dev check, so round 7 stays the best version; round 10
+    has the highest fresh-train success (46.3%) but is unchecked on dev. Next: the six tasks still at 0 on dev (cabinet doors, the blender lid, the
     stove knob, the faucet, the coffee mug, the toaster pick); new videos of the stage 2 program; the target50 test;
     then composite activities built from these skills.</p>
 
