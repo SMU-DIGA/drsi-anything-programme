@@ -398,6 +398,7 @@ tbody tr:last-child td { border-bottom-width: 1.5px; }
 .video-grid { display: grid; gap: 16px; margin: 16px 0 24px; }
 .video-grid-atari { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
 .video-grid-robot { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.video-grid-wide { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
 .video-card { margin: 0; }
 .video-card video { display: block; width: 100%; height: auto; background: #000; border-radius: 6px; }
 .video-card figcaption { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-top: 6px; }

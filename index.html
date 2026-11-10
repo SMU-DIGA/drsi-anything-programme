@@ -102,7 +102,8 @@ layout: default
   <figure class="table-figure">
     <figcaption><strong>Table 1.</strong> Headline results on test seeds no improver or gate saw (dev where marked).
     ± is the sample std over seeds; for success rates, of the 0 / 1 outcomes (pp). *SwiftSage calls GPT-4 at run time
-    and scores failures more leniently; our program calls no model.</figcaption>
+    and scores failures more leniently; our program calls no model. †RoboCasa: the start of the single-skill stage,
+    after six earlier rounds on all train tasks from an empty program.</figcaption>
     <table>
       <thead><tr><th>Domain</th><th>Benchmark</th><th>Protocol</th><th class="num">Seed</th><th class="num">Best</th><th class="num">Reference</th></tr></thead>
       <tbody>
@@ -111,6 +112,7 @@ layout: default
         <tr><td>Text games</td><td>ScienceWorld, 30 types</td><td>1,819 test variations</td><td class="num">2.5 ± 3.1</td><td class="num"><strong>85.0 ± 23.3</strong></td><td class="num">SwiftSage (GPT-4) 84.68*</td></tr>
         <tr><td>Embodied robotics</td><td>LIBERO-Spatial / 10, vision</td><td>400 test episodes</td><td class="num">0%</td><td class="num"><strong>95.3% / 87.0%</strong></td><td class="num">OpenVLA-OFT 97.6% / 94.5%</td></tr>
         <tr><td>Embodied robotics</td><td>LIBERO-Spatial / 10, state</td><td>400 test episodes</td><td class="num">0%</td><td class="num"><strong>99.0% / 99.0%</strong></td><td class="num">privileged state</td></tr>
+        <tr><td>Embodied robotics</td><td>RoboCasa365, 18 single-skill tasks, vision, code only</td><td>dev, 72 episodes</td><td class="num">8.3%†</td><td class="num"><strong>23.6%</strong></td><td class="num">—</td></tr>
         <tr><td>Computer use</td><td>OSWorld, Calc + OS</td><td>24 test tasks</td><td class="num">0%</td><td class="num"><strong>16.7% ± 38.1 pp</strong></td><td class="num">—</td></tr>
         <tr><td>Abstract reasoning</td><td>ARC-AGI-1 / 2 / 3</td><td>dev, running</td><td class="num">0% / 0% / 0%</td><td class="num"><strong>40.0%</strong> / 1.3% / 1.5%</td><td class="num">—</td></tr>
       </tbody>
@@ -246,6 +248,48 @@ layout: default
       grasping. The LIBERO-10 program worked out each goal condition (the stove counts as on past 0.45 rad).</p>
     </div>
     <p class="pending">Next: LIBERO-Object and LIBERO-Goal from vision, then ManiSkill3.</p>
+
+    <h3 id="robocasa">RoboCasa365: single skills first, in code only</h3>
+    <p>RoboCasa365 kitchens with the PandaOmron mobile manipulator, in the official vision mode: three 128-pixel RGB-D
+    cameras, proprioception and the instruction. The program calls no model and has no learned weights. This stage
+    covers only the 18 single-skill tasks (open and close doors, drawers and lids, pick and place, press, turn,
+    navigate); composite activities come next, built from these skills. Train uses RoboCasa's pretraining kitchens;
+    hidden dev is 72 episodes, 4 per task, in held-out kitchens with held-out objects. One improver (Claude Opus),
+    10 rounds. Status: 10 Nov 2026.</p>
+    <figure class="table-figure">
+      <figcaption><strong>Table 5b.</strong> RoboCasa365 single-skill tasks, success on hidden dev (successes out of
+      4 per task, same 72 seeds for every column). Tasks not listed are 0 / 4 in all three columns.</figcaption>
+      <table>
+        <thead><tr><th>Task</th><th class="num">Start of stage</th><th class="num">Round 2</th><th class="num">Round 10</th></tr></thead>
+        <tbody>
+          <tr><td>Close the fridge</td><td class="num">1</td><td class="num">1</td><td class="num"><strong>4</strong></td></tr>
+          <tr><td>Pick from the sink, place on the counter</td><td class="num">2</td><td class="num">2</td><td class="num"><strong>3</strong></td></tr>
+          <tr><td>Pick from the counter, place in a cabinet</td><td class="num">1</td><td class="num">1</td><td class="num"><strong>2</strong></td></tr>
+          <tr><td>Pick from the counter, place on the stove</td><td class="num">1</td><td class="num">2</td><td class="num">2</td></tr>
+          <tr><td>Slide the dishwasher rack</td><td class="num">1</td><td class="num">1</td><td class="num"><strong>2</strong></td></tr>
+          <tr><td>Turn on the microwave</td><td class="num">0</td><td class="num">2</td><td class="num">2</td></tr>
+          <tr><td>Open a drawer</td><td class="num">0</td><td class="num">0</td><td class="num"><strong>1</strong></td></tr>
+          <tr><td>Pick from a drawer, place on the counter</td><td class="num">0</td><td class="num">0</td><td class="num"><strong>1</strong></td></tr>
+          <tr class="best"><td>All 18 tasks (72 episodes)</td><td class="num">8.3%</td><td class="num">12.5%</td><td class="num"><strong>23.6%</strong></td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Round 2 passed the dev gate (3 wins, 0 losses). Round 10 was checked on dev once, after the
+      run: 10 wins and 2 losses against round 2 on the same seeds (one-sided sign test p = 0.02). Dev only: the
+      official target50 test (50 episodes per task) has not been run.</p>
+    </figure>
+    <div class="finding">
+      <p class="finding-label">Train could not rank the versions</p>
+      <p>Each round's train measurement (36 fresh episodes) stayed between 4 and 10 successes from round 3 on, while
+      dev went from 9 to 17 of 72. At this size, train noise hides real gains.</p>
+    </div>
+    <h4 id="robocasa-videos">Watch the RoboCasa program</h4>
+    <p>The program's three RGB camera views (it also receives depth), upscaled, at real time, on hidden dev kitchens
+    with the round-10 program. One solved episode for each of the eight tasks it solves at all, then failures on two
+    tasks it never solves. These are not a sample of its overall rate of 23.6%; the caption gives the rate on each
+    task. All 10 replays matched their evaluated outcome.</p>
+    {% include videos-robocasa.html %}
+    <p class="pending">Next: the ten tasks still at 0 on dev (navigation, knobs, faucet, lids and others), then composite
+    activities built from these skills.</p>
   </div>
 
   <div data-panel="computer" hidden>
