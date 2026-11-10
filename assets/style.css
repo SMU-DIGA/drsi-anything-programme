@@ -403,3 +403,5 @@ tbody tr:last-child td { border-bottom-width: 1.5px; }
 .video-card video { display: block; width: 100%; height: auto; background: #000; border-radius: 6px; }
 .video-card figcaption { font-size: 13.5px; color: var(--muted); line-height: 1.5; margin-top: 6px; }
 .video-card figcaption strong { color: var(--fg); font-weight: 600; }
+.curves-1 { grid-template-columns: 1fr; }
+.c-dot-off { fill: var(--panel); stroke: var(--accent); stroke-width: 2; }
