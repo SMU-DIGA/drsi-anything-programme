@@ -32,7 +32,7 @@ LLM 先写出一个能完成任务的程序，比如游戏 bot、机器人控制
 | 具身机器人：LIBERO（Spatial state test 99.0%；LIBERO-10 state test 99.0%；Spatial vision test 95.3%；LIBERO-10 vision test 87.0%） | Done |
 | 具身机器人：SimplerEnv、RoboTwin 2.0 | Planned |
 | OSWorld：Calc + OS（test：可调用小模型 16.7%，纯代码 4.2%） | Done |
-| ARC-AGI-1、2、3：一个程序同时处理静态谜题和交互游戏 | Running |
+| ARC-AGI-1、2、3：一个程序同时处理静态谜题和交互游戏 | Paused |
 
 状态：Done（已接入并测试）· Running（实验进行中）· In progress（开发中）· Planned（尚未开始）。
 

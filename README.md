@@ -47,7 +47,7 @@ the implementation is not public.
 | Embodied robotics: LIBERO (Spatial state 99.0% test; LIBERO-10 state 99.0% test; Spatial vision 95.3% test; LIBERO-10 vision 87.0% test) | Done |
 | Embodied robotics: SimplerEnv, RoboTwin 2.0 | Planned |
 | Computer use: OSWorld Calc + OS (test 16.7% with a small model available, 4.2% pure code) | Done |
-| Abstract reasoning: ARC-AGI-1, 2 and 3, one program for static puzzles and interactive games | Running |
+| Abstract reasoning: ARC-AGI-1, 2 and 3, one program for static puzzles and interactive games | Paused |
 
 Status: Done (integrated and tested) · Running (experiment in progress) · In progress (being built) · Planned (not started).
 
